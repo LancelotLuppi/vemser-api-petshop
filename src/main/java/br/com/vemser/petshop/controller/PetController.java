@@ -23,8 +23,18 @@ public class PetController {
         return ResponseEntity.ok(petService.create(id, pet));
     }
 
-    @GetMapping
-    public ResponseEntity<List<PetDTO>> get() {
-        return ResponseEntity.ok(petService.list());
+    @GetMapping("/{idCliente}")
+    public ResponseEntity<List<PetDTO>> get(@PathVariable("idCliente") Integer id) {
+        return ResponseEntity.ok(petService.list(id));
+    }
+
+    @PutMapping("/{idPet}")
+    public ResponseEntity<PetDTO> put(@PathVariable("idPet") Integer id, @Valid @RequestBody PetCreateDTO petAtualizado) {
+        return ResponseEntity.ok(petService.update(id, petAtualizado));
+    }
+
+    @DeleteMapping("/{idPet}")
+    public void delete(@PathVariable("idPet") Integer id) {
+
     }
 }
