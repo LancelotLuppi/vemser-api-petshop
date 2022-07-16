@@ -15,7 +15,7 @@ public class ConexaoBancoDeDados {
     @Value("${jdbc-string}")
     private String jdbcString;
 
-    @Value("${jdbc-user")
+    @Value("${jdbc-user}")
     private String user;
 
     @Value("${jdbc-pass}")
@@ -29,7 +29,7 @@ public class ConexaoBancoDeDados {
     public Connection getConnection() throws SQLException {
         Connection con = DriverManager.getConnection(jdbcString, user, pass);
 
-        con.createStatement().execute("alter session set current_schema="+ schema);
+        con.createStatement().execute("alter session set current_schema=" + schema);
 
         return con;
     }
