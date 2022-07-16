@@ -190,7 +190,7 @@ public class ContatoRepository {
 
             while (res.next()) {
                 Contato contato = getContatoFromResultSet(res);
-                contato.setIdContato(idCliente);
+                contato.setIdCliente(idCliente);
                 contatos.add(contato);
             }
             return contatos;
