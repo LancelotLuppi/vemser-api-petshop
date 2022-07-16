@@ -64,7 +64,7 @@ public class PetRepository {
         return pet;
     }
 
-    public boolean remover(Integer id) throws  SQLException {
+    public boolean remover(Integer id) {
         try {
 
             String sql = "DELETE FROM ANIMAL WHERE ID_ANIMAL = ?";
@@ -78,7 +78,7 @@ public class PetRepository {
 
             return res>0;
         } catch (SQLException e) {
-            throw new SQLException(e.getCause());
+            e.printStackTrace();
         } finally {
             try {
                 if (!connection.isClosed()) {
@@ -88,9 +88,11 @@ public class PetRepository {
                 e.printStackTrace();
             }
         }
+        return false;
     }
 
-    public boolean editar(Integer id, Pet pet) throws SQLException {
+    public Pet update(Integer id, Pet pet) {
+        Pet petAtualizado;
         try {
 
             StringBuilder sql = new StringBuilder();
@@ -140,17 +142,14 @@ public class PetRepository {
             }
             stmt.setInt(index++, id);
             stmt.setInt(index, pet.getIdCliente());
-            int res = stmt.executeUpdate();
-            System.out.println("editarAnimal.res=" + res);
 
-            if(res <= 0){
-                System.out.println("Não foi possível editar esse animal =(");
-                return false;
+            if(stmt.executeUpdate() > 0) {
+                petAtualizado = returnByIdUtil(id);
+                return petAtualizado;
             }
-            return true;
 
         } catch (SQLException e) {
-            throw new SQLException(e.getCause());
+            e.printStackTrace();
         } finally {
             try {
                 if (!connection.isClosed()) {
@@ -160,38 +159,39 @@ public class PetRepository {
                 e.printStackTrace();
             }
         }
+        return null;
     }
 
-    public List<Pet> listar() throws SQLException {
-        List<Pet> animais = new ArrayList<>();
-        try {
-            Statement stmt = connection.createStatement();
-            String sql = "SELECT A.* " +
-                    "          , C.NOME AS NOME_DONO " +
-                    "       FROM ANIMAL A " +
-                    "       LEFT JOIN CLIENTE C ON (C.ID_CLIENTE = A.ID_CLIENTE) ";
+//    public List<Pet> listar() {
+//        List<Pet> animais = new ArrayList<>();
+//        try {
+//            String sql = "SELECT A.* " +
+//                    "       FROM ANIMAL A " +
+//                    "       WHERE A.ID_CLIENTE = ? ";
+//
+//            Statement stmt = connection.prepareStatement(sql);
+//            ResultSet res = stmt.executeQuery(sql);
+//
+//            while(res.next()) {
+//                Pet animal = getPetFromResultSet(res);
+//                animais.add(animal);
+//            }
+//            return animais;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                if(!connection.isClosed()) {
+//                    connection.close();
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return animais;
+//    }
 
-            ResultSet res = stmt.executeQuery(sql);
-
-            while(res.next()) {
-                Pet animal = getPetFromResultSet(res);
-                animais.add(animal);
-            }
-            return animais;
-        } catch (SQLException e) {
-            throw new SQLException(e.getCause());
-        } finally {
-            try {
-                if(!connection.isClosed()) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public List<Pet> listarAnimalPorCliente(Integer id) throws SQLException {
+    public List<Pet> listarAnimalPorCliente(Integer id) {
         List<Pet> pets = new ArrayList<>();
         try {
             String sql = """
@@ -214,7 +214,7 @@ public class PetRepository {
             }
             return pets;
         } catch (SQLException e) {
-            throw new SQLException(e.getCause());
+            e.printStackTrace();
         } finally {
             try {
                 if(!connection.isClosed()) {
@@ -224,34 +224,27 @@ public class PetRepository {
                 e.printStackTrace();
             }
         }
+        return pets;
     }
 
-    public Pet getPetPorId(int idPet) throws SQLException {
-        Pet animal;
-        try {
-            String sql = """
-                                SELECT a.*
-                                FROM ANIMAL a
-                                WHERE a.ID_ANIMAL = ?
-                    """;
+    public Pet returnByIdUtil(Integer id) throws SQLException {
+        Pet pet = null;
 
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, idPet);
+        String sql = """
+                            SELECT a.*
+                            FROM ANIMAL a
+                            WHERE a.ID_ANIMAL = ?
+                """;
 
-            ResultSet res = stmt.executeQuery();
-            animal = getPetFromResultSet(res);
-            return animal;
-        } catch (SQLException e) {
-            throw new SQLException(e.getCause());
-        } finally {
-            try {
-                if(!connection.isClosed()) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setInt(1, id);
+
+        ResultSet res = stmt.executeQuery();
+
+        if (res.next()) {
+            pet = getPetFromResultSet(res);
         }
+        return pet;
     }
 
     public Pet getPetPorId(int idPet, int idUsuario) throws SQLException {
@@ -289,13 +282,14 @@ public class PetRepository {
 
     private Pet getPetFromResultSet(ResultSet res) throws SQLException {
         Pet pet = new Pet();
-        pet.setIdPet(res.getInt("id_pet"));
-        pet.setNome(res.getString("nome"));
-        pet.setTipoPet(TipoPet.valueOf(res.getString("tipo")));
-        pet.setRaca(res.getString("raca"));
-        pet.setPelagem(res.getInt("pelagem"));
-        pet.setPorte(res.getInt("porte"));
-        pet.setIdade(res.getInt("idade"));
+        pet.setIdCliente(res.getInt("ID_CLIENTE"));
+        pet.setIdPet(res.getInt("ID_ANIMAL"));
+        pet.setNome(res.getString("NOME"));
+        pet.setTipoPet(TipoPet.valueOf(res.getString("TIPO")));
+        pet.setRaca(res.getString("RACA"));
+        pet.setPelagem(res.getInt("PELAGEM"));
+        pet.setPorte(res.getInt("PORTE"));
+        pet.setIdade(res.getInt("IDADE"));
         return pet;
     }
 }
