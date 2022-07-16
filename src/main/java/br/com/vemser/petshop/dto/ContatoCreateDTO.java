@@ -10,11 +10,10 @@ import javax.validation.constraints.Size;
 @Data
 public class ContatoCreateDTO {
 
-    @NotBlank
+    @NotNull
     private Integer idCliente;
 
     @NotNull
-    @Size(min = 11, max = 11)
     private Integer telefone;
 
     @NotNull
