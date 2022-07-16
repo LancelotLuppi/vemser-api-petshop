@@ -50,7 +50,7 @@ public class ContatoRepository {
             PreparedStatement stmt = connection.prepareStatement(sql);
 
             stmt.setInt(1, contato.getIdContato());
-            stmt.setInt(2, contato.getCliente().getIdCliente());
+            stmt.setInt(2, contato.getIdCliente());
             stmt.setInt(3, contato.getTelefone());
             stmt.setString(4, contato.getDescricao());
 
@@ -102,13 +102,8 @@ public class ContatoRepository {
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE contato SET \n");
-            Cliente cliente = contato.getCliente();
 
-            if (cliente != null) {
-                if (cliente.getIdCliente() != null) {
-                    sql.append(" id_pessoa = ?,");
-                }
-            }
+            sql.append(" id_pessoa = ?,");
 
             if (contato.getTelefone() != null) {
                 sql.append(" numero = ?,");
@@ -124,11 +119,7 @@ public class ContatoRepository {
             PreparedStatement stmt = connection.prepareStatement(sql.toString());
 
             int index = 1;
-            if (cliente != null) {
-                if (cliente.getIdCliente() != null) {
-                    stmt.setInt(index++, cliente.getIdCliente());
-                }
-            }
+            stmt.setInt(index++, contato.getIdCliente());
             if (contato.getTelefone() != null) {
                 stmt.setInt(index++, contato.getTelefone());
             }
@@ -228,9 +219,8 @@ public class ContatoRepository {
         Contato contato = new Contato();
         contato.setIdContato(res.getInt("id_Contato"));
         Cliente cliente = new Cliente();
-        cliente.setNome(res.getString("nome_pessoa"));
-        cliente.setIdCliente(res.getInt("id_pessoa"));
-        contato.setCliente(cliente);
+        cliente.setNome(res.getString("nome"));
+        cliente.setIdCliente(res.getInt("id_cliente"));
         contato.setTelefone(res.getInt("telefone"));
         contato.setDescricao(res.getString("descricao"));
         return contato;

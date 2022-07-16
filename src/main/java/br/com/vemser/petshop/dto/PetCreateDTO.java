@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 @Data
 public class PetCreateDTO {
 
-    @NotBlank
-    private Cliente cliente;
+    @NotNull
+    private Integer idCliente;
 
     @NotNull
     @NotBlank
@@ -26,14 +26,11 @@ public class PetCreateDTO {
     private String raca;
 
     @NotNull
-    @NotEmpty
     private Integer pelagem;
 
     @NotNull
-    @NotEmpty
     private Integer porte;
 
     @NotNull
-    @NotEmpty
     private Integer idade;
 }

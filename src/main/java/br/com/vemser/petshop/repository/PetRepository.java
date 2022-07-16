@@ -4,41 +4,29 @@ import br.com.vemser.petshop.entity.Cliente;
 import br.com.vemser.petshop.entity.Pet;
 import br.com.vemser.petshop.enums.TipoPet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class PetRepository {
 
     @Autowired
     private Connection connection;
 
-    public Integer nextSeq() {
-        try {
-            String sql = "SELECT SEQ_ID_ANIMAL.nextval SEQ_ID_ANIMAL from DUAL";
-            Statement stmt = connection.createStatement();
-            ResultSet res = stmt.executeQuery(sql);
-            if(res.next()) {
-                return res.getInt("SEQ_ID_ANIMAL");
-            }
-            return null;
-        }catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if(!connection.isClosed()) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+    public Integer nextSeq() throws SQLException {
+        String sql = "SELECT SEQ_ID_ANIMAL.nextval SEQ_ID_ANIMAL from DUAL";
+        Statement stmt = connection.createStatement();
+        ResultSet res = stmt.executeQuery(sql);
+        if (res.next()) {
+            return res.getInt("SEQ_ID_ANIMAL");
         }
         return null;
     }
 
-    public Pet adicionar(Pet pet) throws SQLException {
-
+    public Pet adicionar(Integer idCliente, Pet pet) {
         try {
 
             Integer proximoId = this.nextSeq();
@@ -50,21 +38,9 @@ public class PetRepository {
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                     """;
 
-            if(pet.getIdPet() == null
-                    || pet.getCliente().getIdCliente() == null
-                    || pet.getNome() == null
-                    || pet.getTipoPet() == null
-                    || pet.getPelagem() == null
-                    || pet.getRaca() == null
-                    || pet.getIdade() == null
-                    || pet.getPorte() == null)
-            {
-                return null;
-            }
-
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, pet.getIdPet());
-            stmt.setInt(2, pet.getCliente().getIdCliente());
+            stmt.setInt(2, idCliente);
             stmt.setString(3, pet.getNome());
             stmt.setString(4, pet.getTipoPet().toString());
             stmt.setString(5, pet.getRaca());
@@ -73,10 +49,9 @@ public class PetRepository {
             stmt.setInt(8, pet.getIdade());
 
             int res = stmt.executeUpdate();
-            System.out.println("adicionarAnimal.res=" + res);
             return pet;
         } catch (SQLException e) {
-            throw new SQLException(e.getCause());
+            e.printStackTrace();
         } finally {
             try{
                 if(!connection.isClosed()) {
@@ -86,6 +61,7 @@ public class PetRepository {
                 e.printStackTrace();
             }
         }
+        return pet;
     }
 
     public boolean remover(Integer id) throws  SQLException {
@@ -163,7 +139,7 @@ public class PetRepository {
                 stmt.setInt(index++, pet.getIdade());
             }
             stmt.setInt(index++, id);
-            stmt.setInt(index, pet.getCliente().getIdCliente());
+            stmt.setInt(index, pet.getIdCliente());
             int res = stmt.executeUpdate();
             System.out.println("editarAnimal.res=" + res);
 
@@ -215,7 +191,7 @@ public class PetRepository {
         }
     }
 
-    public List<Pet> listarAnimalPorCliente(Cliente cliente) throws SQLException {
+    public List<Pet> listarAnimalPorCliente(Integer id) throws SQLException {
         List<Pet> pets = new ArrayList<>();
         try {
             String sql = """
@@ -227,13 +203,13 @@ public class PetRepository {
                     """;
 
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, cliente.getIdCliente());
+            stmt.setInt(1, id);
 
             ResultSet res = stmt.executeQuery();
 
             while(res.next()) {
                 Pet pet = getPetFromResultSet(res);
-                pet.setCliente(cliente);
+                pet.setIdCliente(id);
                 pets.add(pet);
             }
             return pets;

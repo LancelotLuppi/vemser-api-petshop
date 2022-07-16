@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 public class Contato {
     private Integer idContato;
-    private Cliente cliente;
+    private Integer idCliente;
     private Integer telefone;
     private String descricao;
 }

@@ -10,11 +10,11 @@ import javax.validation.constraints.NotNull;
 @Data
 public class PedidoCreateDTO {
 
-    @NotBlank
-    private Cliente cliente;
+    @NotNull
+    private Integer idCliente;
 
-    @NotBlank
-    private Pet pet;
+    @NotNull
+    private Integer idPet;
 
     @NotNull
     @NotBlank
@@ -23,7 +23,4 @@ public class PedidoCreateDTO {
     @NotNull
     @NotBlank
     private String descricao;
-
-    @NotNull
-    private Integer idPet;
 }

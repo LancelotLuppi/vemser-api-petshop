@@ -9,9 +9,8 @@ import lombok.*;
 @ToString
 public class Pedido {
     private Integer idPedido;
-    private Cliente cliente;
-    private Pet pet;
-    private Double valor;
+    private Integer idCliente;
+    private Integer idPet;
+    private Integer valor;
     private String descricao;
-    private Integer IdPet;
 }

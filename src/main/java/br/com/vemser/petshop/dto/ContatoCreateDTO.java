@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 public class ContatoCreateDTO {
 
     @NotBlank
-    private Cliente cliente;
+    private Integer idCliente;
 
     @NotNull
     @Size(min = 11, max = 11)

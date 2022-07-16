@@ -113,7 +113,7 @@ public class ClienteRepository {
             stmt.setInt(index, id);
             // Executa-se a consulta
             if (stmt.executeUpdate() > 0) {
-                clienteAtualizado = returnById(id);
+                clienteAtualizado = returnByIdUtil(id);
                 return clienteAtualizado;
             }
 
@@ -221,36 +221,42 @@ public class ClienteRepository {
         }
     }
 
-    public Cliente returnById(Integer id) {
+    public Cliente returnByIdUtil(Integer id) throws SQLException {
         Cliente cliente = null;
+
+        String sql = """
+                            SELECT c.*
+                            FROM CLIENTE c
+                            WHERE c.ID_CLIENTE = ?
+                """;
+
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setInt(1, id);
+
+        ResultSet res = stmt.executeQuery();
+
+        if (res.next()) {
+            cliente = getClienteFromResultSet(res);
+        }
+        return cliente;
+    }
+
+    public Cliente getById(Integer id) {
         try {
-            String sql = """
-                                SELECT c.*
-                                FROM CLIENTE c
-                                WHERE c.ID_CLIENTE = ?
-                    """;
-
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, id);
-
-            ResultSet res = stmt.executeQuery();
-
-            if (res.next()) {
-                cliente = getClienteFromResultSet(res);
-            }
+            Cliente cliente = returnByIdUtil(id);
             return cliente;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
-                if (!connection.isClosed()) {
+                if(!connection.isClosed()) {
                     connection.close();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        return cliente;
+        return null;
     }
 
     private Cliente getClienteFromResultSet(ResultSet res) throws SQLException {

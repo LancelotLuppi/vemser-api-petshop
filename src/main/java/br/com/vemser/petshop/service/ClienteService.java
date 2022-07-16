@@ -32,7 +32,7 @@ public class ClienteService {
     }
 
     public ClienteDTO getById(Integer id) {
-        return returnDto(clienteRepository.returnById(id));
+        return returnDto(clienteRepository.getById(id));
     }
 
     public ClienteDTO update(Integer id, ClienteCreateDTO clienteDto) {

@@ -53,8 +53,8 @@ public class PedidoRepository {
             PreparedStatement stmt = connection.prepareStatement(sql);
 
             stmt.setInt(1, pedido.getIdPedido());
-            stmt.setInt(2, pedido.getCliente().getIdCliente());
-            stmt.setInt(3, pedido.getPet().getIdPet());
+            stmt.setInt(2, pedido.getIdCliente());
+            stmt.setInt(3, pedido.getIdPet());
             stmt.setDouble(4, pedido.getValor());
             stmt.setString(5, pedido.getDescricao());
 
@@ -105,19 +105,11 @@ public class PedidoRepository {
         try {
 
             StringBuilder sql = new StringBuilder();
+
             sql.append("UPDATE pedido SET \n");
-            Pet animal = pedido.getPet();
-            if (animal != null) {
-                if(animal.getIdPet() != null) {
-                    sql.append(" id_animal = ?,");
-                }
-            }
-            if(pedido.getValor() != null) {
-                sql.append(" valor = ?,");
-            }
-            if(pedido.getDescricao() != null) {
-                sql.append(" descricao = ?,");
-            }
+            sql.append(" id_animal = ?,");
+            sql.append(" valor = ?,");
+            sql.append(" descricao = ?,");
 
             sql.deleteCharAt(sql.length() -1);
             sql.append("WHERE id_pedido = ? ");
@@ -125,11 +117,7 @@ public class PedidoRepository {
             PreparedStatement  stmt = connection.prepareStatement(sql.toString());
 
             int index = 1;
-            if(animal != null) {
-                if(animal.getIdPet() != null) {
-                    stmt.setInt(index++, animal.getIdPet());
-                }
-            }
+            stmt.setInt(index++, pedido.getIdPet());
             if(pedido.getValor() != null) {
                 stmt.setDouble(index++, pedido.getValor());
             }
@@ -188,7 +176,7 @@ public class PedidoRepository {
         }
     }
 
-    public List<Pedido> listarPedidosPorCliente(Cliente cliente) throws SQLException {
+    public List<Pedido> listarPedidosPorCliente(Integer idCliente) throws SQLException {
         List<Pedido> pedidos = new ArrayList<>();
         try {
 
@@ -199,14 +187,17 @@ public class PedidoRepository {
                     "      WHERE P.ID_CLIENTE = ? ";
 
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, cliente.getIdCliente());
+            stmt.setInt(1, idCliente);
 
             ResultSet res = stmt.executeQuery();
             PetRepository animalRepository = new PetRepository();
             while(res.next()) {
                 Pedido pedido = getPedidoFromResultSet(res);
-                pedido.setCliente(cliente);
-                pedido.setPet(animalRepository.getPetPorId(pedido.getIdPet(), cliente.getIdCliente()));
+                pedido.setIdPedido(res.getInt("ID_PEDIDO"));
+                pedido.setIdCliente(res.getInt("ID_CLIENTE"));
+                pedido.setIdPet(res.getInt("ID_ANIMAL"));
+                pedido.setValor(res.getInt("VALOR"));
+                pedido.setDescricao(res.getString("DESCRICAO"));
                 pedidos.add(pedido);
             }
             return pedidos;
@@ -257,7 +248,7 @@ public class PedidoRepository {
     private Pedido getPedidoFromResultSet(ResultSet res) throws  SQLException {
         Pedido pedido = new Pedido();
         pedido.setIdPedido(res.getInt("id_pedido"));
-        pedido.setValor(res.getDouble("valor"));
+        pedido.setValor(res.getInt("valor"));
         pedido.setDescricao(res.getString("descricao"));
         pedido.setIdPet(res.getInt("id_animal"));
         return pedido;

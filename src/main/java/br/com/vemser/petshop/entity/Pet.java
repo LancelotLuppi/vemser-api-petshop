@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 public class Pet {
     private Integer idPet;
-    private Cliente cliente;
+    private Integer idCliente;
     private String nome;
     private TipoPet tipoPet;
     private String raca;
