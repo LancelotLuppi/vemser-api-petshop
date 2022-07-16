@@ -162,14 +162,12 @@ public class PetRepository {
         }
     }
 
-    public List<Pet> listar() throws SQLException {
+    public List<Pet> listar() {
         List<Pet> animais = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
-            String sql = "SELECT A.* " +
-                    "          , C.NOME AS NOME_DONO " +
-                    "       FROM ANIMAL A " +
-                    "       LEFT JOIN CLIENTE C ON (C.ID_CLIENTE = A.ID_CLIENTE) ";
+            String sql = "SELECT * " +
+                    "       FROM ANIMAL";
 
             ResultSet res = stmt.executeQuery(sql);
 
@@ -179,7 +177,7 @@ public class PetRepository {
             }
             return animais;
         } catch (SQLException e) {
-            throw new SQLException(e.getCause());
+            e.printStackTrace();
         } finally {
             try {
                 if(!connection.isClosed()) {
@@ -189,6 +187,7 @@ public class PetRepository {
                 e.printStackTrace();
             }
         }
+        return animais;
     }
 
     public List<Pet> listarAnimalPorCliente(Integer id) throws SQLException {
@@ -289,13 +288,14 @@ public class PetRepository {
 
     private Pet getPetFromResultSet(ResultSet res) throws SQLException {
         Pet pet = new Pet();
-        pet.setIdPet(res.getInt("id_pet"));
-        pet.setNome(res.getString("nome"));
-        pet.setTipoPet(TipoPet.valueOf(res.getString("tipo")));
-        pet.setRaca(res.getString("raca"));
-        pet.setPelagem(res.getInt("pelagem"));
-        pet.setPorte(res.getInt("porte"));
-        pet.setIdade(res.getInt("idade"));
+        pet.setIdCliente(res.getInt("ID_CLIENTE"));
+        pet.setIdPet(res.getInt("ID_ANIMAL"));
+        pet.setNome(res.getString("NOME"));
+        pet.setTipoPet(TipoPet.valueOf(res.getString("TIPO")));
+        pet.setRaca(res.getString("RACA"));
+        pet.setPelagem(res.getInt("PELAGEM"));
+        pet.setPorte(res.getInt("PORTE"));
+        pet.setIdade(res.getInt("IDADE"));
         return pet;
     }
 }

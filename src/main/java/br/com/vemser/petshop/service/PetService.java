@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PetService {
@@ -24,6 +26,12 @@ public class PetService {
     public PetDTO create(Integer idCliente, PetCreateDTO petDto) {
         Pet pet = returnEntity(petDto);
         return returnDto(petRepository.adicionar(idCliente, pet));
+    }
+
+    public List<PetDTO> list() {
+        return petRepository.listar().stream()
+                .map(this::returnDto)
+                .collect(Collectors.toList());
     }
 
     private Pet returnEntity(PetCreateDTO dto) {
