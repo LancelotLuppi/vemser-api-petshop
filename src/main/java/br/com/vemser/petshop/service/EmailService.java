@@ -1,5 +1,6 @@
 package br.com.vemser.petshop.service;
 
+import br.com.vemser.petshop.enums.TipoRequisicao;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -30,15 +31,11 @@ public class EmailService {
     @Value("${remetente}")
     private String usuario;
 
-    public static final int POST = 1;
-    public static final int PUT = 2;
-    public static final int DELETE = 3;
-
 
     private final JavaMailSender emailSender;
 
 
-    public void sendEmail(String nome, Integer id, String email, Integer tipoRequisicao) {
+    public void sendEmail(String nome, Integer id, String email, TipoRequisicao tipoRequisicao) {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         try {
 
@@ -66,7 +63,7 @@ public class EmailService {
         }
     }
 
-    public String geContentFromTemplate(String nome, Integer id, String email, Integer requisicao) throws IOException, TemplateException {
+    public String geContentFromTemplate(String nome, Integer id, String email, TipoRequisicao requisicao) throws IOException, TemplateException {
         Map<String, Object> dados = new HashMap<>();
 
         // local

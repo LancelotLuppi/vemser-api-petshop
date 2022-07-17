@@ -3,6 +3,7 @@ package br.com.vemser.petshop.service;
 import br.com.vemser.petshop.dto.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.ClienteDTO;
 import br.com.vemser.petshop.entity.Cliente;
+import br.com.vemser.petshop.enums.TipoRequisicao;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.ContatoRepository;
@@ -16,8 +17,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
-import static br.com.vemser.petshop.service.EmailService.POST;
+import static br.com.vemser.petshop.service.EmailService.*;
 
 @Service
 public class ClienteService {
@@ -37,7 +37,7 @@ public class ClienteService {
     public ClienteDTO create(ClienteCreateDTO clienteDto) throws SQLException, RegraDeNegocioException {
         Cliente cliente = returnEntity(clienteDto);
         Cliente clienteTempParaRetorno = clienteRepository.adicionar(cliente);
-        emailService.sendEmail(cliente.getNome(), clienteTempParaRetorno.getIdCliente(), cliente.getEmail(), POST);
+        emailService.sendEmail(cliente.getNome(), clienteTempParaRetorno.getIdCliente(), cliente.getEmail(), TipoRequisicao.POST);
         return returnDto(clienteTempParaRetorno);
     }
 
@@ -52,15 +52,15 @@ public class ClienteService {
     }
 
     public ClienteDTO update(Integer id, ClienteCreateDTO clienteDto) throws SQLException, RegraDeNegocioException {
-        Cliente clienteAtualizado = returnEntity(clienteDto);
-        ClienteDTO clienteTempParaRetorno = returnDto(clienteRepository.update(id, clienteAtualizado));
-        emailService.sendEmail(clienteAtualizado.getNome(), clienteTempParaRetorno.getIdCliente(), clienteAtualizado.getEmail(), POST);
-        return clienteTempParaRetorno;
+        Cliente cliente = returnEntity(clienteDto);
+        Cliente clienteTempParaRetorno = clienteRepository.update(id,cliente);
+        emailService.sendEmail(cliente.getNome(), clienteTempParaRetorno.getIdCliente(), cliente.getEmail(), TipoRequisicao.POST);
+        return returnDto(clienteTempParaRetorno);
     }
 
     public void delete(Integer id) throws SQLException, RegraDeNegocioException {
         Cliente clienteRecuperado = clienteRepository.returnByIdUtil(id);
-        emailService.sendEmail(clienteRecuperado.getNome(), clienteRecuperado.getIdCliente(), clienteRecuperado.getEmail(), POST);
+        emailService.sendEmail(clienteRecuperado.getNome(), clienteRecuperado.getIdCliente(), clienteRecuperado.getEmail(), TipoRequisicao.DELETE);
         clienteRepository.remover(id);
     }
 

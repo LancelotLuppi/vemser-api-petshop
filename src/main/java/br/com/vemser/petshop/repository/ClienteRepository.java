@@ -34,14 +34,16 @@ public class ClienteRepository {
             cliente.setIdCliente(this.nextSeq());
 
             String sql = "INSERT INTO CLIENTE\n" +
-                    "(ID_CLIENTE, NOME, QUANTIDADE_PEDIDOS)\n" +
-                    "VALUES(?, ?, ?)\n";
+                    "(ID_CLIENTE, NOME, QUANTIDADE_PEDIDOS, EMAIL)\n" +
+                    "VALUES(?, ?, ?, ?)\n";
 
             PreparedStatement stmt = connection.prepareStatement(sql);
 
             stmt.setInt(1, cliente.getIdCliente());
             stmt.setString(2, cliente.getNome());
             stmt.setInt(3, cliente.getQuantidadeDePedidos());
+            stmt.setString(4, cliente.getEmail());
+
 
             if (stmt.executeUpdate() != 0) {
                 System.out.println("Cliente adicionado com sucesso");
@@ -96,26 +98,30 @@ public class ClienteRepository {
         try {
 
             StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE cliente SET \n");
+            sql.append("UPDATE cliente SET\n");
             if (cliente.getNome() != null) {
-                sql.append(" nome = ?,");
+                sql.append("nome = ?,");
             }
             if (cliente.getQuantidadeDePedidos() != null) {
                 sql.append(" QUANTIDADE_PEDIDOS = ?,");
             }
-            sql.deleteCharAt(sql.length() - 1); //remove o ultimo ','
-            sql.append(" WHERE id_cliente = ? ");
+            if (cliente.getEmail() != null) {
+                sql.append(" email = ?\n");
+            }
+            sql.append("WHERE id_cliente = ? ");
 
             PreparedStatement stmt = connection.prepareStatement(sql.toString());
 
-            int index = 1;
             if (cliente.getNome() != null) {
-                stmt.setString(index++, cliente.getNome());
+                stmt.setString(1, cliente.getNome());
             }
             if (cliente.getQuantidadeDePedidos() != null) {
-                stmt.setInt(index++, cliente.getQuantidadeDePedidos());
+                stmt.setInt(2, cliente.getQuantidadeDePedidos());
             }
-            stmt.setInt(index, id);
+            if (cliente.getEmail() != null) {
+                stmt.setString(3, cliente.getEmail());
+            }
+            stmt.setInt(4, id);
             // Executa-se a consulta
             if (stmt.executeUpdate() > 0) {
                 clienteAtualizado = returnByIdUtil(id);
@@ -152,6 +158,7 @@ public class ClienteRepository {
                 cliente.setIdCliente(res.getInt("ID_CLIENTE"));
                 cliente.setNome(res.getString("NOME"));
                 cliente.setQuantidadeDePedidos(res.getInt("QUANTIDADE_PEDIDOS"));
+                cliente.setQuantidadeDePedidos(res.getInt("EMAIL"));
                 clientes.add(cliente);
             }
         } catch (SQLException e) {
@@ -271,6 +278,7 @@ public class ClienteRepository {
         cliente.setIdCliente(res.getInt("id_cliente"));
         cliente.setNome(res.getString("nome"));
         cliente.setQuantidadeDePedidos(res.getInt("quantidade_pedidos"));
+        cliente.setEmail(res.getString("email"));
         return cliente;
     }
 }
