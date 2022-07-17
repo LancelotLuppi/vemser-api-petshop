@@ -1,5 +1,6 @@
 package br.com.vemser.petshop.repository;
 
+import br.com.vemser.petshop.config.ConexaoBancoDeDados;
 import br.com.vemser.petshop.entity.Cliente;
 import br.com.vemser.petshop.entity.Contato;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,10 @@ import java.util.List;
 public class ContatoRepository {
 
     @Autowired
-    private Connection connection;
+    private ConexaoBancoDeDados conexaoBancoDeDados;
 
     public Integer nextSeq() throws SQLException{
+        Connection connection = conexaoBancoDeDados.getConnection();
         String sql = "SELECT seq_id_contato.nextval seqContato from DUAL";
         Statement stmt = connection.createStatement();
         ResultSet res = stmt.executeQuery(sql);
@@ -25,7 +27,8 @@ public class ContatoRepository {
         return null;
     }
 
-    public Contato adicionar(Integer idCliente, Contato contato) {
+    public Contato adicionar(Integer idCliente, Contato contato) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         try {
             Integer proximoId = this.nextSeq();
             contato.setIdContato(proximoId);
@@ -57,7 +60,8 @@ public class ContatoRepository {
         return contato;
     }
 
-    public boolean remover(Integer id) {
+    public boolean remover(Integer id) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         try {
 
             String sql = "DELETE FROM CONTATO WHERE ID_CONTATO = ?";
@@ -85,7 +89,8 @@ public class ContatoRepository {
         return false;
     }
 
-    public Contato atualizar(Integer id, Contato contato) {
+    public Contato atualizar(Integer id, Contato contato) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         Contato contatoAtualizado;
         try {
 
@@ -169,9 +174,9 @@ public class ContatoRepository {
 //        }
 //    }
 
-    public List<Contato> listarContatosPorCliente(Integer idCliente) {
+    public List<Contato> listarContatosPorCliente(Integer idCliente) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         List<Contato> contatos = new ArrayList<>();
-
         try {
 
 
@@ -218,8 +223,8 @@ public class ContatoRepository {
     }
 
     public Contato returnByIdUtil(Integer id) throws SQLException{
+        Connection connection = conexaoBancoDeDados.getConnection();
         Contato contato = null;
-
         String sql = """
                             SELECT ctt.*
                             FROM CONTATO ctt

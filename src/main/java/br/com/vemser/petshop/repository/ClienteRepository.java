@@ -1,5 +1,6 @@
 package br.com.vemser.petshop.repository;
 
+import br.com.vemser.petshop.config.ConexaoBancoDeDados;
 import br.com.vemser.petshop.entity.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -12,10 +13,11 @@ import java.util.List;
 public class ClienteRepository {
 
     @Autowired
-    private Connection connection;
+    private ConexaoBancoDeDados conexaoBancoDeDados;
 
 
     public Integer nextSeq() throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         String sql = "SELECT SEQ_ID_CLIENTE.nextval SEQ_ID_CLIENTE from DUAL";
         Statement stmt = connection.createStatement();
         ResultSet res = stmt.executeQuery(sql);
@@ -25,7 +27,8 @@ public class ClienteRepository {
         return null;
     }
 
-    public Cliente adicionar(Cliente cliente) {
+    public Cliente adicionar(Cliente cliente) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         try {
 
             cliente.setIdCliente(this.nextSeq());
@@ -58,7 +61,8 @@ public class ClienteRepository {
         return null;
     }
 
-    public boolean remover(Integer id) {
+    public boolean remover(Integer id) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         try {
 
             String sql = "DELETE FROM CLIENTE WHERE ID_CLIENTE = ?";
@@ -86,7 +90,8 @@ public class ClienteRepository {
         return false;
     }
 
-    public Cliente update(Integer id, Cliente cliente) {
+    public Cliente update(Integer id, Cliente cliente) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         Cliente clienteAtualizado;
         try {
 
@@ -132,8 +137,8 @@ public class ClienteRepository {
     }
 
 
-    public List<Cliente> listar() {
-
+    public List<Cliente> listar() throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         List<Cliente> clientes = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
@@ -165,6 +170,7 @@ public class ClienteRepository {
     }
 
     public int incrementarQuantidadeDePedidosNoBanco(int idCliente) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         try {
             String sql = """
                                 SELECT c.QUANTIDADE_PEDIDOS
@@ -190,6 +196,7 @@ public class ClienteRepository {
     }
 
     public void setPedidosBanco(int idCliente, int novaQuantidade) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         try {
 
             String sql = """
@@ -222,8 +229,8 @@ public class ClienteRepository {
     }
 
     public Cliente returnByIdUtil(Integer id) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         Cliente cliente = null;
-
         String sql = """
                             SELECT c.*
                             FROM CLIENTE c
@@ -241,7 +248,8 @@ public class ClienteRepository {
         return cliente;
     }
 
-    public Cliente getById(Integer id) {
+    public Cliente getById(Integer id) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         try {
             Cliente cliente = returnByIdUtil(id);
             return cliente;

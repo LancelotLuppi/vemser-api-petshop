@@ -10,15 +10,10 @@ import javax.validation.constraints.NotNull;
 @Data
 public class PedidoCreateDTO {
 
-    @NotNull
-    private Integer idCliente;
+
 
     @NotNull
-    private Integer idPet;
-
-    @NotNull
-    @NotBlank
-    private Double valor;
+    private Integer valor;
 
     @NotNull
     @NotBlank

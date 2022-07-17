@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,27 +21,27 @@ public class ClienteService {
 
 
 
-    public ClienteDTO create(ClienteCreateDTO clienteDto) {
+    public ClienteDTO create(ClienteCreateDTO clienteDto) throws SQLException {
         Cliente cliente = returnEntity(clienteDto);
         return returnDto(clienteRepository.adicionar(cliente));
     }
 
-    public List<ClienteDTO>  list() {
+    public List<ClienteDTO>  list() throws SQLException {
         return clienteRepository.listar().stream()
                 .map(this::returnDto)
                 .collect(Collectors.toList());
     }
 
-    public ClienteDTO getById(Integer id) {
+    public ClienteDTO getById(Integer id) throws SQLException {
         return returnDto(clienteRepository.getById(id));
     }
 
-    public ClienteDTO update(Integer id, ClienteCreateDTO clienteDto) {
+    public ClienteDTO update(Integer id, ClienteCreateDTO clienteDto) throws SQLException {
         Cliente clienteAtualizado = returnEntity(clienteDto);
         return returnDto(clienteRepository.update(id, clienteAtualizado));
     }
 
-    public void delete(Integer id) {
+    public void delete(Integer id) throws SQLException {
         clienteRepository.remover(id);
     }
 

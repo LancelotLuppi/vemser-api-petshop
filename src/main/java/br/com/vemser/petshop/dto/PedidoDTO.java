@@ -7,4 +7,6 @@ import lombok.Data;
 public class PedidoDTO extends PedidoCreateDTO{
 
     private Integer idPedido;
+    private Integer idCliente;
+    private Integer idPet;
 }

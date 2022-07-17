@@ -22,23 +22,23 @@ public class PetService {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    public PetDTO create(Integer idCliente, PetCreateDTO petDto) {
+    public PetDTO create(Integer idCliente, PetCreateDTO petDto) throws SQLException {
         Pet pet = returnEntity(petDto);
         return returnDto(petRepository.adicionar(idCliente, pet));
     }
 
-    public List<PetDTO> list(Integer idCliente) {
+    public List<PetDTO> list(Integer idCliente) throws SQLException {
         return petRepository.listarAnimalPorCliente(idCliente).stream()
                 .map(this::returnDto)
                 .collect(Collectors.toList());
     }
 
-    public PetDTO update(Integer idPet, PetCreateDTO petDto) {
+    public PetDTO update(Integer idPet, PetCreateDTO petDto) throws SQLException {
         Pet petAtualizado = returnEntity(petDto);
         return returnDto(petRepository.update(idPet, petAtualizado));
     }
 
-    public void delete(Integer id) {
+    public void delete(Integer id) throws SQLException {
         petRepository.remover(id);
     }
 

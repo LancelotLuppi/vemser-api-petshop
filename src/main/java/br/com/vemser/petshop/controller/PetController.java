@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -19,22 +20,22 @@ public class PetController {
     private PetService petService;
 
     @PostMapping("/{idCliente}")
-    public ResponseEntity<PetDTO> post(@PathVariable("idCliente") Integer id, @Valid @RequestBody PetCreateDTO pet) {
+    public ResponseEntity<PetDTO> post(@PathVariable("idCliente") Integer id, @Valid @RequestBody PetCreateDTO pet) throws SQLException {
         return ResponseEntity.ok(petService.create(id, pet));
     }
 
     @GetMapping("/{idCliente}")
-    public ResponseEntity<List<PetDTO>> get(@PathVariable("idCliente") Integer id) {
+    public ResponseEntity<List<PetDTO>> get(@PathVariable("idCliente") Integer id) throws SQLException {
         return ResponseEntity.ok(petService.list(id));
     }
 
     @PutMapping("/{idPet}")
-    public ResponseEntity<PetDTO> put(@PathVariable("idPet") Integer id, @Valid @RequestBody PetCreateDTO petAtualizado) {
+    public ResponseEntity<PetDTO> put(@PathVariable("idPet") Integer id, @Valid @RequestBody PetCreateDTO petAtualizado) throws SQLException {
         return ResponseEntity.ok(petService.update(id, petAtualizado));
     }
 
     @DeleteMapping("/{idPet}")
-    public void delete(@PathVariable("idPet") Integer id) {
-
+    public void delete(@PathVariable("idPet") Integer id) throws SQLException {
+        petService.delete(id);
     }
 }

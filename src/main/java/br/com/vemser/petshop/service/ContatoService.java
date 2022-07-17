@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,7 @@ public class ContatoService {
     @Autowired
     ClienteRepository clienteRepository;
 
-    public List<ContatoDTO> listarContatoPorId(Integer idCliente){
+    public List<ContatoDTO> listarContatoPorId(Integer idCliente) throws SQLException {
         log.info("listando contatos");
         return contatoRepository.listarContatosPorCliente(idCliente).stream()
                 .map(this::returnDTO)
@@ -34,19 +35,19 @@ public class ContatoService {
 
     }
 
-    public ContatoDTO create (Integer idCliente, ContatoCreateDTO contatoDTO){
+    public ContatoDTO create (Integer idCliente, ContatoCreateDTO contatoDTO) throws SQLException {
         log.info("Criando contato");
         Contato contato = returnEntity(contatoDTO);
         return returnDTO(contatoRepository.adicionar(idCliente, contato));
     }
 
-    public ContatoDTO update(Integer idCliente, ContatoCreateDTO contatoAtualizado){
+    public ContatoDTO update(Integer idCliente, ContatoCreateDTO contatoAtualizado) throws SQLException {
         log.info("atualizando contato");
         Contato contato = returnEntity(contatoAtualizado);
         return returnDTO(contatoRepository.atualizar(idCliente, contato));
     }
 
-    public void delete(Integer id){
+    public void delete(Integer id) throws SQLException {
         log.info("chamou deletar");
         contatoRepository.remover(id);
     }

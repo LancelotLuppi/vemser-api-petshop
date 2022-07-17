@@ -1,5 +1,6 @@
 package br.com.vemser.petshop.repository;
 
+import br.com.vemser.petshop.config.ConexaoBancoDeDados;
 import br.com.vemser.petshop.entity.Cliente;
 import br.com.vemser.petshop.entity.Pet;
 import br.com.vemser.petshop.enums.TipoPet;
@@ -14,9 +15,10 @@ import java.util.List;
 public class PetRepository {
 
     @Autowired
-    private Connection connection;
+    private ConexaoBancoDeDados conexaoBancoDeDados;
 
     public Integer nextSeq() throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         String sql = "SELECT SEQ_ID_ANIMAL.nextval SEQ_ID_ANIMAL from DUAL";
         Statement stmt = connection.createStatement();
         ResultSet res = stmt.executeQuery(sql);
@@ -26,7 +28,8 @@ public class PetRepository {
         return null;
     }
 
-    public Pet adicionar(Integer idCliente, Pet pet) {
+    public Pet adicionar(Integer idCliente, Pet pet) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         try {
 
             Integer proximoId = this.nextSeq();
@@ -64,7 +67,8 @@ public class PetRepository {
         return pet;
     }
 
-    public boolean remover(Integer id) {
+    public boolean remover(Integer id) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         try {
 
             String sql = "DELETE FROM ANIMAL WHERE ID_ANIMAL = ?";
@@ -73,10 +77,8 @@ public class PetRepository {
 
             stmt.setInt(1, id);
 
-            int res = stmt.executeUpdate();
-            System.out.println("removerAnimalPorId.res=" + res);
+            return stmt.executeUpdate() > 0;
 
-            return res>0;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -91,7 +93,8 @@ public class PetRepository {
         return false;
     }
 
-    public Pet update(Integer id, Pet pet) {
+    public Pet update(Integer id, Pet pet) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         Pet petAtualizado;
         try {
 
@@ -191,14 +194,13 @@ public class PetRepository {
 //        return animais;
 //    }
 
-    public List<Pet> listarAnimalPorCliente(Integer id) {
+    public List<Pet> listarAnimalPorCliente(Integer id) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         List<Pet> pets = new ArrayList<>();
         try {
             String sql = """
                                 SELECT a.*
-                                , c.NOME
                                 FROM ANIMAL a
-                                INNER JOIN CLIENTE c ON (c.ID_CLIENTE = a.ID_CLIENTE)
                                 WHERE a.ID_CLIENTE = ?
                     """;
 
@@ -228,8 +230,8 @@ public class PetRepository {
     }
 
     public Pet returnByIdUtil(Integer id) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         Pet pet = null;
-
         String sql = """
                             SELECT a.*
                             FROM ANIMAL a
@@ -248,6 +250,7 @@ public class PetRepository {
     }
 
     public Pet getPetPorId(int idPet, int idUsuario) throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
         Pet animal = null;
         try {
             String sql = """

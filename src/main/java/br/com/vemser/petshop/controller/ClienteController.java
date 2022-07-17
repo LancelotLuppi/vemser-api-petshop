@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -19,27 +20,27 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @PostMapping
-    public ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO cliente) {
+    public ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO cliente) throws SQLException {
         return ResponseEntity.ok(clienteService.create(cliente));
     }
 
     @GetMapping
-    public ResponseEntity<List<ClienteDTO>> get() {
+    public ResponseEntity<List<ClienteDTO>> get() throws SQLException {
         return ResponseEntity.ok(clienteService.list());
     }
 
     @GetMapping("/{idCliente}")
-    public ResponseEntity<ClienteDTO> getById(@PathVariable("idCliente") Integer id) {
+    public ResponseEntity<ClienteDTO> getById(@PathVariable("idCliente") Integer id) throws SQLException {
         return ResponseEntity.ok(clienteService.getById(id));
     }
 
     @PutMapping("/{idCliente}")
-    public ResponseEntity<ClienteDTO> put(@PathVariable("idCliente") Integer id, @RequestBody ClienteCreateDTO clienteAtualizado) {
+    public ResponseEntity<ClienteDTO> put(@PathVariable("idCliente") Integer id, @RequestBody ClienteCreateDTO clienteAtualizado) throws SQLException {
         return ResponseEntity.ok(clienteService.update(id, clienteAtualizado));
     }
 
     @DeleteMapping("/{idCliente}")
-    public void delete(@PathVariable("idCliente") Integer id) {
+    public void delete(@PathVariable("idCliente") Integer id) throws SQLException {
         clienteService.delete(id);
     }
 }
