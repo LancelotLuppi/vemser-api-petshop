@@ -42,9 +42,11 @@ public class ContatoService {
         return returnDTO(contatoRepository.adicionar(idCliente, contato));
     }
 
-    public ContatoDTO update(Integer idContato, ContatoCreateDTO contatoAtualizado) throws SQLException, RegraDeNegocioException {
+    public ContatoDTO update(Integer idContato, ContatoCreateDTO contatoAtualizado) throws SQLException {
         log.info("atualizando contato");
         Contato contato = returnEntity(contatoAtualizado);
+        Contato contato1 = contatoRepository.returnByIdUtil(idContato);
+        contato.setIdCliente(contato1.getIdCliente());
         return returnDTO(contatoRepository.atualizar(idContato, contato));
     }
 

@@ -11,9 +11,6 @@ import javax.validation.constraints.Size;
 public class ContatoCreateDTO {
 
     @NotNull
-    private Integer idCliente;
-
-    @NotNull
     private Integer telefone;
 
     @NotNull

@@ -211,7 +211,7 @@ public class ContatoRepository {
 
     private Contato getContatoFromResultSet(ResultSet res) throws SQLException {
         Contato contato = new Contato();
-        contato.setIdContato(res.getInt("ID_CLIENTE"));
+        contato.setIdCliente(res.getInt("ID_CLIENTE"));
         contato.setIdContato(res.getInt("ID_CONTATO"));
         contato.setTelefone(res.getInt("TELEFONE"));
         contato.setDescricao(res.getString("DESCRICAO"));
