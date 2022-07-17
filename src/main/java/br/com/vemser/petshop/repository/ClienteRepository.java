@@ -136,7 +136,6 @@ public class ClienteRepository {
         return null;
     }
 
-
     public List<Cliente> listar() throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
         List<Cliente> clientes = new ArrayList<>();
@@ -235,7 +234,7 @@ public class ClienteRepository {
                             SELECT c.*
                             FROM CLIENTE c
                             WHERE c.ID_CLIENTE = ?
-                """;
+                    """;
 
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setInt(1, id);

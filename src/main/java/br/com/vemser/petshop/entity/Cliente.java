@@ -10,6 +10,7 @@ import lombok.*;
 @ToString
 public class Cliente {
     private Integer idCliente;
+    private String email;
     private String nome;
     private Integer quantidadeDePedidos;
 }

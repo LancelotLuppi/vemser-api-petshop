@@ -10,6 +10,10 @@ public class ClienteCreateDTO {
 
     @NotBlank
     @NotNull
+    private String email;
+
+    @NotBlank
+    @NotNull
     private String nome;
 
     @NotNull
