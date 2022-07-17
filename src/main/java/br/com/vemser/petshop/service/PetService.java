@@ -2,9 +2,11 @@ package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.dto.PetCreateDTO;
 import br.com.vemser.petshop.dto.PetDTO;
+import br.com.vemser.petshop.entity.Pedido;
 import br.com.vemser.petshop.entity.Pet;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
+import br.com.vemser.petshop.repository.PedidoRepository;
 import br.com.vemser.petshop.repository.PetRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ public class PetService {
     private ObjectMapper objectMapper;
     @Autowired
     private PetRepository petRepository;
+    @Autowired
+    private PedidoRepository pedidoRepository;
     @Autowired
     private ClienteRepository clienteRepository;
 
@@ -40,6 +44,7 @@ public class PetService {
     }
 
     public void delete(Integer id) throws SQLException, RegraDeNegocioException {
+        pedidoRepository.removerPedidosPorIDAnimal(id);
         petRepository.remover(id);
     }
 
