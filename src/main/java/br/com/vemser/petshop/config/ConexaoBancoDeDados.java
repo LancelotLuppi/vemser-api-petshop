@@ -25,7 +25,7 @@ public class ConexaoBancoDeDados {
     private String schema;
 
 
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException{
         Connection con = DriverManager.getConnection(jdbcString, user, pass);
 
         con.createStatement().execute("alter session set current_schema=" + schema);

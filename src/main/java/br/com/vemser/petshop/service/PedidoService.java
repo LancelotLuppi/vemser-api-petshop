@@ -5,6 +5,7 @@ import br.com.vemser.petshop.dto.PedidoDTO;
 import br.com.vemser.petshop.entity.Cliente;
 import br.com.vemser.petshop.entity.Pedido;
 import br.com.vemser.petshop.entity.Pet;
+import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.PedidoRepository;
 import br.com.vemser.petshop.repository.PetRepository;
@@ -27,7 +28,7 @@ public class PedidoService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public PedidoDTO create(Integer idPet, PedidoCreateDTO pedidoDto) throws SQLException {
+    public PedidoDTO create(Integer idPet, PedidoCreateDTO pedidoDto) throws SQLException, RegraDeNegocioException {
         Pedido pedido = returnEntity(pedidoDto);
         Pet petRecuperado = petRepository.returnByIdUtil(idPet);
         Cliente clienteRecuperado = clienteRepository.returnByIdUtil(petRecuperado.getIdCliente());
@@ -40,25 +41,25 @@ public class PedidoService {
         return returnDTO(pedidoRepository.adicionar(idPet, pedido));
     }
 
-    public List<PedidoDTO> list(Integer idCliente) throws SQLException {
+    public List<PedidoDTO> list(Integer idCliente) throws SQLException, RegraDeNegocioException {
         return pedidoRepository.listar(idCliente).stream()
                 .map(this::returnDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<PedidoDTO> listByPetId(Integer idPet) throws SQLException {
+    public List<PedidoDTO> listByPetId(Integer idPet) throws SQLException, RegraDeNegocioException {
         return pedidoRepository.listarPedidosPorPet(idPet).stream()
                 .map(this::returnDTO)
                 .collect(Collectors.toList());
     }
 
-    public PedidoDTO update(Integer idPedido, PedidoCreateDTO pedidoDto) throws SQLException {
+    public PedidoDTO update(Integer idPedido, PedidoCreateDTO pedidoDto) throws SQLException, RegraDeNegocioException {
         Pedido pedidoAtualizado = returnEntity(pedidoDto);
 
         return returnDTO(pedidoRepository.update(idPedido, pedidoAtualizado));
     }
 
-    public void delete(Integer idPedido) throws SQLException {
+    public void delete(Integer idPedido) throws SQLException, RegraDeNegocioException {
         Pedido pedidoRecuperado = pedidoRepository.returnByIdUtil(idPedido);
         Cliente clienteRecuperado = clienteRepository.returnByIdUtil(pedidoRecuperado.getIdCliente());
         pedidoRepository.remover(idPedido);

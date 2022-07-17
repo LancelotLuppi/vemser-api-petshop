@@ -2,6 +2,7 @@ package br.com.vemser.petshop.controller;
 
 import br.com.vemser.petshop.dto.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.ClienteDTO;
+import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,27 +21,27 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @PostMapping
-    public ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO cliente) throws SQLException {
+    public ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO cliente) throws SQLException, RegraDeNegocioException {
         return ResponseEntity.ok(clienteService.create(cliente));
     }
 
     @GetMapping
-    public ResponseEntity<List<ClienteDTO>> get() throws SQLException {
+    public ResponseEntity<List<ClienteDTO>> get() throws SQLException, RegraDeNegocioException {
         return ResponseEntity.ok(clienteService.list());
     }
 
     @GetMapping("/{idCliente}")
-    public ResponseEntity<ClienteDTO> getById(@PathVariable("idCliente") Integer id) throws SQLException {
+    public ResponseEntity<ClienteDTO> getById(@PathVariable("idCliente") Integer id) throws SQLException, RegraDeNegocioException {
         return ResponseEntity.ok(clienteService.getById(id));
     }
 
     @PutMapping("/{idCliente}")
-    public ResponseEntity<ClienteDTO> put(@PathVariable("idCliente") Integer id, @RequestBody ClienteCreateDTO clienteAtualizado) throws SQLException {
+    public ResponseEntity<ClienteDTO> put(@PathVariable("idCliente") Integer id, @RequestBody ClienteCreateDTO clienteAtualizado) throws SQLException, RegraDeNegocioException {
         return ResponseEntity.ok(clienteService.update(id, clienteAtualizado));
     }
 
     @DeleteMapping("/{idCliente}")
-    public void delete(@PathVariable("idCliente") Integer id) throws SQLException {
+    public void delete(@PathVariable("idCliente") Integer id) throws SQLException, RegraDeNegocioException {
         clienteService.delete(id);
     }
 }

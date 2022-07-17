@@ -3,6 +3,7 @@ package br.com.vemser.petshop.service;
 import br.com.vemser.petshop.dto.PetCreateDTO;
 import br.com.vemser.petshop.dto.PetDTO;
 import br.com.vemser.petshop.entity.Pet;
+import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.PetRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,23 +23,23 @@ public class PetService {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    public PetDTO create(Integer idCliente, PetCreateDTO petDto) throws SQLException {
+    public PetDTO create(Integer idCliente, PetCreateDTO petDto) throws SQLException, RegraDeNegocioException {
         Pet pet = returnEntity(petDto);
         return returnDto(petRepository.adicionar(idCliente, pet));
     }
 
-    public List<PetDTO> list(Integer idCliente) throws SQLException {
+    public List<PetDTO> list(Integer idCliente) throws SQLException, RegraDeNegocioException {
         return petRepository.listarAnimalPorCliente(idCliente).stream()
                 .map(this::returnDto)
                 .collect(Collectors.toList());
     }
 
-    public PetDTO update(Integer idPet, PetCreateDTO petDto) throws SQLException {
+    public PetDTO update(Integer idPet, PetCreateDTO petDto) throws SQLException, RegraDeNegocioException {
         Pet petAtualizado = returnEntity(petDto);
         return returnDto(petRepository.update(idPet, petAtualizado));
     }
 
-    public void delete(Integer id) throws SQLException {
+    public void delete(Integer id) throws SQLException, RegraDeNegocioException {
         petRepository.remover(id);
     }
 

@@ -3,6 +3,7 @@ package br.com.vemser.petshop.service;
 import br.com.vemser.petshop.dto.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.ClienteDTO;
 import br.com.vemser.petshop.entity.Cliente;
+import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,27 +22,27 @@ public class ClienteService {
 
 
 
-    public ClienteDTO create(ClienteCreateDTO clienteDto) throws SQLException {
+    public ClienteDTO create(ClienteCreateDTO clienteDto) throws SQLException, RegraDeNegocioException {
         Cliente cliente = returnEntity(clienteDto);
         return returnDto(clienteRepository.adicionar(cliente));
     }
 
-    public List<ClienteDTO>  list() throws SQLException {
+    public List<ClienteDTO>  list() throws SQLException, RegraDeNegocioException {
         return clienteRepository.listar().stream()
                 .map(this::returnDto)
                 .collect(Collectors.toList());
     }
 
-    public ClienteDTO getById(Integer id) throws SQLException {
+    public ClienteDTO getById(Integer id) throws SQLException, RegraDeNegocioException {
         return returnDto(clienteRepository.getById(id));
     }
 
-    public ClienteDTO update(Integer id, ClienteCreateDTO clienteDto) throws SQLException {
+    public ClienteDTO update(Integer id, ClienteCreateDTO clienteDto) throws SQLException, RegraDeNegocioException {
         Cliente clienteAtualizado = returnEntity(clienteDto);
         return returnDto(clienteRepository.update(id, clienteAtualizado));
     }
 
-    public void delete(Integer id) throws SQLException {
+    public void delete(Integer id) throws SQLException, RegraDeNegocioException {
         clienteRepository.remover(id);
     }
 

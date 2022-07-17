@@ -2,6 +2,7 @@ package br.com.vemser.petshop.controller;
 
 import br.com.vemser.petshop.dto.PedidoCreateDTO;
 import br.com.vemser.petshop.dto.PedidoDTO;
+import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,27 +21,27 @@ public class PedidoController {
     private PedidoService pedidoService;
 
     @PostMapping("/{idPet}")
-    public ResponseEntity<PedidoDTO> post(@PathVariable("idPet") Integer id, @Valid @RequestBody PedidoCreateDTO pedido) throws SQLException {
+    public ResponseEntity<PedidoDTO> post(@PathVariable("idPet") Integer id, @Valid @RequestBody PedidoCreateDTO pedido) throws SQLException, RegraDeNegocioException {
         return ResponseEntity.ok(pedidoService.create(id, pedido));
     }
 
     @GetMapping("/{idCliente}")
-    public ResponseEntity<List<PedidoDTO>> getByClientId(@PathVariable("idCliente") Integer id) throws SQLException {
+    public ResponseEntity<List<PedidoDTO>> getByClientId(@PathVariable("idCliente") Integer id) throws SQLException, RegraDeNegocioException {
         return ResponseEntity.ok(pedidoService.list(id));
     }
 
     @GetMapping("/{idPet}/pet")
-    public ResponseEntity<List<PedidoDTO>> getByPetId(@PathVariable("idPet") Integer idPet) throws SQLException {
+    public ResponseEntity<List<PedidoDTO>> getByPetId(@PathVariable("idPet") Integer idPet) throws SQLException, RegraDeNegocioException {
         return ResponseEntity.ok(pedidoService.listByPetId(idPet));
     }
 
     @PutMapping("/{idPedido}")
-    public ResponseEntity<PedidoDTO> put(@PathVariable("idPedido") Integer idPedido, @Valid @RequestBody PedidoCreateDTO pedidoAtualizado) throws SQLException {
+    public ResponseEntity<PedidoDTO> put(@PathVariable("idPedido") Integer idPedido, @Valid @RequestBody PedidoCreateDTO pedidoAtualizado) throws SQLException, RegraDeNegocioException {
         return ResponseEntity.ok(pedidoService.update(idPedido, pedidoAtualizado));
     }
 
     @DeleteMapping("/{idPedido}")
-    public void delete(@PathVariable("idPedido") Integer idPedido) throws SQLException {
+    public void delete(@PathVariable("idPedido") Integer idPedido) throws SQLException, RegraDeNegocioException {
         pedidoService.delete(idPedido);
     }
 }

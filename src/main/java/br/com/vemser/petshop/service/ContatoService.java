@@ -3,6 +3,7 @@ package br.com.vemser.petshop.service;
 import br.com.vemser.petshop.dto.ContatoCreateDTO;
 import br.com.vemser.petshop.dto.ContatoDTO;
 import br.com.vemser.petshop.entity.Contato;
+import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.ContatoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +28,7 @@ public class ContatoService {
     @Autowired
     ClienteRepository clienteRepository;
 
-    public List<ContatoDTO> listarContatoPorId(Integer idCliente) throws SQLException {
+    public List<ContatoDTO> listarContatoPorId(Integer idCliente) throws SQLException, RegraDeNegocioException {
         log.info("listando contatos");
         return contatoRepository.listarContatosPorCliente(idCliente).stream()
                 .map(this::returnDTO)
@@ -35,19 +36,19 @@ public class ContatoService {
 
     }
 
-    public ContatoDTO create (Integer idCliente, ContatoCreateDTO contatoDTO) throws SQLException {
+    public ContatoDTO create (Integer idCliente, ContatoCreateDTO contatoDTO) throws SQLException, RegraDeNegocioException {
         log.info("Criando contato");
         Contato contato = returnEntity(contatoDTO);
         return returnDTO(contatoRepository.adicionar(idCliente, contato));
     }
 
-    public ContatoDTO update(Integer idContato, ContatoCreateDTO contatoAtualizado) throws SQLException {
+    public ContatoDTO update(Integer idContato, ContatoCreateDTO contatoAtualizado) throws SQLException, RegraDeNegocioException {
         log.info("atualizando contato");
         Contato contato = returnEntity(contatoAtualizado);
         return returnDTO(contatoRepository.atualizar(idContato, contato));
     }
 
-    public void delete(Integer id) throws SQLException {
+    public void delete(Integer id) throws SQLException, RegraDeNegocioException {
         log.info("chamou deletar");
         contatoRepository.remover(id);
     }
