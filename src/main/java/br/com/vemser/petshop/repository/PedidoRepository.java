@@ -220,6 +220,7 @@ public class PedidoRepository {
         Pedido pedido = new Pedido();
         pedido.setIdPedido(res.getInt("id_pedido"));
         pedido.setValor(res.getInt("valor"));
+        pedido.setIdCliente(res.getInt("ID_CLIENTE"));
         pedido.setDescricao(res.getString("descricao"));
         pedido.setIdPet(res.getInt("id_animal"));
         return pedido;
