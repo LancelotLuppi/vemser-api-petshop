@@ -41,10 +41,10 @@ public class ContatoService {
         return returnDTO(contatoRepository.adicionar(idCliente, contato));
     }
 
-    public ContatoDTO update(Integer idCliente, ContatoCreateDTO contatoAtualizado) throws SQLException {
+    public ContatoDTO update(Integer idContato, ContatoCreateDTO contatoAtualizado) throws SQLException {
         log.info("atualizando contato");
         Contato contato = returnEntity(contatoAtualizado);
-        return returnDTO(contatoRepository.atualizar(idCliente, contato));
+        return returnDTO(contatoRepository.atualizar(idContato, contato));
     }
 
     public void delete(Integer id) throws SQLException {

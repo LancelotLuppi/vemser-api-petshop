@@ -96,9 +96,6 @@ public class ContatoRepository {
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE contato SET \n");
-
-            sql.append(" id_cliente = ?,");
-
             if (contato.getTelefone() != null) {
                 sql.append(" telefone = ?,");
             }
@@ -107,21 +104,20 @@ public class ContatoRepository {
                 sql.append(" descricao = ?,");
             }
 
-            sql.deleteCharAt(sql.length() - 1); //remove o ultimo ','
-            sql.append(" WHERE id_contato = ? ");
+            sql.deleteCharAt(sql.length() - 1);
+            sql.append(" WHERE id_contato = ? and contato.id_cliente = ?");
 
             PreparedStatement stmt = connection.prepareStatement(sql.toString());
 
             int index = 1;
-            stmt.setInt(index++, contato.getIdCliente());
             if (contato.getTelefone() != null) {
                 stmt.setInt(index++, contato.getTelefone());
             }
             if (contato.getDescricao() != null) {
                 stmt.setString(index++, contato.getDescricao());
             }
-
             stmt.setInt(index++, id);
+            stmt.setInt(index, contato.getIdCliente());
 
             // Executa-se a consulta
             if(stmt.executeUpdate() > 0){
