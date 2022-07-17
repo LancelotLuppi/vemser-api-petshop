@@ -2,6 +2,7 @@ package br.com.vemser.petshop.repository;
 
 import br.com.vemser.petshop.config.ConexaoBancoDeDados;
 import br.com.vemser.petshop.entity.Cliente;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@Slf4j
 public class ClienteRepository {
 
     @Autowired
@@ -46,7 +48,7 @@ public class ClienteRepository {
 
 
             if (stmt.executeUpdate() != 0) {
-                System.out.println("Cliente adicionado com sucesso");
+                log.info("Cliente adicionado com sucesso");
                 return cliente;
             }
         } catch (SQLException e) {
@@ -74,7 +76,7 @@ public class ClienteRepository {
             stmt.setInt(1, id);
 
             if (stmt.executeUpdate() > 0) {
-                System.out.println("Cliente removido com sucesso");
+                log.info("Cliente removido com sucesso");
                 return true;
             }
             return false;
@@ -124,6 +126,7 @@ public class ClienteRepository {
             stmt.setInt(4, id);
             // Executa-se a consulta
             if (stmt.executeUpdate() > 0) {
+                log.info("Cliente editado com sucesso");
                 clienteAtualizado = returnByIdUtil(id);
                 return clienteAtualizado;
             }
@@ -219,7 +222,7 @@ public class ClienteRepository {
 
             // Executa-se a consulta
             if (stmt.executeUpdate() > 0) {
-                System.out.println("Cliente editado com sucesso");
+                log.info("Cliente editado com sucesso");
             }
         } catch (SQLException e) {
             throw new SQLException(e.getCause());

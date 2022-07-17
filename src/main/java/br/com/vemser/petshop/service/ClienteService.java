@@ -53,9 +53,8 @@ public class ClienteService {
 
     public ClienteDTO update(Integer id, ClienteCreateDTO clienteDto) throws SQLException, RegraDeNegocioException {
         Cliente cliente = returnEntity(clienteDto);
-        Cliente clienteTempParaRetorno = clienteRepository.update(id,cliente);
-        emailService.sendEmail(cliente.getNome(), clienteTempParaRetorno.getIdCliente(), cliente.getEmail(), TipoRequisicao.POST);
-        return returnDto(clienteTempParaRetorno);
+        emailService.sendEmail(cliente.getNome(), id, cliente.getEmail(), TipoRequisicao.POST);
+        return returnDto(cliente);
     }
 
     public void delete(Integer id) throws SQLException, RegraDeNegocioException {
