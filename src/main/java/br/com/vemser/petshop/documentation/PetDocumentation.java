@@ -22,6 +22,7 @@ public interface PetDocumentation {
                 value = {
                         @ApiResponse(responseCode = "200", description = "Retorna o cadastro do pet criado"),
                         @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
@@ -33,6 +34,7 @@ public interface PetDocumentation {
                 value = {
                         @ApiResponse(responseCode = "200", description = "Retorna a lista de pets do cliente"),
                         @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
@@ -43,6 +45,7 @@ public interface PetDocumentation {
             value = {
                     @ApiResponse(responseCode = "200", description = "Retorna a lista de pets do cliente"),
                     @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                    @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
                     @ApiResponse(responseCode = "500", description = "Erro server-side")
             }
     )
@@ -54,6 +57,7 @@ public interface PetDocumentation {
                 value = {
                         @ApiResponse(responseCode = "200", description = "Retorna o cadastro com as informações atualizadas"),
                         @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
@@ -65,6 +69,7 @@ public interface PetDocumentation {
                 value = {
                         @ApiResponse(responseCode = "200", description = "Remove o cadastro"),
                         @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )

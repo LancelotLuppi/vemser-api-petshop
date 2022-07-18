@@ -22,6 +22,7 @@ public interface ContatoDocumentation {
                 value = {
                         @ApiResponse(responseCode = "200", description = "Retorna o contato desejado"),
                         @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
@@ -33,6 +34,7 @@ public interface ContatoDocumentation {
                 value = {
                         @ApiResponse(responseCode = "200", description = "Retorna contato criado"),
                         @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
@@ -44,6 +46,7 @@ public interface ContatoDocumentation {
                 value = {
                         @ApiResponse(responseCode = "200", description = "Retorna o contato atualizado"),
                         @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
@@ -55,6 +58,7 @@ public interface ContatoDocumentation {
                 value = {
                         @ApiResponse(responseCode = "200", description = "Deleta o contato"),
                         @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
