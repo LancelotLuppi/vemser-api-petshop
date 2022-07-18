@@ -4,6 +4,7 @@ import br.com.vemser.petshop.dto.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.ClienteDTO;
 import br.com.vemser.petshop.entity.Cliente;
 import br.com.vemser.petshop.enums.TipoRequisicao;
+import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.ContatoRepository;
@@ -21,6 +22,7 @@ import static br.com.vemser.petshop.service.EmailService.*;
 
 @Service
 public class ClienteService {
+    private final static String NOT_FOUND_MESSAGE = "{idCliente} não encontrado";
     @Autowired
     private ClienteRepository clienteRepository;
 
@@ -48,8 +50,9 @@ public class ClienteService {
                 .collect(Collectors.toList());
     }
 
-    public ClienteDTO getById(Integer id) throws SQLException, RegraDeNegocioException {
-        return returnDto(clienteRepository.getById(id));
+    public ClienteDTO getById(Integer id) throws SQLException, EntidadeNaoEncontradaException {
+        Cliente cliente = verificaIdCliente(id);
+        return returnDto(cliente);
     }
 
     public ClienteDTO update(Integer id, ClienteCreateDTO clienteDto) throws SQLException, RegraDeNegocioException {
@@ -67,6 +70,13 @@ public class ClienteService {
         clienteRepository.remover(id);
     }
 
+
+    public Cliente verificaIdCliente(Integer id) throws SQLException, EntidadeNaoEncontradaException {
+        return clienteRepository.listar().stream()
+                .filter(cliente -> cliente.getIdCliente().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(NOT_FOUND_MESSAGE));
+    }
 
 
     private Cliente returnEntity(ClienteCreateDTO dto) {

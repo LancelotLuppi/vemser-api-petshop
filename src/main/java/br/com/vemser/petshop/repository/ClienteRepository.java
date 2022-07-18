@@ -161,7 +161,7 @@ public class ClienteRepository {
                 cliente.setIdCliente(res.getInt("ID_CLIENTE"));
                 cliente.setNome(res.getString("NOME"));
                 cliente.setQuantidadeDePedidos(res.getInt("QUANTIDADE_PEDIDOS"));
-                cliente.setQuantidadeDePedidos(res.getInt("EMAIL"));
+                cliente.setEmail(res.getString("EMAIL"));
                 clientes.add(cliente);
             }
         } catch (SQLException e) {

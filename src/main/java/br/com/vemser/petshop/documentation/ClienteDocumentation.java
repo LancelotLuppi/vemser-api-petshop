@@ -2,6 +2,7 @@ package br.com.vemser.petshop.documentation;
 
 import br.com.vemser.petshop.dto.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.ClienteDTO;
+import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,7 +36,7 @@ public interface ClienteDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<ClienteDTO> getById(Integer idCliente) throws SQLException, RegraDeNegocioException;
+    ResponseEntity<ClienteDTO> getById(Integer idCliente) throws SQLException, EntidadeNaoEncontradaException;
 
     @Operation(summary = "Atualizar cadastro de cliente", description = "Atualiza as informações no banco de dados por uma nova, " +
             "baseando no ID do cliente para qual alterar. \n" +

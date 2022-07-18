@@ -3,6 +3,7 @@ package br.com.vemser.petshop.controller;
 import br.com.vemser.petshop.documentation.ClienteDocumentation;
 import br.com.vemser.petshop.dto.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.ClienteDTO;
+import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class ClienteController implements ClienteDocumentation {
     }
 
     @GetMapping("/{idCliente}")
-    public ResponseEntity<ClienteDTO> getById(@PathVariable("idCliente") Integer id) throws SQLException, RegraDeNegocioException {
+    public ResponseEntity<ClienteDTO> getById(@PathVariable("idCliente") Integer id) throws SQLException, EntidadeNaoEncontradaException {
         return ResponseEntity.ok(clienteService.getById(id));
     }
 
