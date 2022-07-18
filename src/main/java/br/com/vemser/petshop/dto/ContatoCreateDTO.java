@@ -11,12 +11,13 @@ import javax.validation.constraints.Size;
 @Data
 public class ContatoCreateDTO {
 
-    @Schema(description = "Telefone do cliente cadastrado no sistema, apenas números", example = "999990812")
+    @Schema(description = "Telefone do cliente cadastrado no sistema, apenas números", example = "(54) 99999-0812")
     @NotNull
-    private Integer telefone;
+    private String telefone;
 
     @Schema(description = "Informações adicionais sobre o telefone informado", example = "celular pessoal")
     @NotNull
     @NotBlank
+    @Size(max = 100)
     private String descricao;
 }

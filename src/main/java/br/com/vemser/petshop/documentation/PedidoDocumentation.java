@@ -53,7 +53,8 @@ public interface PedidoDocumentation {
     ResponseEntity<List<PedidoDTO>> getByPetId(Integer idPet) throws SQLException, EntidadeNaoEncontradaException;
 
     @Operation(summary = "Atualizar pedido", description = "Atualiza as informações de um pedido a partir " +
-            "do {idPedido}")
+            "do {idPedido}. As informações de {idPet} e {idCliente} não são modificáveis, recomendável remover " +
+            "o pedido e gerar um novo caso uma dessas informações estejam erradas.")
         @ApiResponses(
                 value = {
                         @ApiResponse(responseCode = "200", description = "Retorna o pedido atualizado"),

@@ -64,7 +64,7 @@ public interface PetDocumentation {
     ResponseEntity<PetDTO> put(Integer idPet, @Valid @RequestBody PetCreateDTO petDto) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException;
 
     @Operation(summary = "Deletar cadastro do pet", description = "Remove o cadastro do pet desejado " +
-            "a partir de seu ID")
+            "a partir de seu ID, removerá também os pedidos atrelados ao seu ID")
         @ApiResponses(
                 value = {
                         @ApiResponse(responseCode = "200", description = "Remove o cadastro"),

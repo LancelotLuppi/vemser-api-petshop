@@ -6,6 +6,7 @@ import br.com.vemser.petshop.dto.ClienteDTO;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.service.ClienteService;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +28,7 @@ public class ClienteController implements ClienteDocumentation {
         return ResponseEntity.ok(clienteService.create(cliente));
     }
 
+    @Hidden // Criado para testar conexão com a DB e facilitar no desenvolvimento da api
     @GetMapping
     public ResponseEntity<List<ClienteDTO>> get() throws SQLException, RegraDeNegocioException {
         return ResponseEntity.ok(clienteService.list());

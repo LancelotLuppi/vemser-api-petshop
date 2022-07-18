@@ -10,7 +10,7 @@ import lombok.*;
 public class Contato {
     private Integer idContato;
     private Integer idCliente;
-    private Integer telefone;
+    private String telefone;
     private String descricao;
     private String email;
 }

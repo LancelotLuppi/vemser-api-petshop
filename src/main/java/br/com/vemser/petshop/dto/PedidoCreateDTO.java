@@ -15,7 +15,7 @@ public class PedidoCreateDTO {
     @NotNull
     private Integer valor;
 
-    @Schema(description = "Informações adicionais sobre o pedido", example = "Banho e tosa")
+    @Schema(description = "Informações adicionais sobre o pedido", example = "Banho e tosa, alérgico a shampoo com químico forte")
     @NotNull
     @NotBlank
     private String descricao;

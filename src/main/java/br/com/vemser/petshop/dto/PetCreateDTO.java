@@ -13,6 +13,7 @@ public class PetCreateDTO {
     @Schema(description = "Nome do pet no cadastro", example = "Eros")
     @NotNull
     @NotBlank
+    @Size(max = 50)
     private String nome;
 
     @Schema(description = "Informativo se o pet é um cachorro ou gato", example = "GATO")
@@ -22,6 +23,7 @@ public class PetCreateDTO {
     @Schema(description = "Informativo da raça do pet", example = "SRD")
     @NotBlank
     @NotNull
+    @Size(max = 50)
     private String raca;
 
     @Schema(description = "Informativo do tamanho da pelagem baseada na raça (0min - 9max)", example = "9")

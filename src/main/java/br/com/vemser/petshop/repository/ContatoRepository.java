@@ -41,7 +41,7 @@ public class ContatoRepository {
 
             stmt.setInt(1, contato.getIdContato());
             stmt.setInt(2, idCliente);
-            stmt.setInt(3, contato.getTelefone());
+            stmt.setString(3, contato.getTelefone());
             stmt.setString(4, contato.getDescricao());
 
             int res = stmt.executeUpdate();
@@ -60,7 +60,7 @@ public class ContatoRepository {
         return contato;
     }
 
-    public boolean remover(Integer id) throws SQLException {
+    public void remover(Integer id) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
         try {
 
@@ -70,11 +70,7 @@ public class ContatoRepository {
 
             stmt.setInt(1, id);
 
-            if (stmt.executeUpdate() > 0) {
-                System.out.println("Contato removido com sucesso");
-                return true;
-            }
-            return false;
+            stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -86,7 +82,6 @@ public class ContatoRepository {
                 e.printStackTrace();
             }
         }
-        return false;
     }
 
     public Contato atualizar(Integer id, Contato contato) throws SQLException {
@@ -111,7 +106,7 @@ public class ContatoRepository {
 
             int index = 1;
             if (contato.getTelefone() != null) {
-                stmt.setInt(index++, contato.getTelefone());
+                stmt.setString(index++, contato.getTelefone());
             }
             if (contato.getDescricao() != null) {
                 stmt.setString(index++, contato.getDescricao());
@@ -119,7 +114,6 @@ public class ContatoRepository {
             stmt.setInt(index++, id);
             stmt.setInt(index, contato.getIdCliente());
 
-            // Executa-se a consulta
             if(stmt.executeUpdate() > 0){
                 contatoAtualizado = returnByIdUtil(id);
                 return contatoAtualizado;
@@ -153,7 +147,7 @@ public class ContatoRepository {
                 Contato contato = new Contato();
                 contato.setIdContato(res.getInt("ID_CONTATO"));
                 contato.setIdCliente(res.getInt("ID_CLIENTE"));
-                contato.setTelefone(res.getInt("TELEFONE"));
+                contato.setTelefone(res.getString("TELEFONE"));
                 contato.setDescricao(res.getString("DESCRICAO"));
                 contatos.add(contato);
             }
@@ -258,7 +252,7 @@ public class ContatoRepository {
         Contato contato = new Contato();
         contato.setIdCliente(res.getInt("ID_CLIENTE"));
         contato.setIdContato(res.getInt("ID_CONTATO"));
-        contato.setTelefone(res.getInt("TELEFONE"));
+        contato.setTelefone(res.getString("TELEFONE"));
         contato.setDescricao(res.getString("DESCRICAO"));
         return contato;
     }
