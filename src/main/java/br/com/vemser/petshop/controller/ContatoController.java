@@ -1,5 +1,6 @@
 package br.com.vemser.petshop.controller;
 
+import br.com.vemser.petshop.documentation.ContatoDocumentation;
 import br.com.vemser.petshop.dto.ContatoCreateDTO;
 import br.com.vemser.petshop.dto.ContatoDTO;
 
@@ -17,24 +18,24 @@ import java.util.List;
 @RestController
 @RequestMapping("/contato")
 @Validated
-public class ContatoController {
+public class ContatoController implements ContatoDocumentation {
 
 
     @Autowired
     private ContatoService contatoService;
 
     @GetMapping("/{idCliente}")
-    public ResponseEntity<List<ContatoDTO>> buscarPorIdCliente(@PathVariable("idCliente") Integer id) throws SQLException, RegraDeNegocioException {
+    public ResponseEntity<List<ContatoDTO>> get(@PathVariable("idCliente") Integer id) throws SQLException, RegraDeNegocioException {
         return ResponseEntity.ok(contatoService.listarContatoPorId(id));
     }
 
     @PostMapping("/{idCliente}")
-    public ResponseEntity<ContatoDTO> criarContatoPorCliente(@PathVariable("idCliente") Integer id, @Valid @RequestBody ContatoCreateDTO contato) throws SQLException, RegraDeNegocioException {
+    public ResponseEntity<ContatoDTO> post(@PathVariable("idCliente") Integer id, @Valid @RequestBody ContatoCreateDTO contato) throws SQLException, RegraDeNegocioException {
         return ResponseEntity.ok(contatoService.create(id, contato));
     }
 
     @PutMapping("/{idContato}")
-    public ResponseEntity<ContatoDTO> atualizarContato(@PathVariable("idContato") Integer id,
+    public ResponseEntity<ContatoDTO> put(@PathVariable("idContato") Integer id,
                                                        @Valid @RequestBody ContatoCreateDTO contatoAtualizado) throws SQLException, RegraDeNegocioException {
         return ResponseEntity.ok(contatoService.update(id, contatoAtualizado));
     }
