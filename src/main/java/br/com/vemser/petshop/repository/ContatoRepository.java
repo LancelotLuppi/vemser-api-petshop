@@ -35,7 +35,7 @@ public class ContatoRepository {
 
             String sql = "INSERT INTO CONTATO\n" +
                     "(ID_CONTATO, ID_CLIENTE, TELEFONE, DESCRICAO)\n" +
-                    "VALUES(?, ?, ?, ?, ?)\n";
+                    "VALUES(?, ?, ?, ?)\n";
 
             PreparedStatement stmt = connection.prepareStatement(sql);
 

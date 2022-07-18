@@ -51,7 +51,7 @@ public class PetRepository {
             stmt.setInt(7, pet.getPorte());
             stmt.setInt(8, pet.getIdade());
 
-            int res = stmt.executeUpdate();
+            stmt.executeUpdate();
             return pet;
         } catch (SQLException e) {
             e.printStackTrace();

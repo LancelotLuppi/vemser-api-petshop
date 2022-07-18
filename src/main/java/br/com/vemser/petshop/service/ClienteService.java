@@ -36,6 +36,7 @@ public class ClienteService {
 
     public ClienteDTO create(ClienteCreateDTO clienteDto) throws SQLException, RegraDeNegocioException {
         Cliente cliente = returnEntity(clienteDto);
+        cliente.setQuantidadeDePedidos(0);
         Cliente clienteTempParaRetorno = clienteRepository.adicionar(cliente);
         emailService.sendEmail(cliente.getNome(), clienteTempParaRetorno.getIdCliente(), cliente.getEmail(), TipoRequisicao.POST);
         return returnDto(clienteTempParaRetorno);
@@ -53,6 +54,9 @@ public class ClienteService {
 
     public ClienteDTO update(Integer id, ClienteCreateDTO clienteDto) throws SQLException, RegraDeNegocioException {
         Cliente cliente = returnEntity(clienteDto);
+        Cliente clienteRecuperado = clienteRepository.returnByIdUtil(id);
+        cliente.setQuantidadeDePedidos(clienteRecuperado.getQuantidadeDePedidos());
+        cliente.setIdCliente(clienteRecuperado.getIdCliente());
         emailService.sendEmail(cliente.getNome(), id, cliente.getEmail(), TipoRequisicao.POST);
         return returnDto(cliente);
     }

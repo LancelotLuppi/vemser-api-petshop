@@ -29,6 +29,7 @@ public class PetService {
 
     public PetDTO create(Integer idCliente, PetCreateDTO petDto) throws SQLException, RegraDeNegocioException {
         Pet pet = returnEntity(petDto);
+        pet.setIdCliente(idCliente);
         return returnDto(petRepository.adicionar(idCliente, pet));
     }
 
@@ -39,7 +40,9 @@ public class PetService {
     }
 
     public PetDTO update(Integer idPet, PetCreateDTO petDto) throws SQLException, RegraDeNegocioException {
+        Pet petRecuperado = petRepository.returnByIdUtil(idPet);
         Pet petAtualizado = returnEntity(petDto);
+        petAtualizado.setIdCliente(petRecuperado.getIdCliente());
         return returnDto(petRepository.update(idPet, petAtualizado));
     }
 

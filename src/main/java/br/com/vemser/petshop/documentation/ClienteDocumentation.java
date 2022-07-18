@@ -15,7 +15,8 @@ import java.sql.SQLException;
 public interface ClienteDocumentation {
 
     @Operation(summary = "Criar cadastro de cliente", description = "Adiciona as informações do cadastro no banco de dados" +
-            ", gerando um ID único automaticamente")
+            ", a quantidade de pedidos é passada como 0 ao criar um novo cadastro. \n" +
+            "Envia um email informando que foi feito o cadastro no sistema.")
         @ApiResponses(
                 value = {
                         @ApiResponse(responseCode = "200", description = "Criado com sucesso"),
@@ -37,7 +38,8 @@ public interface ClienteDocumentation {
     ResponseEntity<ClienteDTO> getById(Integer idCliente) throws SQLException, RegraDeNegocioException;
 
     @Operation(summary = "Atualizar cadastro de cliente", description = "Atualiza as informações no banco de dados por uma nova, " +
-            "baseando no ID do cliente para qual alterar")
+            "baseando no ID do cliente para qual alterar. \n" +
+            "Envia um email informando a atualização dos dados para o cliente.")
         @ApiResponses(
                 value = {
                         @ApiResponse(responseCode = "200", description = "Atualiza os dados"),
@@ -48,7 +50,8 @@ public interface ClienteDocumentation {
     ResponseEntity<ClienteDTO> put(Integer idCliente, @Valid @RequestBody ClienteCreateDTO clienteDto) throws SQLException, RegraDeNegocioException;
 
     @Operation(summary = "Deletar cadastro de cliente", description = "Deleta as informações do cliente no banco de dados, " +
-            "juntamente apagando as informações de (contato/pet/pedido) que estão ligados com o ID desse cliente")
+            "juntamente apagando as informações de (contato/pet/pedido) que estão ligados com o ID desse cliente. \n" +
+            "Envia um email informando a deleção do cadastro para o cliente.")
         @ApiResponses(
                 value = {
                         @ApiResponse(responseCode = "200", description = "Criado com sucesso"),

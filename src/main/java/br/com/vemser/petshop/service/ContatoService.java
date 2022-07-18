@@ -28,7 +28,7 @@ public class ContatoService {
     @Autowired
     ClienteRepository clienteRepository;
 
-    public List<ContatoDTO> listarContatoPorId(Integer idCliente) throws SQLException, RegraDeNegocioException {
+    public List<ContatoDTO> listarContatoPorId(Integer idCliente) throws SQLException {
         log.info("listando contatos");
         return contatoRepository.listarContatosPorCliente(idCliente).stream()
                 .map(this::returnDTO)
@@ -39,6 +39,7 @@ public class ContatoService {
     public ContatoDTO create (Integer idCliente, ContatoCreateDTO contatoDTO) throws SQLException, RegraDeNegocioException {
         log.info("Criando contato");
         Contato contato = returnEntity(contatoDTO);
+        contato.setIdCliente(idCliente);
         return returnDTO(contatoRepository.adicionar(idCliente, contato));
     }
 
