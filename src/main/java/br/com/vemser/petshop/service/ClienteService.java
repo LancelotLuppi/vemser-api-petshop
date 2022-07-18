@@ -69,6 +69,7 @@ public class ClienteService {
         Cliente clienteRecuperado = clienteRepository.returnByIdUtil(id);
         cliente.setQuantidadeDePedidos(clienteRecuperado.getQuantidadeDePedidos());
         cliente.setIdCliente(clienteRecuperado.getIdCliente());
+        clienteRepository.update(id, cliente);
         emailService.sendEmail(cliente.getNome(), id, cliente.getEmail(), TipoRequisicao.POST);
         return returnDto(cliente);
     }
