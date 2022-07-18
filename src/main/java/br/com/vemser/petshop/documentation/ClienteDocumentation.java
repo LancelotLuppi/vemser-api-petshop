@@ -45,7 +45,7 @@ public interface ClienteDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<ClienteDTO> put(Integer idCliente, ClienteCreateDTO clienteDto) throws SQLException, RegraDeNegocioException;
+    ResponseEntity<ClienteDTO> put(Integer idCliente, @Valid @RequestBody ClienteCreateDTO clienteDto) throws SQLException, RegraDeNegocioException;
 
     @Operation(summary = "Deletar cadastro de cliente", description = "Deleta as informações do cliente no banco de dados, " +
             "juntamente apagando as informações de (contato/pet/pedido) que estão ligados com o ID desse cliente")

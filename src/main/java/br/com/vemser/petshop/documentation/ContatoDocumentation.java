@@ -7,7 +7,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -33,7 +35,7 @@ public interface ContatoDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<ContatoDTO> post(Integer idCliente, ContatoCreateDTO contatoDto) throws SQLException, RegraDeNegocioException;
+    ResponseEntity<ContatoDTO> post(Integer idCliente, @Valid @RequestBody ContatoCreateDTO contatoDto) throws SQLException, RegraDeNegocioException;
 
     @Operation(summary = "Atualizar informações de contato", description = "Atualiza as informações de um contato existente " +
             "passando seu ID como parâmetro e os dados ")
@@ -44,7 +46,7 @@ public interface ContatoDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<ContatoDTO> put(Integer idContato, ContatoCreateDTO contatoAtualizadoDTO) throws SQLException, RegraDeNegocioException;
+    ResponseEntity<ContatoDTO> put(Integer idContato,@Valid @RequestBody ContatoCreateDTO contatoAtualizadoDTO) throws SQLException, RegraDeNegocioException;
 
     @Operation(summary = "Deletar contato", description = "Deleta um contato passando  " +
             "passando seu ID como parâmetro e os dados ")
