@@ -25,7 +25,7 @@ public interface ClienteDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO clienteDto) throws SQLException, RegraDeNegocioException;
+    ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO clienteDto) throws RegraDeNegocioException;
 
     @Operation(summary = "Retornar informações de um cliente", description = "Busca no banco de dados por um " +
             "cadastro com o ID fornecido na requisição, retornando as informações caso encontre")
@@ -37,7 +37,7 @@ public interface ClienteDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<ClienteDTO> getById(Integer idCliente) throws SQLException, EntidadeNaoEncontradaException;
+    ResponseEntity<ClienteDTO> getById(Integer idCliente) throws EntidadeNaoEncontradaException;
 
     @Operation(summary = "Atualizar cadastro de cliente", description = "Atualiza as informações no banco de dados por uma nova, " +
             "baseando no ID do cliente para qual alterar. \n" +
@@ -50,7 +50,7 @@ public interface ClienteDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<ClienteDTO> put(Integer idCliente, @Valid @RequestBody ClienteCreateDTO clienteDto) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException;
+    ResponseEntity<ClienteDTO> put(Integer idCliente, @Valid @RequestBody ClienteCreateDTO clienteDto) throws RegraDeNegocioException, EntidadeNaoEncontradaException;
 
     @Operation(summary = "Deletar cadastro de cliente", description = "Deleta as informações do cliente no banco de dados, " +
             "juntamente apagando as informações de (contato/pet/pedido) que estão ligados com o ID desse cliente. \n" +
@@ -63,5 +63,5 @@ public interface ClienteDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    void delete(Integer idCliente) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException;
+    void delete(Integer idCliente) throws RegraDeNegocioException, EntidadeNaoEncontradaException;
 }

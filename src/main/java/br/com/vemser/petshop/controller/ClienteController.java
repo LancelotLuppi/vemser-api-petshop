@@ -24,28 +24,28 @@ public class ClienteController implements ClienteDocumentation {
     private ClienteService clienteService;
 
     @PostMapping
-    public ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO cliente) throws SQLException, RegraDeNegocioException {
+    public ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO cliente) throws RegraDeNegocioException {
         return ResponseEntity.ok(clienteService.create(cliente));
     }
 
     @Hidden // Criado para testar conexão com a DB e facilitar no desenvolvimento da api
     @GetMapping
-    public ResponseEntity<List<ClienteDTO>> get() throws SQLException, RegraDeNegocioException {
+    public ResponseEntity<List<ClienteDTO>> get() throws RegraDeNegocioException {
         return ResponseEntity.ok(clienteService.list());
     }
 
     @GetMapping("/{idCliente}")
-    public ResponseEntity<ClienteDTO> getById(@PathVariable("idCliente") Integer id) throws SQLException, EntidadeNaoEncontradaException {
+    public ResponseEntity<ClienteDTO> getById(@PathVariable("idCliente") Integer id) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(clienteService.getById(id));
     }
 
     @PutMapping("/{idCliente}")
-    public ResponseEntity<ClienteDTO> put(@PathVariable("idCliente") Integer id, @Valid @RequestBody ClienteCreateDTO clienteAtualizado) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public ResponseEntity<ClienteDTO> put(@PathVariable("idCliente") Integer id, @Valid @RequestBody ClienteCreateDTO clienteAtualizado) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
         return ResponseEntity.ok(clienteService.update(id, clienteAtualizado));
     }
 
     @DeleteMapping("/{idCliente}")
-    public void delete(@PathVariable("idCliente") Integer id) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public void delete(@PathVariable("idCliente") Integer id) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
         clienteService.delete(id);
     }
 }
