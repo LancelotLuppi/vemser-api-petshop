@@ -178,65 +178,6 @@ public class ClienteRepository {
         return clientes;
     }
 
-    public int incrementarQuantidadeDePedidosNoBanco(int idCliente) throws SQLException {
-        Connection connection = conexaoBancoDeDados.getConnection();
-        try {
-            String sql = """
-                                SELECT c.QUANTIDADE_PEDIDOS
-                                FROM CLIENTE c
-                                WHERE c.ID_CLIENTE = ?
-                    """;
-
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, idCliente);
-            ResultSet res = stmt.executeQuery();
-            return res.getInt("QUANTIDADE_PEDIDOS");
-        } catch (SQLException e) {
-            throw new SQLException(e.getCause());
-        } finally {
-            try {
-                if (!connection.isClosed()) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void setPedidosBanco(int idCliente, int novaQuantidade) throws SQLException {
-        Connection connection = conexaoBancoDeDados.getConnection();
-        try {
-
-            String sql = """
-                    UPDATE CLIENTE
-                    SET QUANTIDADE_PEDIDOS = ?
-                    WHERE ID_CLIENTE = ?
-                    """;
-
-            PreparedStatement stmt = connection.prepareStatement(sql);
-
-            int index = 1;
-            stmt.setInt(index++, novaQuantidade);
-            stmt.setInt(index, idCliente);
-
-            // Executa-se a consulta
-            if (stmt.executeUpdate() > 0) {
-                log.info("Cliente editado com sucesso");
-            }
-        } catch (SQLException e) {
-            throw new SQLException(e.getCause());
-        } finally {
-            try {
-                if (!connection.isClosed()) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public Cliente returnByIdUtil(Integer id) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
         Cliente cliente = null;
@@ -255,25 +196,6 @@ public class ClienteRepository {
             cliente = getClienteFromResultSet(res);
         }
         return cliente;
-    }
-
-    public Cliente getById(Integer id) throws SQLException {
-        Connection connection = conexaoBancoDeDados.getConnection();
-        try {
-            Cliente cliente = returnByIdUtil(id);
-            return cliente;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if(!connection.isClosed()) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
     }
 
     private Cliente getClienteFromResultSet(ResultSet res) throws SQLException {

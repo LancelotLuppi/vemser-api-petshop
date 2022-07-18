@@ -18,11 +18,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static br.com.vemser.petshop.service.EmailService.*;
-
 @Service
 public class ClienteService {
-    private final static String NOT_FOUND_MESSAGE = "{idCliente} não encontrado";
+
     @Autowired
     private ClienteRepository clienteRepository;
 
@@ -33,6 +31,8 @@ public class ClienteService {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    private final static String NOT_FOUND_MESSAGE = "{idCliente} não encontrado";
 
 
 
@@ -51,11 +51,13 @@ public class ClienteService {
     }
 
     public ClienteDTO getById(Integer id) throws SQLException, EntidadeNaoEncontradaException {
-        Cliente cliente = verificaIdCliente(id);
+        verificarId(id);
+        Cliente cliente = clienteRepository.returnByIdUtil(id);
         return returnDto(cliente);
     }
 
-    public ClienteDTO update(Integer id, ClienteCreateDTO clienteDto) throws SQLException, RegraDeNegocioException {
+    public ClienteDTO update(Integer id, ClienteCreateDTO clienteDto) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
+        verificarId(id);
         Cliente cliente = returnEntity(clienteDto);
         Cliente clienteRecuperado = clienteRepository.returnByIdUtil(id);
         cliente.setQuantidadeDePedidos(clienteRecuperado.getQuantidadeDePedidos());
@@ -64,20 +66,20 @@ public class ClienteService {
         return returnDto(cliente);
     }
 
-    public void delete(Integer id) throws SQLException, RegraDeNegocioException {
+    public void delete(Integer id) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
+        verificarId(id);
         Cliente clienteRecuperado = clienteRepository.returnByIdUtil(id);
         emailService.sendEmail(clienteRecuperado.getNome(), clienteRecuperado.getIdCliente(), clienteRecuperado.getEmail(), TipoRequisicao.DELETE);
         clienteRepository.remover(id);
     }
 
 
-    public Cliente verificaIdCliente(Integer id) throws SQLException, EntidadeNaoEncontradaException {
-        return clienteRepository.listar().stream()
-                .filter(cliente -> cliente.getIdCliente().equals(id))
+    public void verificarId(Integer id) throws SQLException, EntidadeNaoEncontradaException {
+        clienteRepository.listar().stream()
+                .filter(contato -> contato.getIdCliente().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new EntidadeNaoEncontradaException(NOT_FOUND_MESSAGE));
     }
-
 
     private Cliente returnEntity(ClienteCreateDTO dto) {
         return objectMapper.convertValue(dto, Cliente.class);

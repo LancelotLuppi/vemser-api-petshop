@@ -138,37 +138,38 @@ public class ContatoRepository {
         return null;
     }
 
-//    public List<Contato> listar() throws SQLException {
-//        List<Contato> contatos = new ArrayList<>();
-//        try {
-//
-//            Statement stmt = connection.createStatement();
-//
-//            String sql = "SELECT CTT.*, " +
-//                    "                    C.NOME AS NOME_CLIENTE " +
-//                    "               FROM CONTATO CTT " +
-//                    "               LEFT JOIN CLIENTE C ON (C.ID_CLIENTE = CTT.ID_CLIENTE) ";
-//
-//            // Executa-se a consulta
-//            ResultSet res = stmt.executeQuery(sql);
-//
-//            while (res.next()) {
-//                Contato contato = getContatoFromResultSet(res);
-//                contatos.add(contato);
-//            }
-//            return contatos;
-//        } catch (SQLException e) {
-//            throw new SQLException(e.getCause());
-//        } finally {
-//            try {
-//                if (!connection.isClosed()) {
-//                    connection.close();
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+    public List<Contato> listar() throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
+        List<Contato> contatos = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+
+            String sql = "SELECT * FROM CONTATO";
+
+            // Executa-se a consulta
+            ResultSet res = stmt.executeQuery(sql);
+
+            while (res.next()) {
+                Contato contato = new Contato();
+                contato.setIdContato(res.getInt("ID_CONTATO"));
+                contato.setIdCliente(res.getInt("ID_CLIENTE"));
+                contato.setTelefone(res.getInt("TELEFONE"));
+                contato.setDescricao(res.getString("DESCRICAO"));
+                contatos.add(contato);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (!connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return contatos;
+    }
 
     public List<Contato> listarContatosPorCliente(Integer idCliente) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();

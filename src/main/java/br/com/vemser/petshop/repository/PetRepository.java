@@ -1,7 +1,6 @@
 package br.com.vemser.petshop.repository;
 
 import br.com.vemser.petshop.config.ConexaoBancoDeDados;
-import br.com.vemser.petshop.entity.Cliente;
 import br.com.vemser.petshop.entity.Pet;
 import br.com.vemser.petshop.enums.TipoPet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,34 +164,33 @@ public class PetRepository {
         return null;
     }
 
-//    public List<Pet> listar() {
-//        List<Pet> animais = new ArrayList<>();
-//        try {
-//            String sql = "SELECT A.* " +
-//                    "       FROM ANIMAL A " +
-//                    "       WHERE A.ID_CLIENTE = ? ";
-//
-//            Statement stmt = connection.prepareStatement(sql);
-//            ResultSet res = stmt.executeQuery(sql);
-//
-//            while(res.next()) {
-//                Pet animal = getPetFromResultSet(res);
-//                animais.add(animal);
-//            }
-//            return animais;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                if(!connection.isClosed()) {
-//                    connection.close();
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return animais;
-//    }
+    public List<Pet> listar() throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
+        List<Pet> animais = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM ANIMAL";
+
+            Statement stmt = connection.prepareStatement(sql);
+            ResultSet res = stmt.executeQuery(sql);
+
+            while(res.next()) {
+                Pet pet = getPetFromResultSet(res);
+                animais.add(pet);
+            }
+            return animais;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if(!connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return animais;
+    }
 
     public List<Pet> listarAnimalPorCliente(Integer id) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
@@ -249,7 +247,7 @@ public class PetRepository {
         return pet;
     }
 
-    public Pet getPetPorId(int idPet, int idUsuario) throws SQLException {
+    public Pet getPetPorId(Integer idPet) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
         Pet animal = null;
         try {
@@ -257,12 +255,10 @@ public class PetRepository {
                                 SELECT a.*
                                 FROM ANIMAL a
                                 WHERE a.ID_ANIMAL = ?
-                                AND a.ID_CLIENTE = ?
                     """;
 
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, idPet);
-            stmt.setInt(2, idUsuario);
 
             ResultSet res = stmt.executeQuery();
 

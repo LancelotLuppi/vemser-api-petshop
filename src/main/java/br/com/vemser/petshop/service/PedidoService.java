@@ -5,6 +5,7 @@ import br.com.vemser.petshop.dto.PedidoDTO;
 import br.com.vemser.petshop.entity.Cliente;
 import br.com.vemser.petshop.entity.Pedido;
 import br.com.vemser.petshop.entity.Pet;
+import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.PedidoRepository;
@@ -24,11 +25,18 @@ public class PedidoService {
     @Autowired
     private PetRepository petRepository;
     @Autowired
+    private PetService petService;
+    @Autowired
     private ClienteRepository clienteRepository;
+    @Autowired
+    private ClienteService clienteService;
     @Autowired
     private ObjectMapper objectMapper;
 
-    public PedidoDTO create(Integer idPet, PedidoCreateDTO pedidoDto) throws SQLException, RegraDeNegocioException {
+    private final static String NOT_FOUND_MESSAGE = "{idPedido} não encontrado";
+
+    public PedidoDTO create(Integer idPet, PedidoCreateDTO pedidoDto) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
+        petService.verificarIdPet(idPet);
         Pedido pedido = returnEntity(pedidoDto);
         Pet petRecuperado = petRepository.returnByIdUtil(idPet);
         Cliente clienteRecuperado = clienteRepository.returnByIdUtil(petRecuperado.getIdCliente());
@@ -41,29 +49,39 @@ public class PedidoService {
         return returnDTO(pedidoRepository.adicionar(idPet, pedido));
     }
 
-    public List<PedidoDTO> list(Integer idCliente) throws SQLException, RegraDeNegocioException {
-        return pedidoRepository.listar(idCliente).stream()
+    public List<PedidoDTO> list(Integer idCliente) throws SQLException, EntidadeNaoEncontradaException {
+        clienteService.verificarId(idCliente);
+        return pedidoRepository.listarPorIdCliente(idCliente).stream()
                 .map(this::returnDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<PedidoDTO> listByPetId(Integer idPet) throws SQLException, RegraDeNegocioException {
-        return pedidoRepository.listarPedidosPorPet(idPet).stream()
+    public List<PedidoDTO> listByPetId(Integer idPet) throws SQLException, EntidadeNaoEncontradaException {
+        petService.verificarIdPet(idPet);
+        return pedidoRepository.listarPorIdPet(idPet).stream()
                 .map(this::returnDTO)
                 .collect(Collectors.toList());
     }
 
-    public PedidoDTO update(Integer idPedido, PedidoCreateDTO pedidoDto) throws SQLException, RegraDeNegocioException {
+    public PedidoDTO update(Integer idPedido, PedidoCreateDTO pedidoDto) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
+        verificarIdPedido(idPedido);
         Pedido pedidoAtualizado = returnEntity(pedidoDto);
-
         return returnDTO(pedidoRepository.update(idPedido, pedidoAtualizado));
     }
 
-    public void delete(Integer idPedido) throws SQLException, RegraDeNegocioException {
+    public void delete(Integer idPedido) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
+        verificarIdPedido(idPedido);
         Pedido pedidoRecuperado = pedidoRepository.returnByIdUtil(idPedido);
         Cliente clienteRecuperado = clienteRepository.returnByIdUtil(pedidoRecuperado.getIdCliente());
         pedidoRepository.remover(idPedido);
         clienteRecuperado.setQuantidadeDePedidos(clienteRecuperado.getQuantidadeDePedidos() - 1);
+    }
+
+    public void verificarIdPedido(Integer id) throws SQLException, EntidadeNaoEncontradaException {
+        pedidoRepository.listar().stream()
+                .filter(pedido -> pedido.getIdPedido().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(NOT_FOUND_MESSAGE));
     }
 
     private Pedido returnEntity(PedidoCreateDTO dto) {

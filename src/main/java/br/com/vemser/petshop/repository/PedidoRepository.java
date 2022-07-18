@@ -151,7 +151,7 @@ public class PedidoRepository {
         return null;
     }
 
-    public List<Pedido> listar(Integer idCliente) throws SQLException {
+    public List<Pedido> listarPorIdCliente(Integer idCliente) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
         List<Pedido> pedidos = new ArrayList<>();
         try {;
@@ -185,7 +185,7 @@ public class PedidoRepository {
         }
     }
 
-    public List<Pedido> listarPedidosPorPet(Integer idPet) throws SQLException {
+    public List<Pedido> listarPorIdPet(Integer idPet) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
         List<Pedido> pedidos = new ArrayList<>();
         try {
@@ -219,6 +219,34 @@ public class PedidoRepository {
                 e.printStackTrace();
             }
         }
+    }
+
+    public List<Pedido> listar() throws SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
+        List<Pedido> pedidos = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM PEDIDO";
+
+            Statement stmt = connection.prepareStatement(sql);
+            ResultSet res = stmt.executeQuery(sql);
+
+            while(res.next()) {
+                Pedido pedido = getPedidoFromResultSet(res);
+                pedidos.add(pedido);
+            }
+            return pedidos;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (!connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return pedidos;
     }
 
     public Pedido returnByIdUtil(int idPedido) throws SQLException {

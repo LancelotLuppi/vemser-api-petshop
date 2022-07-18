@@ -2,6 +2,7 @@ package br.com.vemser.petshop.documentation;
 
 import br.com.vemser.petshop.dto.PedidoCreateDTO;
 import br.com.vemser.petshop.dto.PedidoDTO;
+import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,7 +25,7 @@ public interface PedidoDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<PedidoDTO> post(Integer idPet, @Valid @RequestBody PedidoCreateDTO pedidoDto) throws SQLException, RegraDeNegocioException;
+    ResponseEntity<PedidoDTO> post(Integer idPet, @Valid @RequestBody PedidoCreateDTO pedidoDto) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException;
 
     @Operation(summary = "Listar pedidos por cliente", description = "Lista todos os pedidos ligados " +
             "ao {idCliente} informado")
@@ -35,7 +36,7 @@ public interface PedidoDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<List<PedidoDTO>> getByClientId(Integer idCliente) throws SQLException, RegraDeNegocioException;
+    ResponseEntity<List<PedidoDTO>> getByClientId(Integer idCliente) throws SQLException, EntidadeNaoEncontradaException;
 
     @Operation(summary = "Listar pedidos por pet", description = "Lista todos os pedidos ligados " +
             "ao {idPet} informado")
@@ -46,7 +47,7 @@ public interface PedidoDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<List<PedidoDTO>> getByPetId(Integer idPet) throws SQLException, RegraDeNegocioException;
+    ResponseEntity<List<PedidoDTO>> getByPetId(Integer idPet) throws SQLException, EntidadeNaoEncontradaException;
 
     @Operation(summary = "Atualizar pedido", description = "Atualiza as informações de um pedido a partir " +
             "do {idPedido}")
@@ -57,7 +58,7 @@ public interface PedidoDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<PedidoDTO> put(Integer idPedido, @Valid @RequestBody PedidoCreateDTO pedidoDto) throws SQLException, RegraDeNegocioException;
+    ResponseEntity<PedidoDTO> put(Integer idPedido, @Valid @RequestBody PedidoCreateDTO pedidoDto) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException;
 
     @Operation(summary = "Deletar pedido", description = "Deleta o pedido a partir " +
             "do {idPedido} informado")
@@ -68,5 +69,5 @@ public interface PedidoDocumentation {
                     @ApiResponse(responseCode = "500", description = "Erro server-side")
             }
     )
-    void delete(Integer idPedido) throws SQLException, RegraDeNegocioException;
+    void delete(Integer idPedido) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException;
 }

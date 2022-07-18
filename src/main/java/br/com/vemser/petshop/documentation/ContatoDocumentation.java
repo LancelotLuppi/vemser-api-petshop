@@ -2,6 +2,7 @@ package br.com.vemser.petshop.documentation;
 
 import br.com.vemser.petshop.dto.ContatoCreateDTO;
 import br.com.vemser.petshop.dto.ContatoDTO;
+import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,7 +25,7 @@ public interface ContatoDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<List<ContatoDTO>> get(Integer idCliente) throws SQLException, RegraDeNegocioException;
+    ResponseEntity<List<ContatoDTO>> get(Integer idCliente) throws SQLException;
 
     @Operation(summary = "Criar contato", description = "Cria um contato para um cliente, passando o ID " +
             "do cliente como parâmetro na requisição")
@@ -35,7 +36,7 @@ public interface ContatoDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<ContatoDTO> post(Integer idCliente, @Valid @RequestBody ContatoCreateDTO contatoDto) throws SQLException, RegraDeNegocioException;
+    ResponseEntity<ContatoDTO> post(Integer idCliente, @Valid @RequestBody ContatoCreateDTO contatoDto) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException;
 
     @Operation(summary = "Atualizar informações de contato", description = "Atualiza as informações de um contato existente " +
             "passando seu ID como parâmetro e os dados ")
@@ -46,7 +47,7 @@ public interface ContatoDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<ContatoDTO> put(Integer idContato,@Valid @RequestBody ContatoCreateDTO contatoAtualizadoDTO) throws SQLException, RegraDeNegocioException;
+    ResponseEntity<ContatoDTO> put(Integer idContato,@Valid @RequestBody ContatoCreateDTO contatoAtualizadoDTO) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException;
 
     @Operation(summary = "Deletar contato", description = "Deleta um contato passando  " +
             "passando seu ID como parâmetro e os dados ")
@@ -57,5 +58,5 @@ public interface ContatoDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    void delete(Integer idContato) throws SQLException, RegraDeNegocioException;
+    void delete(Integer idContato) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException;
 }

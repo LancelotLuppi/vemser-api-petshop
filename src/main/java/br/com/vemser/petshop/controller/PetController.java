@@ -3,8 +3,10 @@ package br.com.vemser.petshop.controller;
 import br.com.vemser.petshop.documentation.PetDocumentation;
 import br.com.vemser.petshop.dto.PetCreateDTO;
 import br.com.vemser.petshop.dto.PetDTO;
+import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.service.PetService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,22 +24,27 @@ public class PetController implements PetDocumentation {
     private PetService petService;
 
     @PostMapping("/{idCliente}")
-    public ResponseEntity<PetDTO> post(@PathVariable("idCliente") Integer id, @Valid @RequestBody PetCreateDTO pet) throws SQLException, RegraDeNegocioException {
+    public ResponseEntity<PetDTO> post(@PathVariable("idCliente") Integer id, @Valid @RequestBody PetCreateDTO pet) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
         return ResponseEntity.ok(petService.create(id, pet));
     }
 
     @GetMapping("/{idCliente}")
-    public ResponseEntity<List<PetDTO>> get(@PathVariable("idCliente") Integer id) throws SQLException, RegraDeNegocioException {
+    public ResponseEntity<List<PetDTO>> get(@PathVariable("idCliente") Integer id) throws SQLException, EntidadeNaoEncontradaException {
         return ResponseEntity.ok(petService.list(id));
     }
 
+    @GetMapping("/{idPet}/pet")
+    public ResponseEntity<PetDTO> getByPetId(@PathVariable("idPet") Integer idPet) throws SQLException, EntidadeNaoEncontradaException {
+        return ResponseEntity.ok(petService.getByPetId(idPet));
+    }
+
     @PutMapping("/{idPet}")
-    public ResponseEntity<PetDTO> put(@PathVariable("idPet") Integer id, @Valid @RequestBody PetCreateDTO petAtualizado) throws SQLException, RegraDeNegocioException {
+    public ResponseEntity<PetDTO> put(@PathVariable("idPet") Integer id, @Valid @RequestBody PetCreateDTO petAtualizado) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
         return ResponseEntity.ok(petService.update(id, petAtualizado));
     }
 
     @DeleteMapping("/{idPet}")
-    public void delete(@PathVariable("idPet") Integer id) throws SQLException, RegraDeNegocioException {
+    public void delete(@PathVariable("idPet") Integer id) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
         petService.delete(id);
     }
 }

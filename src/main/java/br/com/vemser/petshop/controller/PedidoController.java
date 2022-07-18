@@ -3,6 +3,7 @@ package br.com.vemser.petshop.controller;
 import br.com.vemser.petshop.documentation.PedidoDocumentation;
 import br.com.vemser.petshop.dto.PedidoCreateDTO;
 import br.com.vemser.petshop.dto.PedidoDTO;
+import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,27 +23,27 @@ public class PedidoController implements PedidoDocumentation {
     private PedidoService pedidoService;
 
     @PostMapping("/{idPet}")
-    public ResponseEntity<PedidoDTO> post(@PathVariable("idPet") Integer id, @Valid @RequestBody PedidoCreateDTO pedido) throws SQLException, RegraDeNegocioException {
+    public ResponseEntity<PedidoDTO> post(@PathVariable("idPet") Integer id, @Valid @RequestBody PedidoCreateDTO pedido) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
         return ResponseEntity.ok(pedidoService.create(id, pedido));
     }
 
     @GetMapping("/{idCliente}")
-    public ResponseEntity<List<PedidoDTO>> getByClientId(@PathVariable("idCliente") Integer id) throws SQLException, RegraDeNegocioException {
+    public ResponseEntity<List<PedidoDTO>> getByClientId(@PathVariable("idCliente") Integer id) throws SQLException, EntidadeNaoEncontradaException {
         return ResponseEntity.ok(pedidoService.list(id));
     }
 
     @GetMapping("/{idPet}/pet")
-    public ResponseEntity<List<PedidoDTO>> getByPetId(@PathVariable("idPet") Integer idPet) throws SQLException, RegraDeNegocioException {
+    public ResponseEntity<List<PedidoDTO>> getByPetId(@PathVariable("idPet") Integer idPet) throws SQLException, EntidadeNaoEncontradaException {
         return ResponseEntity.ok(pedidoService.listByPetId(idPet));
     }
 
     @PutMapping("/{idPedido}")
-    public ResponseEntity<PedidoDTO> put(@PathVariable("idPedido") Integer idPedido, @Valid @RequestBody PedidoCreateDTO pedidoAtualizado) throws SQLException, RegraDeNegocioException {
+    public ResponseEntity<PedidoDTO> put(@PathVariable("idPedido") Integer idPedido, @Valid @RequestBody PedidoCreateDTO pedidoAtualizado) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
         return ResponseEntity.ok(pedidoService.update(idPedido, pedidoAtualizado));
     }
 
     @DeleteMapping("/{idPedido}")
-    public void delete(@PathVariable("idPedido") Integer idPedido) throws SQLException, RegraDeNegocioException {
+    public void delete(@PathVariable("idPedido") Integer idPedido) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
         pedidoService.delete(idPedido);
     }
 }

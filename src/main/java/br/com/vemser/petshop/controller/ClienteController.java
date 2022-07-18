@@ -38,12 +38,12 @@ public class ClienteController implements ClienteDocumentation {
     }
 
     @PutMapping("/{idCliente}")
-    public ResponseEntity<ClienteDTO> put(@PathVariable("idCliente") Integer id, @Valid @RequestBody ClienteCreateDTO clienteAtualizado) throws SQLException, RegraDeNegocioException {
+    public ResponseEntity<ClienteDTO> put(@PathVariable("idCliente") Integer id, @Valid @RequestBody ClienteCreateDTO clienteAtualizado) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
         return ResponseEntity.ok(clienteService.update(id, clienteAtualizado));
     }
 
     @DeleteMapping("/{idCliente}")
-    public void delete(@PathVariable("idCliente") Integer id) throws SQLException, RegraDeNegocioException {
+    public void delete(@PathVariable("idCliente") Integer id) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
         clienteService.delete(id);
     }
 }
