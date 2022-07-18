@@ -210,13 +210,28 @@ public class ContatoRepository {
         return contatos;
     }
 
-    private Contato getContatoFromResultSet(ResultSet res) throws SQLException {
-        Contato contato = new Contato();
-        contato.setIdCliente(res.getInt("ID_CLIENTE"));
-        contato.setIdContato(res.getInt("ID_CONTATO"));
-        contato.setTelefone(res.getInt("TELEFONE"));
-        contato.setDescricao(res.getString("DESCRICAO"));
-        return contato;
+    public void removerContatosPorIDCliente(Integer id) throws  SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
+        try {
+
+            String sql = "DELETE FROM CONTATO WHERE ID_CLIENTE = ?";
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+
+            stmt.setInt(1, id);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (!connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public Contato returnByIdUtil(Integer id) throws SQLException{
@@ -236,6 +251,15 @@ public class ContatoRepository {
         if (res.next()) {
             contato = getContatoFromResultSet(res);
         }
+        return contato;
+    }
+
+    private Contato getContatoFromResultSet(ResultSet res) throws SQLException {
+        Contato contato = new Contato();
+        contato.setIdCliente(res.getInt("ID_CLIENTE"));
+        contato.setIdContato(res.getInt("ID_CONTATO"));
+        contato.setTelefone(res.getInt("TELEFONE"));
+        contato.setDescricao(res.getString("DESCRICAO"));
         return contato;
     }
 }

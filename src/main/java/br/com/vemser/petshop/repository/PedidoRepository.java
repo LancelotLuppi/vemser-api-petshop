@@ -111,6 +111,30 @@ public class PedidoRepository {
         }
     }
 
+    public void removerPedidosPorIDCliente(Integer id) throws  SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
+        try {
+
+            String sql = "DELETE FROM PEDIDO WHERE ID_CLIENTE = ?";
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+
+            stmt.setInt(1, id);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (!connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public Pedido update(Integer id, Pedido pedido) throws  SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
         Pedido pedidoAtualizado;

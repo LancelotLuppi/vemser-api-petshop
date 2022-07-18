@@ -279,6 +279,30 @@ public class PetRepository {
         }
     }
 
+    public void removerPetPorIDCliente(Integer id) throws  SQLException {
+        Connection connection = conexaoBancoDeDados.getConnection();
+        try {
+
+            String sql = "DELETE FROM ANIMAL WHERE ID_CLIENTE = ?";
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+
+            stmt.setInt(1, id);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (!connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private Pet getPetFromResultSet(ResultSet res) throws SQLException {
         Pet pet = new Pet();
         pet.setIdCliente(res.getInt("ID_CLIENTE"));

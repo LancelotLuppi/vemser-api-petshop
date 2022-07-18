@@ -9,6 +9,8 @@ import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.ContatoRepository;
 
+import br.com.vemser.petshop.repository.PedidoRepository;
+import br.com.vemser.petshop.repository.PetRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,11 @@ public class ClienteService {
 
     @Autowired
     private ContatoRepository contatoRepository;
+    @Autowired
+    private PetRepository petRepository;
+
+    @Autowired
+    private PedidoRepository pedidoRepository;
     @Autowired
     private EmailService emailService;
 
@@ -68,6 +75,9 @@ public class ClienteService {
 
     public void delete(Integer id) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
         verificarId(id);
+        pedidoRepository.removerPedidosPorIDCliente(id);
+        petRepository.removerPetPorIDCliente(id);
+        contatoRepository.removerContatosPorIDCliente(id);
         Cliente clienteRecuperado = clienteRepository.returnByIdUtil(id);
         emailService.sendEmail(clienteRecuperado.getNome(), clienteRecuperado.getIdCliente(), clienteRecuperado.getEmail(), TipoRequisicao.DELETE);
         clienteRepository.remover(id);
