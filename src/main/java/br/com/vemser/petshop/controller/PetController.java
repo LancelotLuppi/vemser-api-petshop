@@ -1,5 +1,6 @@
 package br.com.vemser.petshop.controller;
 
+import br.com.vemser.petshop.documentation.PetDocumentation;
 import br.com.vemser.petshop.dto.PetCreateDTO;
 import br.com.vemser.petshop.dto.PetDTO;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
@@ -16,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/pet")
 @Validated
-public class PetController {
+public class PetController implements PetDocumentation {
     @Autowired
     private PetService petService;
 

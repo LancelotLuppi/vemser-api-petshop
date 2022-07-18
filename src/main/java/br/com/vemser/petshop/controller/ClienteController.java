@@ -1,5 +1,6 @@
 package br.com.vemser.petshop.controller;
 
+import br.com.vemser.petshop.documentation.ClienteDocumentation;
 import br.com.vemser.petshop.dto.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.ClienteDTO;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
@@ -16,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/cliente")
 @Validated
-public class ClienteController {
+public class ClienteController implements ClienteDocumentation {
     @Autowired
     private ClienteService clienteService;
 
@@ -36,7 +37,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{idCliente}")
-    public ResponseEntity<ClienteDTO> put(@PathVariable("idCliente") Integer id, @RequestBody ClienteCreateDTO clienteAtualizado) throws SQLException, RegraDeNegocioException {
+    public ResponseEntity<ClienteDTO> put(@PathVariable("idCliente") Integer id, @Valid @RequestBody ClienteCreateDTO clienteAtualizado) throws SQLException, RegraDeNegocioException {
         return ResponseEntity.ok(clienteService.update(id, clienteAtualizado));
     }
 
