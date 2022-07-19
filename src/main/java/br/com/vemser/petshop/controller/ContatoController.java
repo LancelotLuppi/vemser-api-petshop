@@ -13,7 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -26,23 +25,23 @@ public class ContatoController implements ContatoDocumentation {
     private ContatoService contatoService;
 
     @GetMapping("/{idCliente}")
-    public ResponseEntity<List<ContatoDTO>> get(@PathVariable("idCliente") Integer id) throws SQLException {
+    public ResponseEntity<List<ContatoDTO>> get(@PathVariable("idCliente") Integer id) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(contatoService.listarContatoPorId(id));
     }
 
     @PostMapping("/{idCliente}")
-    public ResponseEntity<ContatoDTO> post(@PathVariable("idCliente") Integer id, @Valid @RequestBody ContatoCreateDTO contato) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public ResponseEntity<ContatoDTO> post(@PathVariable("idCliente") Integer id, @Valid @RequestBody ContatoCreateDTO contato) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
         return ResponseEntity.ok(contatoService.create(id, contato));
     }
 
     @PutMapping("/{idContato}")
     public ResponseEntity<ContatoDTO> put(@PathVariable("idContato") Integer id,
-                                                       @Valid @RequestBody ContatoCreateDTO contatoAtualizado) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
+                                                       @Valid @RequestBody ContatoCreateDTO contatoAtualizado) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
         return ResponseEntity.ok(contatoService.update(id, contatoAtualizado));
     }
 
     @DeleteMapping("/{idContato}")
-    public void delete(@PathVariable("idContato") Integer id) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public void delete(@PathVariable("idContato") Integer id) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
         contatoService.delete(id);
     }
 }

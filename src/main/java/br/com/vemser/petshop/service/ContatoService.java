@@ -28,42 +28,62 @@ public class ContatoService {
 
     private final static String NOT_FOUND_MESSAGE = "{idContato} não encontrado";
 
-    public List<ContatoDTO> listarContatoPorId(Integer idCliente) throws SQLException {
-        log.info("listando contatos");
-        return contatoRepository.listarContatosPorCliente(idCliente).stream()
-                .map(this::returnDTO)
-                .collect(Collectors.toList());
-
+    public List<ContatoDTO> listarContatoPorId(Integer idCliente) throws EntidadeNaoEncontradaException {
+        try {
+            clienteService.verificarId(idCliente);
+            log.info("listando contatos");
+            return contatoRepository.listarContatosPorCliente(idCliente).stream()
+                    .map(this::returnDTO)
+                    .collect(Collectors.toList());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public ContatoDTO create (Integer idCliente, ContatoCreateDTO contatoDTO) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
-        log.info("Criando contato");
-        clienteService.verificarId(idCliente);
-        Contato contato = returnEntity(contatoDTO);
-        contato.setIdCliente(idCliente);
-        return returnDTO(contatoRepository.adicionar(idCliente, contato));
+    public ContatoDTO create (Integer idCliente, ContatoCreateDTO contatoDTO) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
+        try {
+            log.info("Criando contato");
+            clienteService.verificarId(idCliente);
+            Contato contato = returnEntity(contatoDTO);
+            contato.setIdCliente(idCliente);
+            return returnDTO(contatoRepository.adicionar(idCliente, contato));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public ContatoDTO update(Integer idContato, ContatoCreateDTO contatoAtualizado) throws SQLException, EntidadeNaoEncontradaException {
-        log.info("atualizando contato");
-        verificarIdContato(idContato);
-        Contato contato = returnEntity(contatoAtualizado);
-        Contato contatoRecuperado = contatoRepository.returnByIdUtil(idContato);
-        contato.setIdCliente(contatoRecuperado.getIdCliente());
-        return returnDTO(contatoRepository.atualizar(idContato, contato));
+    public ContatoDTO update(Integer idContato, ContatoCreateDTO contatoAtualizado) throws EntidadeNaoEncontradaException {
+        try {
+            log.info("atualizando contato");
+            verificarIdContato(idContato);
+            Contato contato = returnEntity(contatoAtualizado);
+            Contato contatoRecuperado = contatoRepository.returnByIdUtil(idContato);
+            contato.setIdCliente(contatoRecuperado.getIdCliente());
+            return returnDTO(contatoRepository.atualizar(idContato, contato));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void delete(Integer id) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
-        log.info("chamou deletar");
-        verificarIdContato(id);
-        contatoRepository.remover(id);
+    public void delete(Integer id) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
+        try {
+            log.info("chamou deletar");
+            verificarIdContato(id);
+            contatoRepository.remover(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void verificarIdContato(Integer id) throws SQLException, EntidadeNaoEncontradaException {
-        contatoRepository.listar().stream()
-                .filter(contato -> contato.getIdContato().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(NOT_FOUND_MESSAGE));
+    public void verificarIdContato(Integer id) throws EntidadeNaoEncontradaException {
+        try {
+            contatoRepository.listar().stream()
+                    .filter(contato -> contato.getIdContato().equals(id))
+                    .findFirst()
+                    .orElseThrow(() -> new EntidadeNaoEncontradaException(NOT_FOUND_MESSAGE));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Contato returnEntity(ContatoCreateDTO dto) {

@@ -26,7 +26,7 @@ public interface ContatoDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<List<ContatoDTO>> get(Integer idCliente) throws SQLException;
+    ResponseEntity<List<ContatoDTO>> get(Integer idCliente) throws EntidadeNaoEncontradaException;
 
     @Operation(summary = "Criar contato", description = "Cria um contato para um cliente, passando o ID " +
             "do cliente como parâmetro na requisição")
@@ -38,7 +38,7 @@ public interface ContatoDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<ContatoDTO> post(Integer idCliente, @Valid @RequestBody ContatoCreateDTO contatoDto) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException;
+    ResponseEntity<ContatoDTO> post(Integer idCliente, @Valid @RequestBody ContatoCreateDTO contatoDto) throws RegraDeNegocioException, EntidadeNaoEncontradaException;
 
     @Operation(summary = "Atualizar informações de contato", description = "Atualiza as informações de um contato existente " +
             "passando seu ID como parâmetro e os dados ")
@@ -50,7 +50,7 @@ public interface ContatoDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<ContatoDTO> put(Integer idContato,@Valid @RequestBody ContatoCreateDTO contatoAtualizadoDTO) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException;
+    ResponseEntity<ContatoDTO> put(Integer idContato,@Valid @RequestBody ContatoCreateDTO contatoAtualizadoDTO) throws RegraDeNegocioException, EntidadeNaoEncontradaException;
 
     @Operation(summary = "Deletar contato", description = "Deleta um contato passando  " +
             "passando seu ID como parâmetro e os dados ")
@@ -62,5 +62,5 @@ public interface ContatoDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    void delete(Integer idContato) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException;
+    void delete(Integer idContato) throws RegraDeNegocioException, EntidadeNaoEncontradaException;
 }
