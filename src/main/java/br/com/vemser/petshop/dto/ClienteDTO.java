@@ -14,4 +14,5 @@ public class ClienteDTO extends ClienteCreateDTO {
     @Schema(description = "Quantidade de pedidos relacionados com o id do cliente", example = "0")
     @NotNull
     private Integer quantidadeDePedidos;
+    // (DD)99999-4444
 }
