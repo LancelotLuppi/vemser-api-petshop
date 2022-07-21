@@ -2,7 +2,7 @@ package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.dto.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.ClienteDTO;
-import br.com.vemser.petshop.entity.Cliente;
+import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.enums.TipoRequisicao;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
@@ -44,13 +44,13 @@ public class ClienteService {
 
 
     public ClienteDTO create(ClienteCreateDTO clienteDto) throws  RegraDeNegocioException {
-        Cliente clienteTempParaRetorno = null;
+        ClienteEntity clienteEntityTempParaRetorno = null;
         try {
-            Cliente cliente = returnEntity(clienteDto);
-            cliente.setQuantidadeDePedidos(0);
-            clienteTempParaRetorno = clienteRepository.adicionar(cliente);
-            emailService.sendEmail(cliente.getNome(), clienteTempParaRetorno.getIdCliente(), cliente.getEmail(), TipoRequisicao.POST);
-            return returnDto(clienteTempParaRetorno);
+            ClienteEntity clienteEntity = returnEntity(clienteDto);
+            clienteEntity.setQuantidadeDePedidos(0);
+            clienteEntityTempParaRetorno = clienteRepository.adicionar(clienteEntity);
+            emailService.sendEmail(clienteEntity.getNome(), clienteEntityTempParaRetorno.getIdCliente(), clienteEntity.getEmail(), TipoRequisicao.POST);
+            return returnDto(clienteEntityTempParaRetorno);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -69,8 +69,8 @@ public class ClienteService {
     public ClienteDTO getById(Integer id) throws EntidadeNaoEncontradaException {
         try {
             verificarId(id);
-            Cliente cliente = clienteRepository.returnByIdUtil(id);
-            return returnDto(cliente);
+            ClienteEntity clienteEntity = clienteRepository.returnByIdUtil(id);
+            return returnDto(clienteEntity);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -79,13 +79,13 @@ public class ClienteService {
     public ClienteDTO update(Integer id, ClienteCreateDTO clienteDto) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
         try {
             verificarId(id);
-            Cliente cliente = returnEntity(clienteDto);
-            Cliente clienteRecuperado = clienteRepository.returnByIdUtil(id);
-            cliente.setQuantidadeDePedidos(clienteRecuperado.getQuantidadeDePedidos());
-            cliente.setIdCliente(clienteRecuperado.getIdCliente());
-            clienteRepository.update(id, cliente);
-            emailService.sendEmail(cliente.getNome(), id, cliente.getEmail(), TipoRequisicao.POST);
-            return returnDto(cliente);
+            ClienteEntity clienteEntity = returnEntity(clienteDto);
+            ClienteEntity clienteEntityRecuperado = clienteRepository.returnByIdUtil(id);
+            clienteEntity.setQuantidadeDePedidos(clienteEntityRecuperado.getQuantidadeDePedidos());
+            clienteEntity.setIdCliente(clienteEntityRecuperado.getIdCliente());
+            clienteRepository.update(id, clienteEntity);
+            emailService.sendEmail(clienteEntity.getNome(), id, clienteEntity.getEmail(), TipoRequisicao.POST);
+            return returnDto(clienteEntity);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -97,8 +97,8 @@ public class ClienteService {
             pedidoRepository.removerPedidosPorIDCliente(id);
             petRepository.removerPetPorIDCliente(id);
             contatoRepository.removerContatosPorIDCliente(id);
-            Cliente clienteRecuperado = clienteRepository.returnByIdUtil(id);
-            emailService.sendEmail(clienteRecuperado.getNome(), clienteRecuperado.getIdCliente(), clienteRecuperado.getEmail(), TipoRequisicao.DELETE);
+            ClienteEntity clienteEntityRecuperado = clienteRepository.returnByIdUtil(id);
+            emailService.sendEmail(clienteEntityRecuperado.getNome(), clienteEntityRecuperado.getIdCliente(), clienteEntityRecuperado.getEmail(), TipoRequisicao.DELETE);
             clienteRepository.remover(id);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -117,11 +117,11 @@ public class ClienteService {
         }
     }
 
-    private Cliente returnEntity(ClienteCreateDTO dto) {
-        return objectMapper.convertValue(dto, Cliente.class);
+    private ClienteEntity returnEntity(ClienteCreateDTO dto) {
+        return objectMapper.convertValue(dto, ClienteEntity.class);
     }
 
-    private ClienteDTO returnDto(Cliente entity) {
+    private ClienteDTO returnDto(ClienteEntity entity) {
         return objectMapper.convertValue(entity, ClienteDTO.class);
     }
 }

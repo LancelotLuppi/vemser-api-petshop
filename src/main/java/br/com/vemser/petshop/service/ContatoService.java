@@ -2,7 +2,7 @@ package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.dto.ContatoCreateDTO;
 import br.com.vemser.petshop.dto.ContatoDTO;
-import br.com.vemser.petshop.entity.Contato;
+import br.com.vemser.petshop.entity.ContatoEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ContatoRepository;
@@ -44,9 +44,9 @@ public class ContatoService {
         try {
             log.info("Criando contato");
             clienteService.verificarId(idCliente);
-            Contato contato = returnEntity(contatoDTO);
-            contato.setIdCliente(idCliente);
-            return returnDTO(contatoRepository.adicionar(idCliente, contato));
+            ContatoEntity contatoEntity = returnEntity(contatoDTO);
+            contatoEntity.setIdCliente(idCliente);
+            return returnDTO(contatoRepository.adicionar(idCliente, contatoEntity));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -56,10 +56,10 @@ public class ContatoService {
         try {
             log.info("atualizando contato");
             verificarIdContato(idContato);
-            Contato contato = returnEntity(contatoAtualizado);
-            Contato contatoRecuperado = contatoRepository.returnByIdUtil(idContato);
-            contato.setIdCliente(contatoRecuperado.getIdCliente());
-            return returnDTO(contatoRepository.atualizar(idContato, contato));
+            ContatoEntity contatoEntity = returnEntity(contatoAtualizado);
+            ContatoEntity contatoEntityRecuperado = contatoRepository.returnByIdUtil(idContato);
+            contatoEntity.setIdCliente(contatoEntityRecuperado.getIdCliente());
+            return returnDTO(contatoRepository.atualizar(idContato, contatoEntity));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -78,7 +78,7 @@ public class ContatoService {
     public void verificarIdContato(Integer id) throws EntidadeNaoEncontradaException {
         try {
             contatoRepository.listar().stream()
-                    .filter(contato -> contato.getIdContato().equals(id))
+                    .filter(contatoEntity -> contatoEntity.getIdContato().equals(id))
                     .findFirst()
                     .orElseThrow(() -> new EntidadeNaoEncontradaException(NOT_FOUND_MESSAGE));
         } catch (SQLException e) {
@@ -86,10 +86,10 @@ public class ContatoService {
         }
     }
 
-    private Contato returnEntity(ContatoCreateDTO dto) {
-        return objectMapper.convertValue(dto, Contato.class);
+    private ContatoEntity returnEntity(ContatoCreateDTO dto) {
+        return objectMapper.convertValue(dto, ContatoEntity.class);
     }
-    private ContatoDTO returnDTO(Contato entity){
+    private ContatoDTO returnDTO(ContatoEntity entity){
         return objectMapper.convertValue(entity, ContatoDTO.class);
     }
 }

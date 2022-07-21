@@ -1,7 +1,7 @@
 package br.com.vemser.petshop.repository;
 
 import br.com.vemser.petshop.config.ConexaoBancoDeDados;
-import br.com.vemser.petshop.entity.Pet;
+import br.com.vemser.petshop.entity.PetEntity;
 import br.com.vemser.petshop.enums.TipoPet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -27,12 +27,12 @@ public class PetRepository {
         return null;
     }
 
-    public Pet adicionar(Integer idCliente, Pet pet) throws SQLException {
+    public PetEntity adicionar(Integer idCliente, PetEntity petEntity) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
         try {
 
             Integer proximoId = this.nextSeq();
-            pet.setIdPet(proximoId);
+            petEntity.setIdPet(proximoId);
 
             String sql = """
                     INSERT INTO ANIMAL\s
@@ -41,17 +41,17 @@ public class PetRepository {
                     """;
 
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, pet.getIdPet());
+            stmt.setInt(1, petEntity.getIdPet());
             stmt.setInt(2, idCliente);
-            stmt.setString(3, pet.getNome());
-            stmt.setString(4, pet.getTipoPet().toString());
-            stmt.setString(5, pet.getRaca());
-            stmt.setInt(6, pet.getPelagem());
-            stmt.setInt(7, pet.getPorte());
-            stmt.setInt(8, pet.getIdade());
+            stmt.setString(3, petEntity.getNome());
+            stmt.setString(4, petEntity.getTipoPet().toString());
+            stmt.setString(5, petEntity.getRaca());
+            stmt.setInt(6, petEntity.getPelagem());
+            stmt.setInt(7, petEntity.getPorte());
+            stmt.setInt(8, petEntity.getIdade());
 
             stmt.executeUpdate();
-            return pet;
+            return petEntity;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -63,7 +63,7 @@ public class PetRepository {
                 e.printStackTrace();
             }
         }
-        return pet;
+        return petEntity;
     }
 
     public boolean remover(Integer id) throws SQLException {
@@ -92,29 +92,29 @@ public class PetRepository {
         return false;
     }
 
-    public Pet update(Integer id, Pet pet) throws SQLException {
+    public PetEntity update(Integer id, PetEntity petEntity) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
-        Pet petAtualizado;
+        PetEntity petEntityAtualizado;
         try {
 
             StringBuilder sql = new StringBuilder();
             sql.append("UPDATE animal SET \n");
-            if(pet.getNome() != null) {
+            if(petEntity.getNome() != null) {
                 sql.append("nome = ?,");
             }
-            if(pet.getTipoPet() != null) {
+            if(petEntity.getTipoPet() != null) {
                 sql.append("tipo = ?,");
             }
-            if(pet.getRaca() != null) {
+            if(petEntity.getRaca() != null) {
                 sql.append("raca = ?,");
             }
-            if(pet.getPelagem() != null) {
+            if(petEntity.getPelagem() != null) {
                 sql.append("pelagem = ?,");
             }
-            if(pet.getPorte() != null) {
+            if(petEntity.getPorte() != null) {
                 sql.append("porte = ?,");
             }
-            if(pet.getIdade() != null) {
+            if(petEntity.getIdade() != null) {
                 sql.append("idade = ?,");
             }
 
@@ -124,30 +124,30 @@ public class PetRepository {
             PreparedStatement stmt = connection.prepareStatement(sql.toString());
 
             int index =1;
-            if(pet.getNome() != null) {
-                stmt.setString(index++, pet.getNome());
+            if(petEntity.getNome() != null) {
+                stmt.setString(index++, petEntity.getNome());
             }
-            if(pet.getTipoPet() != null) {
-                stmt.setString(index++, pet.getTipoPet().toString());
+            if(petEntity.getTipoPet() != null) {
+                stmt.setString(index++, petEntity.getTipoPet().toString());
             }
-            if(pet.getRaca() != null) {
-                stmt.setString(index++, pet.getRaca());
+            if(petEntity.getRaca() != null) {
+                stmt.setString(index++, petEntity.getRaca());
             }
-            if(pet.getPelagem() != null) {
-                stmt.setInt(index++, pet.getPelagem());
+            if(petEntity.getPelagem() != null) {
+                stmt.setInt(index++, petEntity.getPelagem());
             }
-            if(pet.getPorte() != null) {
-                stmt.setInt(index++, pet.getPorte());
+            if(petEntity.getPorte() != null) {
+                stmt.setInt(index++, petEntity.getPorte());
             }
-            if(pet.getIdade() != null) {
-                stmt.setInt(index++, pet.getIdade());
+            if(petEntity.getIdade() != null) {
+                stmt.setInt(index++, petEntity.getIdade());
             }
             stmt.setInt(index++, id);
-            stmt.setInt(index, pet.getIdCliente());
+            stmt.setInt(index, petEntity.getIdCliente());
 
             if(stmt.executeUpdate() > 0) {
-                petAtualizado = returnByIdUtil(id);
-                return petAtualizado;
+                petEntityAtualizado = returnByIdUtil(id);
+                return petEntityAtualizado;
             }
 
         } catch (SQLException e) {
@@ -164,9 +164,9 @@ public class PetRepository {
         return null;
     }
 
-    public List<Pet> listar() throws SQLException {
+    public List<PetEntity> listar() throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
-        List<Pet> animais = new ArrayList<>();
+        List<PetEntity> animais = new ArrayList<>();
         try {
             String sql = "SELECT * FROM ANIMAL";
 
@@ -174,8 +174,8 @@ public class PetRepository {
             ResultSet res = stmt.executeQuery(sql);
 
             while(res.next()) {
-                Pet pet = getPetFromResultSet(res);
-                animais.add(pet);
+                PetEntity petEntity = getPetFromResultSet(res);
+                animais.add(petEntity);
             }
             return animais;
         } catch (SQLException e) {
@@ -192,9 +192,9 @@ public class PetRepository {
         return animais;
     }
 
-    public List<Pet> listarAnimalPorCliente(Integer id) throws SQLException {
+    public List<PetEntity> listarAnimalPorCliente(Integer id) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
-        List<Pet> pets = new ArrayList<>();
+        List<PetEntity> petEntities = new ArrayList<>();
         try {
             String sql = """
                                 SELECT a.*
@@ -208,11 +208,11 @@ public class PetRepository {
             ResultSet res = stmt.executeQuery();
 
             while(res.next()) {
-                Pet pet = getPetFromResultSet(res);
-                pet.setIdCliente(id);
-                pets.add(pet);
+                PetEntity petEntity = getPetFromResultSet(res);
+                petEntity.setIdCliente(id);
+                petEntities.add(petEntity);
             }
-            return pets;
+            return petEntities;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -224,12 +224,12 @@ public class PetRepository {
                 e.printStackTrace();
             }
         }
-        return pets;
+        return petEntities;
     }
 
-    public Pet returnByIdUtil(Integer id) throws SQLException {
+    public PetEntity returnByIdUtil(Integer id) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
-        Pet pet = null;
+        PetEntity petEntity = null;
         String sql = """
                             SELECT a.*
                             FROM ANIMAL a
@@ -242,14 +242,14 @@ public class PetRepository {
         ResultSet res = stmt.executeQuery();
 
         if (res.next()) {
-            pet = getPetFromResultSet(res);
+            petEntity = getPetFromResultSet(res);
         }
-        return pet;
+        return petEntity;
     }
 
-    public Pet getPetPorId(Integer idPet) throws SQLException {
+    public PetEntity getPetPorId(Integer idPet) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
-        Pet animal = null;
+        PetEntity animal = null;
         try {
             String sql = """
                                 SELECT a.*
@@ -303,16 +303,16 @@ public class PetRepository {
         }
     }
 
-    private Pet getPetFromResultSet(ResultSet res) throws SQLException {
-        Pet pet = new Pet();
-        pet.setIdCliente(res.getInt("ID_CLIENTE"));
-        pet.setIdPet(res.getInt("ID_ANIMAL"));
-        pet.setNome(res.getString("NOME"));
-        pet.setTipoPet(TipoPet.valueOf(res.getString("TIPO")));
-        pet.setRaca(res.getString("RACA"));
-        pet.setPelagem(res.getInt("PELAGEM"));
-        pet.setPorte(res.getInt("PORTE"));
-        pet.setIdade(res.getInt("IDADE"));
-        return pet;
+    private PetEntity getPetFromResultSet(ResultSet res) throws SQLException {
+        PetEntity petEntity = new PetEntity();
+        petEntity.setIdCliente(res.getInt("ID_CLIENTE"));
+        petEntity.setIdPet(res.getInt("ID_ANIMAL"));
+        petEntity.setNome(res.getString("NOME"));
+        petEntity.setTipoPet(TipoPet.valueOf(res.getString("TIPO")));
+        petEntity.setRaca(res.getString("RACA"));
+        petEntity.setPelagem(res.getInt("PELAGEM"));
+        petEntity.setPorte(res.getInt("PORTE"));
+        petEntity.setIdade(res.getInt("IDADE"));
+        return petEntity;
     }
 }

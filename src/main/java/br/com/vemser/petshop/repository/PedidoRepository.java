@@ -1,7 +1,7 @@
 package br.com.vemser.petshop.repository;
 
 import br.com.vemser.petshop.config.ConexaoBancoDeDados;
-import br.com.vemser.petshop.entity.Pedido;
+import br.com.vemser.petshop.entity.PedidoEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -26,11 +26,11 @@ public class PedidoRepository {
         return null;
     }
 
-    public Pedido adicionar(Integer idPet, Pedido pedido) throws SQLException {
+    public PedidoEntity adicionar(Integer idPet, PedidoEntity pedidoEntity) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
         try {
             Integer proximoId = this.nextSeq();
-            pedido.setIdPedido(proximoId);
+            pedidoEntity.setIdPedido(proximoId);
 
             String sql  = """
                     INSERT INTO PEDIDO
@@ -40,15 +40,15 @@ public class PedidoRepository {
 
             PreparedStatement stmt = connection.prepareStatement(sql);
 
-            stmt.setInt(1, pedido.getIdPedido());
-            stmt.setInt(2, pedido.getIdCliente());
+            stmt.setInt(1, pedidoEntity.getIdPedido());
+            stmt.setInt(2, pedidoEntity.getIdCliente());
             stmt.setInt(3, idPet);
-            stmt.setDouble(4, pedido.getValor());
-            stmt.setString(5, pedido.getDescricao());
+            stmt.setDouble(4, pedidoEntity.getValor());
+            stmt.setString(5, pedidoEntity.getDescricao());
 
             int res = stmt.executeUpdate();
             System.out.println("adicionarPedido=" + res);
-            return pedido;
+            return pedidoEntity;
         } catch (SQLException e) {
             throw new SQLException(e.getCause());
         } finally {
@@ -135,13 +135,13 @@ public class PedidoRepository {
         }
     }
 
-    public Pedido update(Integer id, Pedido pedido) throws  SQLException {
+    public PedidoEntity update(Integer id, PedidoEntity pedidoEntity) throws  SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
-        Pedido pedidoAtualizado;
+        PedidoEntity pedidoEntityAtualizado;
         try {
 
             StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE pedido SET \n");
+            sql.append("UPDATE pedidoEntity SET \n");
             sql.append(" valor = ?,");
             sql.append(" descricao = ?,");
 
@@ -151,14 +151,14 @@ public class PedidoRepository {
             PreparedStatement  stmt = connection.prepareStatement(sql.toString());
 
             int index = 1;
-            stmt.setDouble(index++, pedido.getValor());
-            stmt.setString(index++, pedido.getDescricao());
+            stmt.setDouble(index++, pedidoEntity.getValor());
+            stmt.setString(index++, pedidoEntity.getDescricao());
 
             stmt.setInt(index++, id);
 
             if(stmt.executeUpdate() > 0) {
-                pedidoAtualizado = returnByIdUtil(id);
-                return pedidoAtualizado;
+                pedidoEntityAtualizado = returnByIdUtil(id);
+                return pedidoEntityAtualizado;
             }
 
         } catch (SQLException e) {
@@ -175,9 +175,9 @@ public class PedidoRepository {
         return null;
     }
 
-    public List<Pedido> listarPorIdCliente(Integer idCliente) throws SQLException {
+    public List<PedidoEntity> listarPorIdCliente(Integer idCliente) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
-        List<Pedido> pedidos = new ArrayList<>();
+        List<PedidoEntity> pedidoEntities = new ArrayList<>();
         try {;
             String sql = """
                                 SELECT p.*
@@ -191,11 +191,11 @@ public class PedidoRepository {
             ResultSet res = stmt.executeQuery();
 
             while (res.next()) {
-                Pedido pedido = getPedidoFromResultSet(res);
-                pedido.setIdCliente(idCliente);
-                pedidos.add(pedido);
+                PedidoEntity pedidoEntity = getPedidoFromResultSet(res);
+                pedidoEntity.setIdCliente(idCliente);
+                pedidoEntities.add(pedidoEntity);
             }
-            return pedidos;
+            return pedidoEntities;
         } catch (SQLException e) {
             throw new SQLException(e.getCause());
         } finally {
@@ -209,9 +209,9 @@ public class PedidoRepository {
         }
     }
 
-    public List<Pedido> listarPorIdPet(Integer idPet) throws SQLException {
+    public List<PedidoEntity> listarPorIdPet(Integer idPet) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
-        List<Pedido> pedidos = new ArrayList<>();
+        List<PedidoEntity> pedidoEntities = new ArrayList<>();
         try {
 
             String sql = "SELECT P.*" +
@@ -223,15 +223,15 @@ public class PedidoRepository {
 
             ResultSet res = stmt.executeQuery();
             while(res.next()) {
-                Pedido pedido = getPedidoFromResultSet(res);
-                pedido.setIdPedido(res.getInt("ID_PEDIDO"));
-                pedido.setIdCliente(res.getInt("ID_CLIENTE"));
-                pedido.setIdPet(res.getInt("ID_ANIMAL"));
-                pedido.setValor(res.getInt("VALOR"));
-                pedido.setDescricao(res.getString("DESCRICAO"));
-                pedidos.add(pedido);
+                PedidoEntity pedidoEntity = getPedidoFromResultSet(res);
+                pedidoEntity.setIdPedido(res.getInt("ID_PEDIDO"));
+                pedidoEntity.setIdCliente(res.getInt("ID_CLIENTE"));
+                pedidoEntity.setIdPet(res.getInt("ID_ANIMAL"));
+                pedidoEntity.setValor(res.getInt("VALOR"));
+                pedidoEntity.setDescricao(res.getString("DESCRICAO"));
+                pedidoEntities.add(pedidoEntity);
             }
-            return pedidos;
+            return pedidoEntities;
         } catch (SQLException e) {
             throw new SQLException(e.getCause());
         } finally {
@@ -245,9 +245,9 @@ public class PedidoRepository {
         }
     }
 
-    public List<Pedido> listar() throws SQLException {
+    public List<PedidoEntity> listar() throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
-        List<Pedido> pedidos = new ArrayList<>();
+        List<PedidoEntity> pedidoEntities = new ArrayList<>();
         try {
             String sql = "SELECT * FROM PEDIDO";
 
@@ -255,10 +255,10 @@ public class PedidoRepository {
             ResultSet res = stmt.executeQuery(sql);
 
             while(res.next()) {
-                Pedido pedido = getPedidoFromResultSet(res);
-                pedidos.add(pedido);
+                PedidoEntity pedidoEntity = getPedidoFromResultSet(res);
+                pedidoEntities.add(pedidoEntity);
             }
-            return pedidos;
+            return pedidoEntities;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -270,12 +270,12 @@ public class PedidoRepository {
                 e.printStackTrace();
             }
         }
-        return pedidos;
+        return pedidoEntities;
     }
 
-    public Pedido returnByIdUtil(int idPedido) throws SQLException {
+    public PedidoEntity returnByIdUtil(int idPedido) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
-        Pedido pedido = null;
+        PedidoEntity pedidoEntity = null;
         String sql = """
                             SELECT p.*
                             FROM PEDIDO p
@@ -288,19 +288,19 @@ public class PedidoRepository {
         ResultSet res = stmt.executeQuery();
 
         if (res.next()) {
-            pedido = getPedidoFromResultSet(res);
+            pedidoEntity = getPedidoFromResultSet(res);
         }
-        return pedido;
+        return pedidoEntity;
     }
 
-    private Pedido getPedidoFromResultSet(ResultSet res) throws  SQLException {
-        Pedido pedido = new Pedido();
-        pedido.setIdPedido(res.getInt("id_pedido"));
-        pedido.setValor(res.getInt("valor"));
-        pedido.setIdCliente(res.getInt("ID_CLIENTE"));
-        pedido.setDescricao(res.getString("descricao"));
-        pedido.setIdPet(res.getInt("id_animal"));
-        return pedido;
+    private PedidoEntity getPedidoFromResultSet(ResultSet res) throws  SQLException {
+        PedidoEntity pedidoEntity = new PedidoEntity();
+        pedidoEntity.setIdPedido(res.getInt("id_pedido"));
+        pedidoEntity.setValor(res.getInt("valor"));
+        pedidoEntity.setIdCliente(res.getInt("ID_CLIENTE"));
+        pedidoEntity.setDescricao(res.getString("descricao"));
+        pedidoEntity.setIdPet(res.getInt("id_animal"));
+        return pedidoEntity;
     }
 
 

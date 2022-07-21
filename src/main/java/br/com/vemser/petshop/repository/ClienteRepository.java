@@ -1,7 +1,7 @@
 package br.com.vemser.petshop.repository;
 
 import br.com.vemser.petshop.config.ConexaoBancoDeDados;
-import br.com.vemser.petshop.entity.Cliente;
+import br.com.vemser.petshop.entity.ClienteEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -29,11 +29,11 @@ public class ClienteRepository {
         return null;
     }
 
-    public Cliente adicionar(Cliente cliente) throws SQLException {
+    public ClienteEntity adicionar(ClienteEntity clienteEntity) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
         try {
 
-            cliente.setIdCliente(this.nextSeq());
+            clienteEntity.setIdCliente(this.nextSeq());
 
             String sql = "INSERT INTO CLIENTE\n" +
                     "(ID_CLIENTE, NOME, QUANTIDADE_PEDIDOS, EMAIL)\n" +
@@ -41,15 +41,15 @@ public class ClienteRepository {
 
             PreparedStatement stmt = connection.prepareStatement(sql);
 
-            stmt.setInt(1, cliente.getIdCliente());
-            stmt.setString(2, cliente.getNome());
-            stmt.setInt(3, cliente.getQuantidadeDePedidos());
-            stmt.setString(4, cliente.getEmail());
+            stmt.setInt(1, clienteEntity.getIdCliente());
+            stmt.setString(2, clienteEntity.getNome());
+            stmt.setInt(3, clienteEntity.getQuantidadeDePedidos());
+            stmt.setString(4, clienteEntity.getEmail());
 
 
             if (stmt.executeUpdate() != 0) {
                 log.info("Cliente adicionado com sucesso");
-                return cliente;
+                return clienteEntity;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -94,41 +94,41 @@ public class ClienteRepository {
         return false;
     }
 
-    public Cliente update(Integer id, Cliente cliente) throws SQLException {
+    public ClienteEntity update(Integer id, ClienteEntity clienteEntity) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
-        Cliente clienteAtualizado;
+        ClienteEntity clienteEntityAtualizado;
         try {
 
             StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE cliente SET\n");
-            if (cliente.getNome() != null) {
+            sql.append("UPDATE clienteEntity SET\n");
+            if (clienteEntity.getNome() != null) {
                 sql.append("nome = ?,");
             }
-            if (cliente.getQuantidadeDePedidos() != null) {
+            if (clienteEntity.getQuantidadeDePedidos() != null) {
                 sql.append(" QUANTIDADE_PEDIDOS = ?,");
             }
-            if (cliente.getEmail() != null) {
+            if (clienteEntity.getEmail() != null) {
                 sql.append(" email = ?\n");
             }
             sql.append("WHERE id_cliente = ? ");
 
             PreparedStatement stmt = connection.prepareStatement(sql.toString());
 
-            if (cliente.getNome() != null) {
-                stmt.setString(1, cliente.getNome());
+            if (clienteEntity.getNome() != null) {
+                stmt.setString(1, clienteEntity.getNome());
             }
-            if (cliente.getQuantidadeDePedidos() != null) {
-                stmt.setInt(2, cliente.getQuantidadeDePedidos());
+            if (clienteEntity.getQuantidadeDePedidos() != null) {
+                stmt.setInt(2, clienteEntity.getQuantidadeDePedidos());
             }
-            if (cliente.getEmail() != null) {
-                stmt.setString(3, cliente.getEmail());
+            if (clienteEntity.getEmail() != null) {
+                stmt.setString(3, clienteEntity.getEmail());
             }
             stmt.setInt(4, id);
             // Executa-se a consulta
             if (stmt.executeUpdate() > 0) {
                 log.info("Cliente editado com sucesso");
-                clienteAtualizado = returnByIdUtil(id);
-                return clienteAtualizado;
+                clienteEntityAtualizado = returnByIdUtil(id);
+                return clienteEntityAtualizado;
             }
 
         } catch (SQLException e) {
@@ -145,9 +145,9 @@ public class ClienteRepository {
         return null;
     }
 
-    public List<Cliente> listar() throws SQLException {
+    public List<ClienteEntity> listar() throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
-        List<Cliente> clientes = new ArrayList<>();
+        List<ClienteEntity> clienteEntities = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
 
@@ -157,12 +157,12 @@ public class ClienteRepository {
             ResultSet res = stmt.executeQuery(sql);
 
             while (res.next()) {
-                Cliente cliente = new Cliente();
-                cliente.setIdCliente(res.getInt("ID_CLIENTE"));
-                cliente.setNome(res.getString("NOME"));
-                cliente.setQuantidadeDePedidos(res.getInt("QUANTIDADE_PEDIDOS"));
-                cliente.setEmail(res.getString("EMAIL"));
-                clientes.add(cliente);
+                ClienteEntity clienteEntity = new ClienteEntity();
+                clienteEntity.setIdCliente(res.getInt("ID_CLIENTE"));
+                clienteEntity.setNome(res.getString("NOME"));
+                clienteEntity.setQuantidadeDePedidos(res.getInt("QUANTIDADE_PEDIDOS"));
+                clienteEntity.setEmail(res.getString("EMAIL"));
+                clienteEntities.add(clienteEntity);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -175,12 +175,12 @@ public class ClienteRepository {
                 e.printStackTrace();
             }
         }
-        return clientes;
+        return clienteEntities;
     }
 
-    public Cliente returnByIdUtil(Integer id) throws SQLException {
+    public ClienteEntity returnByIdUtil(Integer id) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
-        Cliente cliente = null;
+        ClienteEntity clienteEntity = null;
         String sql = """
                             SELECT c.*
                             FROM CLIENTE c
@@ -193,17 +193,17 @@ public class ClienteRepository {
         ResultSet res = stmt.executeQuery();
 
         if (res.next()) {
-            cliente = getClienteFromResultSet(res);
+            clienteEntity = getClienteFromResultSet(res);
         }
-        return cliente;
+        return clienteEntity;
     }
 
-    private Cliente getClienteFromResultSet(ResultSet res) throws SQLException {
-        Cliente cliente = new Cliente();
-        cliente.setIdCliente(res.getInt("id_cliente"));
-        cliente.setNome(res.getString("nome"));
-        cliente.setQuantidadeDePedidos(res.getInt("quantidade_pedidos"));
-        cliente.setEmail(res.getString("email"));
-        return cliente;
+    private ClienteEntity getClienteFromResultSet(ResultSet res) throws SQLException {
+        ClienteEntity clienteEntity = new ClienteEntity();
+        clienteEntity.setIdCliente(res.getInt("id_cliente"));
+        clienteEntity.setNome(res.getString("nome"));
+        clienteEntity.setQuantidadeDePedidos(res.getInt("quantidade_pedidos"));
+        clienteEntity.setEmail(res.getString("email"));
+        return clienteEntity;
     }
 }

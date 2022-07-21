@@ -4,13 +4,13 @@ import lombok.*;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class Pedido {
-    private Integer idPedido;
+public class ContatoEntity {
+    private Integer idContato;
     private Integer idCliente;
-    private Integer idPet;
-    private Integer valor;
+    private String telefone;
     private String descricao;
+    private String email;
 }

@@ -2,9 +2,9 @@ package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.dto.PedidoCreateDTO;
 import br.com.vemser.petshop.dto.PedidoDTO;
-import br.com.vemser.petshop.entity.Cliente;
-import br.com.vemser.petshop.entity.Pedido;
-import br.com.vemser.petshop.entity.Pet;
+import br.com.vemser.petshop.entity.ClienteEntity;
+import br.com.vemser.petshop.entity.PedidoEntity;
+import br.com.vemser.petshop.entity.PetEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
@@ -37,16 +37,16 @@ public class PedidoService {
 
     public PedidoDTO create(Integer idPet, PedidoCreateDTO pedidoDto) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
         petService.verificarIdPet(idPet);
-        Pedido pedido = returnEntity(pedidoDto);
-        Pet petRecuperado = petRepository.returnByIdUtil(idPet);
-        Cliente clienteRecuperado = clienteRepository.returnByIdUtil(petRecuperado.getIdCliente());
+        PedidoEntity pedidoEntity = returnEntity(pedidoDto);
+        PetEntity petEntityRecuperado = petRepository.returnByIdUtil(idPet);
+        ClienteEntity clienteEntityRecuperado = clienteRepository.returnByIdUtil(petEntityRecuperado.getIdCliente());
 
-        pedido.setIdCliente(clienteRecuperado.getIdCliente());
-        pedido.setIdPet(idPet);
-        clienteRecuperado.setQuantidadeDePedidos(clienteRecuperado.getQuantidadeDePedidos() + 1);
-        clienteRepository.update(clienteRecuperado.getIdCliente(), clienteRecuperado);
+        pedidoEntity.setIdCliente(clienteEntityRecuperado.getIdCliente());
+        pedidoEntity.setIdPet(idPet);
+        clienteEntityRecuperado.setQuantidadeDePedidos(clienteEntityRecuperado.getQuantidadeDePedidos() + 1);
+        clienteRepository.update(clienteEntityRecuperado.getIdCliente(), clienteEntityRecuperado);
 
-        return returnDTO(pedidoRepository.adicionar(idPet, pedido));
+        return returnDTO(pedidoRepository.adicionar(idPet, pedidoEntity));
     }
 
     public List<PedidoDTO> list(Integer idCliente) throws SQLException, EntidadeNaoEncontradaException {
@@ -65,29 +65,29 @@ public class PedidoService {
 
     public PedidoDTO update(Integer idPedido, PedidoCreateDTO pedidoDto) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
         verificarIdPedido(idPedido);
-        Pedido pedidoAtualizado = returnEntity(pedidoDto);
-        return returnDTO(pedidoRepository.update(idPedido, pedidoAtualizado));
+        PedidoEntity pedidoEntityAtualizado = returnEntity(pedidoDto);
+        return returnDTO(pedidoRepository.update(idPedido, pedidoEntityAtualizado));
     }
 
     public void delete(Integer idPedido) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
         verificarIdPedido(idPedido);
-        Pedido pedidoRecuperado = pedidoRepository.returnByIdUtil(idPedido);
-        Cliente clienteRecuperado = clienteRepository.returnByIdUtil(pedidoRecuperado.getIdCliente());
+        PedidoEntity pedidoEntityRecuperado = pedidoRepository.returnByIdUtil(idPedido);
+        ClienteEntity clienteEntityRecuperado = clienteRepository.returnByIdUtil(pedidoEntityRecuperado.getIdCliente());
         pedidoRepository.remover(idPedido);
-        clienteRecuperado.setQuantidadeDePedidos(clienteRecuperado.getQuantidadeDePedidos() - 1);
+        clienteEntityRecuperado.setQuantidadeDePedidos(clienteEntityRecuperado.getQuantidadeDePedidos() - 1);
     }
 
     public void verificarIdPedido(Integer id) throws SQLException, EntidadeNaoEncontradaException {
         pedidoRepository.listar().stream()
-                .filter(pedido -> pedido.getIdPedido().equals(id))
+                .filter(pedidoEntity -> pedidoEntity.getIdPedido().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new EntidadeNaoEncontradaException(NOT_FOUND_MESSAGE));
     }
 
-    private Pedido returnEntity(PedidoCreateDTO dto) {
-        return objectMapper.convertValue(dto, Pedido.class);
+    private PedidoEntity returnEntity(PedidoCreateDTO dto) {
+        return objectMapper.convertValue(dto, PedidoEntity.class);
     }
-    private PedidoDTO returnDTO(Pedido entity) {
+    private PedidoDTO returnDTO(PedidoEntity entity) {
         return objectMapper.convertValue(entity, PedidoDTO.class);
     }
 }

@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Pet {
+public class PetEntity {
     private Integer idPet;
     private Integer idCliente;
     private String nome;

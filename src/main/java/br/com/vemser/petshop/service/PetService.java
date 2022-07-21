@@ -2,7 +2,7 @@ package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.dto.PetCreateDTO;
 import br.com.vemser.petshop.dto.PetDTO;
-import br.com.vemser.petshop.entity.Pet;
+import br.com.vemser.petshop.entity.PetEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.PedidoRepository;
@@ -30,9 +30,9 @@ public class PetService {
 
     public PetDTO create(Integer idCliente, PetCreateDTO petDto) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
         clienteService.verificarId(idCliente);
-        Pet pet = returnEntity(petDto);
-        pet.setIdCliente(idCliente);
-        return returnDto(petRepository.adicionar(idCliente, pet));
+        PetEntity petEntity = returnEntity(petDto);
+        petEntity.setIdCliente(idCliente);
+        return returnDto(petRepository.adicionar(idCliente, petEntity));
     }
 
     public List<PetDTO> list(Integer idCliente) throws SQLException, EntidadeNaoEncontradaException {
@@ -49,10 +49,10 @@ public class PetService {
 
     public PetDTO update(Integer idPet, PetCreateDTO petDto) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
         verificarIdPet(idPet);
-        Pet petRecuperado = petRepository.returnByIdUtil(idPet);
-        Pet petAtualizado = returnEntity(petDto);
-        petAtualizado.setIdCliente(petRecuperado.getIdCliente());
-        return returnDto(petRepository.update(idPet, petAtualizado));
+        PetEntity petEntityRecuperado = petRepository.returnByIdUtil(idPet);
+        PetEntity petEntityAtualizado = returnEntity(petDto);
+        petEntityAtualizado.setIdCliente(petEntityRecuperado.getIdCliente());
+        return returnDto(petRepository.update(idPet, petEntityAtualizado));
     }
 
     public void delete(Integer id) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
@@ -63,16 +63,16 @@ public class PetService {
 
     public void verificarIdPet(Integer id) throws SQLException, EntidadeNaoEncontradaException {
         petRepository.listar().stream()
-                .filter(pet -> pet.getIdPet().equals(id))
+                .filter(petEntity -> petEntity.getIdPet().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new EntidadeNaoEncontradaException(NOT_FOUND_MESSAGE));
     }
 
-    private Pet returnEntity(PetCreateDTO dto) {
-        return objectMapper.convertValue(dto, Pet.class);
+    private PetEntity returnEntity(PetCreateDTO dto) {
+        return objectMapper.convertValue(dto, PetEntity.class);
     }
 
-    private PetDTO returnDto(Pet entity) {
+    private PetDTO returnDto(PetEntity entity) {
         return objectMapper.convertValue(entity, PetDTO.class);
     }
 }

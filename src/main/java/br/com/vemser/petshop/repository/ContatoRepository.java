@@ -1,8 +1,7 @@
 package br.com.vemser.petshop.repository;
 
 import br.com.vemser.petshop.config.ConexaoBancoDeDados;
-import br.com.vemser.petshop.entity.Cliente;
-import br.com.vemser.petshop.entity.Contato;
+import br.com.vemser.petshop.entity.ContatoEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -27,11 +26,11 @@ public class ContatoRepository {
         return null;
     }
 
-    public Contato adicionar(Integer idCliente, Contato contato) throws SQLException {
+    public ContatoEntity adicionar(Integer idCliente, ContatoEntity contatoEntity) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
         try {
             Integer proximoId = this.nextSeq();
-            contato.setIdContato(proximoId);
+            contatoEntity.setIdContato(proximoId);
 
             String sql = "INSERT INTO CONTATO\n" +
                     "(ID_CONTATO, ID_CLIENTE, TELEFONE, DESCRICAO)\n" +
@@ -39,13 +38,13 @@ public class ContatoRepository {
 
             PreparedStatement stmt = connection.prepareStatement(sql);
 
-            stmt.setInt(1, contato.getIdContato());
+            stmt.setInt(1, contatoEntity.getIdContato());
             stmt.setInt(2, idCliente);
-            stmt.setString(3, contato.getTelefone());
-            stmt.setString(4, contato.getDescricao());
+            stmt.setString(3, contatoEntity.getTelefone());
+            stmt.setString(4, contatoEntity.getDescricao());
 
             int res = stmt.executeUpdate();
-            return contato;
+            return contatoEntity;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -57,7 +56,7 @@ public class ContatoRepository {
                 e.printStackTrace();
             }
         }
-        return contato;
+        return contatoEntity;
     }
 
     public void remover(Integer id) throws SQLException {
@@ -84,39 +83,39 @@ public class ContatoRepository {
         }
     }
 
-    public Contato atualizar(Integer id, Contato contato) throws SQLException {
+    public ContatoEntity atualizar(Integer id, ContatoEntity contatoEntity) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
-        Contato contatoAtualizado;
+        ContatoEntity contatoEntityAtualizado;
         try {
 
             StringBuilder sql = new StringBuilder();
-            sql.append("UPDATE contato SET \n");
-            if (contato.getTelefone() != null) {
+            sql.append("UPDATE contatoEntity SET \n");
+            if (contatoEntity.getTelefone() != null) {
                 sql.append(" telefone = ?,");
             }
 
-            if (contato.getDescricao() != null) {
+            if (contatoEntity.getDescricao() != null) {
                 sql.append(" descricao = ?,");
             }
 
             sql.deleteCharAt(sql.length() - 1);
-            sql.append(" WHERE id_contato = ? and contato.id_cliente = ?");
+            sql.append(" WHERE id_contato = ? and contatoEntity.id_cliente = ?");
 
             PreparedStatement stmt = connection.prepareStatement(sql.toString());
 
             int index = 1;
-            if (contato.getTelefone() != null) {
-                stmt.setString(index++, contato.getTelefone());
+            if (contatoEntity.getTelefone() != null) {
+                stmt.setString(index++, contatoEntity.getTelefone());
             }
-            if (contato.getDescricao() != null) {
-                stmt.setString(index++, contato.getDescricao());
+            if (contatoEntity.getDescricao() != null) {
+                stmt.setString(index++, contatoEntity.getDescricao());
             }
             stmt.setInt(index++, id);
-            stmt.setInt(index, contato.getIdCliente());
+            stmt.setInt(index, contatoEntity.getIdCliente());
 
             if(stmt.executeUpdate() > 0){
-                contatoAtualizado = returnByIdUtil(id);
-                return contatoAtualizado;
+                contatoEntityAtualizado = returnByIdUtil(id);
+                return contatoEntityAtualizado;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -132,9 +131,9 @@ public class ContatoRepository {
         return null;
     }
 
-    public List<Contato> listar() throws SQLException {
+    public List<ContatoEntity> listar() throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
-        List<Contato> contatos = new ArrayList<>();
+        List<ContatoEntity> contatoEntities = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
 
@@ -144,12 +143,12 @@ public class ContatoRepository {
             ResultSet res = stmt.executeQuery(sql);
 
             while (res.next()) {
-                Contato contato = new Contato();
-                contato.setIdContato(res.getInt("ID_CONTATO"));
-                contato.setIdCliente(res.getInt("ID_CLIENTE"));
-                contato.setTelefone(res.getString("TELEFONE"));
-                contato.setDescricao(res.getString("DESCRICAO"));
-                contatos.add(contato);
+                ContatoEntity contatoEntity = new ContatoEntity();
+                contatoEntity.setIdContato(res.getInt("ID_CONTATO"));
+                contatoEntity.setIdCliente(res.getInt("ID_CLIENTE"));
+                contatoEntity.setTelefone(res.getString("TELEFONE"));
+                contatoEntity.setDescricao(res.getString("DESCRICAO"));
+                contatoEntities.add(contatoEntity);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -162,12 +161,12 @@ public class ContatoRepository {
                 e.printStackTrace();
             }
         }
-        return contatos;
+        return contatoEntities;
     }
 
-    public List<Contato> listarContatosPorCliente(Integer idCliente) throws SQLException {
+    public List<ContatoEntity> listarContatosPorCliente(Integer idCliente) throws SQLException {
         Connection connection = conexaoBancoDeDados.getConnection();
-        List<Contato> contatos = new ArrayList<>();
+        List<ContatoEntity> contatoEntities = new ArrayList<>();
         try {
 
 
@@ -185,11 +184,11 @@ public class ContatoRepository {
             ResultSet res = stmt.executeQuery();
 
             while (res.next()) {
-                Contato contato = getContatoFromResultSet(res);
-                contato.setIdCliente(idCliente);
-                contatos.add(contato);
+                ContatoEntity contatoEntity = getContatoFromResultSet(res);
+                contatoEntity.setIdCliente(idCliente);
+                contatoEntities.add(contatoEntity);
             }
-            return contatos;
+            return contatoEntities;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -201,7 +200,7 @@ public class ContatoRepository {
                 e.printStackTrace();
             }
         }
-        return contatos;
+        return contatoEntities;
     }
 
     public void removerContatosPorIDCliente(Integer id) throws  SQLException {
@@ -228,9 +227,9 @@ public class ContatoRepository {
         }
     }
 
-    public Contato returnByIdUtil(Integer id) throws SQLException{
+    public ContatoEntity returnByIdUtil(Integer id) throws SQLException{
         Connection connection = conexaoBancoDeDados.getConnection();
-        Contato contato = null;
+        ContatoEntity contatoEntity = null;
         String sql = """
                             SELECT ctt.*
                             FROM CONTATO ctt
@@ -243,18 +242,18 @@ public class ContatoRepository {
         ResultSet res = stmt.executeQuery();
 
         if (res.next()) {
-            contato = getContatoFromResultSet(res);
+            contatoEntity = getContatoFromResultSet(res);
         }
-        return contato;
+        return contatoEntity;
     }
 
-    private Contato getContatoFromResultSet(ResultSet res) throws SQLException {
-        Contato contato = new Contato();
-        contato.setIdCliente(res.getInt("ID_CLIENTE"));
-        contato.setIdContato(res.getInt("ID_CONTATO"));
-        contato.setTelefone(res.getString("TELEFONE"));
-        contato.setDescricao(res.getString("DESCRICAO"));
-        return contato;
+    private ContatoEntity getContatoFromResultSet(ResultSet res) throws SQLException {
+        ContatoEntity contatoEntity = new ContatoEntity();
+        contatoEntity.setIdCliente(res.getInt("ID_CLIENTE"));
+        contatoEntity.setIdContato(res.getInt("ID_CONTATO"));
+        contatoEntity.setTelefone(res.getString("TELEFONE"));
+        contatoEntity.setDescricao(res.getString("DESCRICAO"));
+        return contatoEntity;
     }
 }
 

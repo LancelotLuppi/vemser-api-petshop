@@ -1,7 +1,5 @@
 package br.com.vemser.petshop.dto;
 
-import br.com.vemser.petshop.entity.Cliente;
-import br.com.vemser.petshop.entity.Pet;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

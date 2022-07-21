@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Cliente {
+public class ClienteEntity {
     private Integer idCliente;
     private String email;
     private String nome;
