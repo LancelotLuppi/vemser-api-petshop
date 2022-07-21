@@ -1,4 +1,4 @@
-package br.com.vemser.petshop.service;
+package br.com.vemser.petshop.exception.service;
 
 import br.com.vemser.petshop.dto.ContatoCreateDTO;
 import br.com.vemser.petshop.dto.ContatoDTO;

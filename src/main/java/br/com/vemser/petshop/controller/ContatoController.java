@@ -6,7 +6,7 @@ import br.com.vemser.petshop.dto.ContatoDTO;
 
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
-import br.com.vemser.petshop.service.ContatoService;
+import br.com.vemser.petshop.exception.service.ContatoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
