@@ -74,3 +74,6 @@ start 1;
 create sequence SEQ_ID_PEDIDO
 increment 1
 start 1;
+
+alter table cliente 
+add column email text;

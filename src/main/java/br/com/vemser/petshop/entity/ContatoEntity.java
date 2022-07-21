@@ -6,7 +6,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class ContatoEntity {
     private Integer idContato;
     private Integer idCliente;

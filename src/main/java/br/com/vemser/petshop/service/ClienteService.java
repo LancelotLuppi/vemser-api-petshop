@@ -43,17 +43,23 @@ public class ClienteService {
 
 
 
-    public ClienteDTO create(ClienteCreateDTO clienteDto) throws  RegraDeNegocioException {
-        ClienteEntity clienteEntityTempParaRetorno = null;
-        try {
-            ClienteEntity clienteEntity = returnEntity(clienteDto);
-            clienteEntity.setQuantidadeDePedidos(0);
-            clienteEntityTempParaRetorno = clienteRepository.adicionar(clienteEntity);
-            emailService.sendEmail(clienteEntity.getNome(), clienteEntityTempParaRetorno.getIdCliente(), clienteEntity.getEmail(), TipoRequisicao.POST);
-            return returnDto(clienteEntityTempParaRetorno);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+//    public ClienteDTO create(ClienteCreateDTO clienteDto) throws  RegraDeNegocioException {
+//        ClienteEntity clienteEntityTempParaRetorno = null;
+//        try {
+//            ClienteEntity clienteEntity = returnEntity(clienteDto);
+//            clienteEntity.setQuantidadeDePedidos(0);
+//            clienteEntityTempParaRetorno = clienteRepository.adicionar(clienteEntity);
+//            emailService.sendEmail(clienteEntity.getNome(), clienteEntityTempParaRetorno.getIdCliente(), clienteEntity.getEmail(), TipoRequisicao.POST);
+//            return returnDto(clienteEntityTempParaRetorno);
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+    public ClienteDTO create(ClienteCreateDTO clienteDto) {
+        ClienteEntity cliente = returnEntity(clienteDto);
+        cliente.setQuantidadeDePedidos(0);
+        return returnDto(clienteRepository.save(cliente));
     }
 
     public List<ClienteDTO>  list() throws RegraDeNegocioException {
