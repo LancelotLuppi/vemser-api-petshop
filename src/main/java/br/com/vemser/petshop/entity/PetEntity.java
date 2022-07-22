@@ -16,7 +16,7 @@ public class PetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PET_SEQ")
     @SequenceGenerator(name = "PET_SEQ", sequenceName = "seq_id_animal", allocationSize = 1)
-    @Column(name = "id_pet")
+    @Column(name = "id_animal")
     private Integer idPet;
 
     @Column(name = "nome")
