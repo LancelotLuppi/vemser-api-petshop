@@ -2,6 +2,7 @@ package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.dto.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.ClienteDTO;
+import br.com.vemser.petshop.dto.ClienteDadosRelatorioDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.enums.TipoRequisicao;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
@@ -72,6 +73,11 @@ public class ClienteService {
         ClienteEntity clienteRecuperado = retornarPorIdVerificado(id);
         clienteRepository.delete(clienteRecuperado);
     }
+
+    public List<ClienteDadosRelatorioDTO> listarDadosCliente(Integer idCliente){
+        return clienteRepository.relatorioCliente(idCliente);
+    }
+
 
     public ClienteEntity retornarPorIdVerificado(Integer id) throws EntidadeNaoEncontradaException {
         return clienteRepository.findById(id).stream()

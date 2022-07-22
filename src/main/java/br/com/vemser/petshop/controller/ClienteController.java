@@ -3,10 +3,12 @@ package br.com.vemser.petshop.controller;
 import br.com.vemser.petshop.documentation.ClienteDocumentation;
 import br.com.vemser.petshop.dto.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.ClienteDTO;
+import br.com.vemser.petshop.dto.ClienteDadosRelatorioDTO;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.service.ClienteService;
 import io.swagger.v3.oas.annotations.Hidden;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -46,5 +48,10 @@ public class ClienteController implements ClienteDocumentation {
     @DeleteMapping("/{idCliente}")
     public void delete(@PathVariable("idCliente") Integer id) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
         clienteService.delete(id);
+    }
+
+    @GetMapping("/relatorio-dados")
+    public ResponseEntity<List<ClienteDadosRelatorioDTO>> listClienteDados(@RequestParam(value = "idCliente" , required = false) Integer idCliente){
+        return ResponseEntity.ok(clienteService.listarDadosCliente(idCliente));
     }
 }
