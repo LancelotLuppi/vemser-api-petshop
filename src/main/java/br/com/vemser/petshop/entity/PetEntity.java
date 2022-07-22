@@ -1,5 +1,7 @@
 package br.com.vemser.petshop.entity;
 
+import br.com.vemser.petshop.enums.PelagemPet;
+import br.com.vemser.petshop.enums.PortePet;
 import br.com.vemser.petshop.enums.TipoPet;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -29,10 +31,10 @@ public class PetEntity {
     private String raca;
 
     @Column(name = "pelagem")
-    private Integer pelagem;
+    private PelagemPet pelagem;
 
     @Column(name = "porte")
-    private Integer porte;
+    private PortePet porte;
 
     @Column(name = "idade")
     private Integer idade;

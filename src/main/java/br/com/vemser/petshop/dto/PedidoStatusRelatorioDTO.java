@@ -2,11 +2,10 @@ package br.com.vemser.petshop.dto;
 
 import br.com.vemser.petshop.enums.StatusPedido;
 import br.com.vemser.petshop.enums.TipoPet;
+import br.com.vemser.petshop.enums.TipoServico;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +15,8 @@ public class PedidoStatusRelatorioDTO {
     private String nomeCliente;
     private String email;
     private String nomePet;
-    private String tipoPet;
-    private String status;
+    private TipoPet tipoPet;
+    private StatusPedido status;
+    private TipoServico servico;
     private Double valor;
 }

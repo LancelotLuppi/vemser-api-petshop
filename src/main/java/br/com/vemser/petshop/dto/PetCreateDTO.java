@@ -1,5 +1,7 @@
 package br.com.vemser.petshop.dto;
 
+import br.com.vemser.petshop.enums.PelagemPet;
+import br.com.vemser.petshop.enums.PortePet;
 import br.com.vemser.petshop.enums.TipoPet;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -27,15 +29,11 @@ public class PetCreateDTO {
 
     @Schema(description = "Informativo do tamanho da pelagem baseada na raça (0min - 9max)", example = "9")
     @NotNull
-    @Min(0)
-    @Max(9)
-    private Integer pelagem;
+    private PelagemPet pelagem;
 
     @Schema(description = "Informativo do porte do pet (0 muito pequeno - 9 muito grande)", example = "6")
     @NotNull
-    @Min(0)
-    @Max(9)
-    private Integer porte;
+    private PortePet porte;
 
     @Schema(description = "Idade do pet", example = "8")
     @NotNull

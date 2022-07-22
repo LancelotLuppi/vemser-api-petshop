@@ -37,6 +37,8 @@ public class PedidoService {
     @Autowired
     private ClienteService clienteService;
     @Autowired
+    private CalculadoraService calculadoraService;
+    @Autowired
     private ObjectMapper objectMapper;
 
     private final static String NOT_FOUND_MESSAGE = "{idPedido} não encontrado";
@@ -48,7 +50,7 @@ public class PedidoService {
 
         pedidoEntity.setCliente(clienteRecuperado);
         pedidoEntity.setPet(petRecuperado);
-        pedidoEntity.setValor(0.0);
+        pedidoEntity.setValor(calculadoraService.calcularValorDoPedido(pedidoEntity, petRecuperado));
         pedidoEntity.setStatus(StatusPedido.ABERTO);
         pedidoEntity.setDataEHora(LocalDate.now());
         PedidoDTO pedidoCriado = returnDTO(pedidoRepository.save(pedidoEntity));
