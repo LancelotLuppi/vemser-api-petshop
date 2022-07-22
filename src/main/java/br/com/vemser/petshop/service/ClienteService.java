@@ -1,4 +1,4 @@
-package br.com.vemser.petshop.exception.service;
+package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.dto.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.ClienteDTO;
@@ -59,68 +59,42 @@ public class ClienteService {
     public ClienteDTO create(ClienteCreateDTO clienteDto) {
         ClienteEntity cliente = returnEntity(clienteDto);
         cliente.setQuantidadeDePedidos(0);
+        cliente.setValorPagamento(0);
         return returnDto(clienteRepository.save(cliente));
     }
 
-    public List<ClienteDTO>  list() throws RegraDeNegocioException {
-        try {
-            return clienteRepository.listar().stream()
-                    .map(this::returnDto)
-                    .collect(Collectors.toList());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public List<ClienteDTO> list() {
+        return clienteRepository.findAll().stream()
+                .map(this::returnDto)
+                .toList();
     }
 
     public ClienteDTO getById(Integer id) throws EntidadeNaoEncontradaException {
-        try {
-            verificarId(id);
-            ClienteEntity clienteEntity = clienteRepository.returnByIdUtil(id);
-            return returnDto(clienteEntity);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        ClienteEntity cliente = clienteRepository.findById(id).get();
+        return returnDto(cliente);
     }
 
-    public ClienteDTO update(Integer id, ClienteCreateDTO clienteDto) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
-        try {
-            verificarId(id);
-            ClienteEntity clienteEntity = returnEntity(clienteDto);
-            ClienteEntity clienteEntityRecuperado = clienteRepository.returnByIdUtil(id);
-            clienteEntity.setQuantidadeDePedidos(clienteEntityRecuperado.getQuantidadeDePedidos());
-            clienteEntity.setIdCliente(clienteEntityRecuperado.getIdCliente());
-            clienteRepository.update(id, clienteEntity);
-            emailService.sendEmail(clienteEntity.getNome(), id, clienteEntity.getEmail(), TipoRequisicao.POST);
-            return returnDto(clienteEntity);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public ClienteDTO update(Integer id, ClienteCreateDTO clienteDto) throws EntidadeNaoEncontradaException {
+        ClienteEntity clienteRecuperado = retornarPorIdVerificado(id);
+        clienteRecuperado.setNome(clienteDto.getNome());
+        clienteRecuperado.setEmail(clienteDto.getEmail());
+        return returnDto(clienteRepository.save(clienteRecuperado));
     }
 
-    public void delete(Integer id) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
-        try {
-            verificarId(id);
-            pedidoRepository.removerPedidosPorIDCliente(id);
-            petRepository.removerPetPorIDCliente(id);
-            contatoRepository.removerContatosPorIDCliente(id);
-            ClienteEntity clienteEntityRecuperado = clienteRepository.returnByIdUtil(id);
-            emailService.sendEmail(clienteEntityRecuperado.getNome(), clienteEntityRecuperado.getIdCliente(), clienteEntityRecuperado.getEmail(), TipoRequisicao.DELETE);
-            clienteRepository.remover(id);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public void delete(Integer id) throws EntidadeNaoEncontradaException {
+        ClienteEntity clienteRecuperado = retornarPorIdVerificado(id);
+        clienteRepository.delete(clienteRecuperado);
     }
 
+    public ClienteEntity retornarPorIdVerificado(Integer id) throws EntidadeNaoEncontradaException {
+        return clienteRepository.findById(id).stream()
+                .findFirst()
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("{idPessoa} não encontrado"));
+    }
 
     public void verificarId(Integer id) throws EntidadeNaoEncontradaException {
-        try {
-            clienteRepository.listar().stream()
-                    .filter(contato -> contato.getIdCliente().equals(id))
-                    .findFirst()
-                    .orElseThrow(() -> new EntidadeNaoEncontradaException(NOT_FOUND_MESSAGE));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        clienteRepository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("{idPessoa} não encontrado"));
     }
 
     private ClienteEntity returnEntity(ClienteCreateDTO dto) {

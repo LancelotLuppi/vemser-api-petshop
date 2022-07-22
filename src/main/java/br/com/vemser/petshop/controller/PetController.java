@@ -5,7 +5,7 @@ import br.com.vemser.petshop.dto.PetCreateDTO;
 import br.com.vemser.petshop.dto.PetDTO;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
-import br.com.vemser.petshop.exception.service.PetService;
+import br.com.vemser.petshop.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

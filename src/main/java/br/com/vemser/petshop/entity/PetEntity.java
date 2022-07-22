@@ -19,9 +19,6 @@ public class PetEntity {
     @Column(name = "id_pet")
     private Integer idPet;
 
-    @Column(name = "id_cliente")
-    private Integer idCliente;
-
     @Column(name = "nome")
     private String nome;
 
@@ -44,5 +41,5 @@ public class PetEntity {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
-    private ClienteEntity clienteEntity;
+    private ClienteEntity cliente;
 }

@@ -18,9 +18,6 @@ public class ContatoEntity {
     @Column(name = "id_contato")
     private Integer idContato;
 
-    @Column(name = "id_cliente")
-    private Integer idCliente;
-
     @Column(name = "telefone")
     private String telefone;
 
@@ -30,6 +27,6 @@ public class ContatoEntity {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
-    private ClienteEntity clienteEntity;
+    private ClienteEntity cliente;
 
 }

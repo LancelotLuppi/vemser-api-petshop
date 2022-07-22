@@ -1,4 +1,4 @@
-package br.com.vemser.petshop.exception.service;
+package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.enums.TipoRequisicao;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
