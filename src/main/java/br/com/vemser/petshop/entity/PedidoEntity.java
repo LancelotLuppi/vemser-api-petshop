@@ -45,7 +45,7 @@ public class PedidoEntity {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_pet", referencedColumnName = "id_pet")
+    @JoinColumn(name = "id_animal", referencedColumnName = "id_animal")
     private PetEntity pet;
 
 
