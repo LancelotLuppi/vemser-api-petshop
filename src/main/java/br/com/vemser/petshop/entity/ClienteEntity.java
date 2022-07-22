@@ -15,7 +15,7 @@ import java.util.Set;
 public class ClienteEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CLIENTE_SEQ")
-    @SequenceGenerator(name = "CLIENTE_SEQ", sequenceName = "seq_id_cliente")
+    @SequenceGenerator(name = "CLIENTE_SEQ", sequenceName = "seq_id_cliente", allocationSize = 1)
     @Column(name = "id_cliente")
     private Integer idCliente;
 
@@ -33,22 +33,16 @@ public class ClienteEntity {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,
-        mappedBy = "cliente",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true)
+        mappedBy = "cliente")
     private Set<ContatoEntity> contatos;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "cliente",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+            mappedBy = "cliente")
     private Set<PetEntity> pets;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "cliente",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+            mappedBy = "cliente")
     private Set<PedidoEntity> pedidos;
 }

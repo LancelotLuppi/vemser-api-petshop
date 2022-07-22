@@ -18,7 +18,7 @@ public class PedidoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PEDIDO_SEQ")
-    @SequenceGenerator(name = "PEDIDO_SEQ", sequenceName = "seq_id_pedido")
+    @SequenceGenerator(name = "PEDIDO_SEQ", sequenceName = "seq_id_pedido", allocationSize = 1)
     @Column(name = "id_pedido")
     private Integer idPedido;
 

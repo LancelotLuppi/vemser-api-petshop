@@ -14,5 +14,9 @@ public class ClienteDTO extends ClienteCreateDTO {
     @Schema(description = "Quantidade de pedidos relacionados com o id do cliente", example = "0")
     @NotNull
     private Integer quantidadeDePedidos;
+
+    @Schema(description = "Valor somado de todos os pedidos em aberto ou em andamento", example = "0")
+    @NotNull
+    private Integer valorPagamento;
     // (DD)99999-4444
 }

@@ -14,7 +14,7 @@ public class ContatoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CONTATO_SEQ")
-    @SequenceGenerator(name = "CONTATO_SEQ", sequenceName = "seq_id_contato")
+    @SequenceGenerator(name = "CONTATO_SEQ", sequenceName = "seq_id_contato", allocationSize = 1)
     @Column(name = "id_contato")
     private Integer idContato;
 

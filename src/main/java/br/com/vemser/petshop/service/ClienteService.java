@@ -13,6 +13,7 @@ import br.com.vemser.petshop.repository.PedidoRepository;
 import br.com.vemser.petshop.repository.PetRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,16 +22,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
-
     @Autowired
     private ContatoRepository contatoRepository;
     @Autowired
     private PetRepository petRepository;
-
     @Autowired
     private PedidoRepository pedidoRepository;
     @Autowired
@@ -41,26 +41,14 @@ public class ClienteService {
 
     private final static String NOT_FOUND_MESSAGE = "{idCliente} não encontrado";
 
-
-
-//    public ClienteDTO create(ClienteCreateDTO clienteDto) throws  RegraDeNegocioException {
-//        ClienteEntity clienteEntityTempParaRetorno = null;
-//        try {
-//            ClienteEntity clienteEntity = returnEntity(clienteDto);
-//            clienteEntity.setQuantidadeDePedidos(0);
-//            clienteEntityTempParaRetorno = clienteRepository.adicionar(clienteEntity);
-//            emailService.sendEmail(clienteEntity.getNome(), clienteEntityTempParaRetorno.getIdCliente(), clienteEntity.getEmail(), TipoRequisicao.POST);
-//            return returnDto(clienteEntityTempParaRetorno);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
     public ClienteDTO create(ClienteCreateDTO clienteDto) {
         ClienteEntity cliente = returnEntity(clienteDto);
         cliente.setQuantidadeDePedidos(0);
         cliente.setValorPagamento(0);
-        return returnDto(clienteRepository.save(cliente));
+        cliente.setIdCliente(9);
+        ClienteDTO clienteCriado = returnDto(clienteRepository.save(cliente));
+        log.info("id do cliente: " + clienteCriado.getIdCliente());
+        return clienteCriado;
     }
 
     public List<ClienteDTO> list() {
