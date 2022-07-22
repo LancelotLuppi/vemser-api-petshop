@@ -3,6 +3,7 @@ package br.com.vemser.petshop.service;
 import br.com.vemser.petshop.dto.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.ClienteDTO;
 import br.com.vemser.petshop.dto.ClienteDadosRelatorioDTO;
+import br.com.vemser.petshop.dto.PageDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.enums.TipoRequisicao;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
@@ -16,6 +17,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -51,10 +56,13 @@ public class ClienteService {
         return clienteCriado;
     }
 
-    public List<ClienteDTO> list() {
-        return clienteRepository.findAll().stream()
+    public PageDTO<ClienteDTO> listarClientes(Integer pagina, Integer registro) {
+        PageRequest pageRequest = PageRequest.of(pagina, registro);
+        Page<ClienteEntity> page = clienteRepository.findAll(pageRequest);
+        List<ClienteDTO> clienteDto = page.getContent().stream()
                 .map(this::returnDto)
-                .toList();
+                .collect(Collectors.toList());
+        return new PageDTO<>(page.getTotalElements(), page.getTotalPages(), pagina, registro, clienteDto);
     }
 
     public ClienteDTO getById(Integer id) throws EntidadeNaoEncontradaException {

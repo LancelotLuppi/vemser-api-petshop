@@ -28,6 +28,6 @@ public interface PedidoRepository extends JpaRepository<PedidoEntity, Integer> {
             " from pedido ped " +
             " join ped.cliente c " +
             " join ped.pet p " +
-            " where (ped.status = :status)")
+            " where (:status is null OR ped.status = :status)")
     Page<PedidoStatusRelatorioDTO> listStatusPedido(@Param("status")StatusPedido status, PageRequest pageRequest);
 }

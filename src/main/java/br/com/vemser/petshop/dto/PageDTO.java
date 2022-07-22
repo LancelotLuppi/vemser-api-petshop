@@ -1,6 +1,7 @@
 package br.com.vemser.petshop.dto;
 
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 

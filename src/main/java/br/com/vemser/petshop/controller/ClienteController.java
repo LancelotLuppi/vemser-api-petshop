@@ -4,18 +4,26 @@ import br.com.vemser.petshop.documentation.ClienteDocumentation;
 import br.com.vemser.petshop.dto.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.ClienteDTO;
 import br.com.vemser.petshop.dto.ClienteDadosRelatorioDTO;
+import br.com.vemser.petshop.dto.PageDTO;
+import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
+import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.service.ClienteService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cliente")
@@ -23,16 +31,19 @@ import java.util.List;
 public class ClienteController implements ClienteDocumentation {
     @Autowired
     private ClienteService clienteService;
+    @Autowired
+    private ClienteRepository clienteRepository;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @PostMapping
     public ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO cliente) throws RegraDeNegocioException {
         return ResponseEntity.ok(clienteService.create(cliente));
     }
 
-    @Hidden // Criado para testar conexão com a DB e facilitar no desenvolvimento da api
-    @GetMapping
-    public ResponseEntity<List<ClienteDTO>> get() throws RegraDeNegocioException {
-        return ResponseEntity.ok(clienteService.list());
+    @GetMapping("/paginacao")
+    private PageDTO<ClienteDTO> listarPaginado(Integer pagina, Integer registro) {
+        return clienteService.listarClientes(pagina, registro);
     }
 
     @GetMapping("/{idCliente}")
