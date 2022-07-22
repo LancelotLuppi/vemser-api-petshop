@@ -31,6 +31,7 @@ public class PedidoEntity {
     @Column(name = "descricao")
     private String descricao;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private StatusPedido status;
 

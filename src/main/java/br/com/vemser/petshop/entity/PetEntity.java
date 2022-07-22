@@ -24,15 +24,18 @@ public class PetEntity {
     @Column(name = "nome")
     private String nome;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "tipo")
     private TipoPet tipoPet;
 
     @Column(name = "raca")
     private String raca;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "pelagem")
     private PelagemPet pelagem;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "porte")
     private PortePet porte;
 
