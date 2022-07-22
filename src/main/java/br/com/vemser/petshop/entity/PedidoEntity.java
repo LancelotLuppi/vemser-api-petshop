@@ -26,7 +26,7 @@ public class PedidoEntity {
     private TipoServico servico;
 
     @Column(name = "valor")
-    private Integer valor;
+    private Double valor;
 
     @Column(name = "descricao")
     private String descricao;

@@ -1,7 +1,9 @@
 package br.com.vemser.petshop.service;
 
+import br.com.vemser.petshop.dto.PageDTO;
 import br.com.vemser.petshop.dto.PedidoCreateDTO;
 import br.com.vemser.petshop.dto.PedidoDTO;
+import br.com.vemser.petshop.dto.PedidoStatusRelatorioDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.PedidoEntity;
 import br.com.vemser.petshop.entity.PetEntity;
@@ -13,6 +15,8 @@ import br.com.vemser.petshop.repository.PedidoRepository;
 import br.com.vemser.petshop.repository.PetRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -44,7 +48,7 @@ public class PedidoService {
 
         pedidoEntity.setCliente(clienteRecuperado);
         pedidoEntity.setPet(petRecuperado);
-        pedidoEntity.setValor(0);
+        pedidoEntity.setValor(0.0);
         pedidoEntity.setStatus(StatusPedido.ABERTO);
         pedidoEntity.setDataEHora(LocalDate.now());
         PedidoDTO pedidoCriado = returnDTO(pedidoRepository.save(pedidoEntity));
@@ -76,11 +80,11 @@ public class PedidoService {
         PedidoEntity pedidoRecuperado = returnByIdPedidoEntity(idPedido);
         verificarStatusPedido(pedidoRecuperado);
 
-        Integer valorAnterior = pedidoRecuperado.getValor();
+        Double valorAnterior = pedidoRecuperado.getValor();
 
         pedidoRecuperado.setServico(pedidoDto.getServico());
         pedidoRecuperado.setDescricao(pedidoRecuperado.getDescricao());
-        pedidoRecuperado.setValor(0);
+        pedidoRecuperado.setValor(0.0);
 
         PedidoDTO pedidoAtualizado = returnDTO(pedidoRepository.save(pedidoRecuperado));
         pedidoAtualizado.setIdCliente(pedidoRecuperado.getCliente().getIdCliente());
@@ -98,6 +102,13 @@ public class PedidoService {
         pedidoRepository.delete(pedidoEntity);
         clienteEntityRecuperado.setQuantidadeDePedidos(clienteEntityRecuperado.getQuantidadeDePedidos() - 1);
     }
+
+    public PageDTO<PedidoStatusRelatorioDTO> gerarRelatorioStatus(StatusPedido status, Integer pagina, Integer registro) {
+        PageRequest pageRequest = PageRequest.of(pagina, registro);
+        Page<PedidoStatusRelatorioDTO> page = pedidoRepository.listStatusPedido(status, pageRequest);
+        return new PageDTO<>(page.getTotalElements(), page.getTotalPages(), pagina, registro, page.getContent());
+    }
+
 
     public PedidoEntity returnByIdPedidoEntity(Integer id) throws EntidadeNaoEncontradaException {
         return pedidoRepository.findById(id).stream()

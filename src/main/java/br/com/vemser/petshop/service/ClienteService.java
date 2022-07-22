@@ -44,8 +44,7 @@ public class ClienteService {
     public ClienteDTO create(ClienteCreateDTO clienteDto) {
         ClienteEntity cliente = returnEntity(clienteDto);
         cliente.setQuantidadeDePedidos(0);
-        cliente.setValorPagamento(0);
-        cliente.setIdCliente(9);
+        cliente.setValorPagamento(0.0);
         ClienteDTO clienteCriado = returnDto(clienteRepository.save(cliente));
         log.info("id do cliente: " + clienteCriado.getIdCliente());
         return clienteCriado;

@@ -1,8 +1,11 @@
 package br.com.vemser.petshop.controller;
 
 import br.com.vemser.petshop.documentation.PedidoDocumentation;
+import br.com.vemser.petshop.dto.PageDTO;
 import br.com.vemser.petshop.dto.PedidoCreateDTO;
 import br.com.vemser.petshop.dto.PedidoDTO;
+import br.com.vemser.petshop.dto.PedidoStatusRelatorioDTO;
+import br.com.vemser.petshop.enums.StatusPedido;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.service.PedidoService;
@@ -45,5 +48,11 @@ public class PedidoController implements PedidoDocumentation {
     @DeleteMapping("/{idPedido}")
     public void delete(@PathVariable("idPedido") Integer idPedido) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
         pedidoService.delete(idPedido);
+    }
+
+
+    @GetMapping("/relatorio-status")
+    public PageDTO<PedidoStatusRelatorioDTO> gerarRelatorioPorStatus(@RequestParam(value = "status", required = false)StatusPedido status, Integer pagina, Integer registro) {
+        return pedidoService.gerarRelatorioStatus(status, pagina, registro);
     }
 }

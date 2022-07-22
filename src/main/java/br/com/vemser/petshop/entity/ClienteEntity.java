@@ -26,7 +26,7 @@ public class ClienteEntity {
     private Integer quantidadeDePedidos;
 
     @Column(name = "valor_pagamento")
-    private Integer valorPagamento;
+    private Double valorPagamento;
 
     @Column(name = "email")
     private String email;
