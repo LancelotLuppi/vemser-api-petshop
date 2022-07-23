@@ -22,6 +22,7 @@ public class PedidoEntity {
     @Column(name = "id_pedido")
     private Integer idPedido;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "servico")
     private TipoServico servico;
 

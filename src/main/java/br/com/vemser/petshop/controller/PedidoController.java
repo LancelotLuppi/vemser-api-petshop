@@ -55,4 +55,11 @@ public class PedidoController implements PedidoDocumentation {
     public PageDTO<PedidoStatusRelatorioDTO> gerarRelatorioPorStatus(@RequestParam(value = "status", required = false)StatusPedido status, Integer pagina, Integer registro) {
         return pedidoService.gerarRelatorioStatus(status, pagina, registro);
     }
+
+    @GetMapping("/paginacao-ids")
+    public PageDTO<PedidoDTO> listarPedidosPaginados(@RequestParam(value = "idCliente", required = false) Integer idCliente,
+                                                     @RequestParam(value = "idPet", required = false) Integer idPet,
+                                                     Integer pagina, Integer registro) {
+        return pedidoService.listarPedidosPaginado(idCliente, idPet, pagina, registro);
+    }
 }

@@ -111,6 +111,19 @@ public class PedidoService {
         return new PageDTO<>(page.getTotalElements(), page.getTotalPages(), pagina, registro, page.getContent());
     }
 
+    public PageDTO<PedidoDTO> listarPedidosPaginado(Integer idCliente, Integer idPet, Integer pagina, Integer registro) {
+        PageRequest pageRequest = PageRequest.of(pagina, registro);
+
+        Page<PedidoEntity> page = resolvePaginacao(idCliente, idPet, pageRequest);
+
+        List<PedidoDTO> pedidosDTO = page.getContent().stream()
+                .map(this::returnDTO)
+                .collect(Collectors.toList());
+        return new PageDTO<>(page.getTotalElements(), page.getTotalPages(), pagina, registro, pedidosDTO);
+    }
+
+
+
 
     public PedidoEntity returnByIdPedidoEntity(Integer id) throws EntidadeNaoEncontradaException {
         return pedidoRepository.findById(id).stream()
@@ -124,6 +137,19 @@ public class PedidoService {
         } else if (pedidoEntity.getStatus().equals(StatusPedido.CONCLUIDO)) {
             throw new RegraDeNegocioException("Pedidos CONCLUIDOS não podem ser atualizados");
         }
+    }
+
+    public Page<PedidoEntity> resolvePaginacao(Integer idCliente, Integer idPet, PageRequest pageRequest) {
+        if(idCliente != null && idPet == null) {
+            return pedidoRepository.listarPedidosPorClientePaginado(idCliente, pageRequest);
+        }
+        else if(idPet != null && idCliente == null) {
+            return pedidoRepository.listarPedidosPorPetPaginado(idPet, pageRequest);
+        }
+        else if(idPet != null && idCliente != null) {
+            return pedidoRepository.listarPedidosPorClienteAndPetPaginado(idCliente ,idPet, pageRequest);
+        }
+        return pedidoRepository.findAll(pageRequest);
     }
 
     private PedidoEntity returnEntity(PedidoCreateDTO dto) {

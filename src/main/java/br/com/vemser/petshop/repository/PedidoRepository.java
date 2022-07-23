@@ -30,4 +30,25 @@ public interface PedidoRepository extends JpaRepository<PedidoEntity, Integer> {
             " join ped.pet p " +
             " where (:status is null OR ped.status = :status)")
     Page<PedidoStatusRelatorioDTO> listStatusPedido(@Param("status")StatusPedido status, PageRequest pageRequest);
+
+    @Query(value = "select p " +
+                    " from pedido p " +
+                    " join p.cliente c " +
+                   " where (c.idCliente = :idCliente) ")
+    Page<PedidoEntity> listarPedidosPorClientePaginado(@Param("idCliente") Integer idCliente, PageRequest pageRequest);
+
+    @Query(value = "select p " +
+            " from pedido p " +
+            " join p.pet pety " +
+            " where (pety.idPet = :idPet) ")
+    Page<PedidoEntity> listarPedidosPorPetPaginado(@Param("idPet") Integer idPet, PageRequest pageRequest);
+
+    @Query(value = "select p " +
+            " from pedido p " +
+            " join p.cliente c " +
+            " join p.pet pety " +
+            " where (pety.idPet = :idPet AND c.idCliente = :idCliente) ")
+    Page<PedidoEntity> listarPedidosPorClienteAndPetPaginado(@Param("idCliente") Integer idCliente,
+                                                             @Param("idPet") Integer idPet,
+                                                             PageRequest pageRequest);
 }
