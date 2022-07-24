@@ -45,6 +45,11 @@ public class PedidoController implements PedidoDocumentation {
         return ResponseEntity.ok(pedidoService.update(idPedido, pedidoAtualizado));
     }
 
+    @PutMapping("/atualizar-status")
+    public ResponseEntity<PedidoDTO> putStatus(Integer idPedido, StatusPedido status) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+        return ResponseEntity.ok(pedidoService.updateStatus(idPedido, status));
+    }
+
     @DeleteMapping("/{idPedido}")
     public void delete(@PathVariable("idPedido") Integer idPedido) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
         pedidoService.delete(idPedido);

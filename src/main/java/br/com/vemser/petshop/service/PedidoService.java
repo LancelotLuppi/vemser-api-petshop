@@ -40,6 +40,8 @@ public class PedidoService {
     @Autowired
     private CalculadoraService calculadoraService;
     @Autowired
+    private RegraStatusPedidoService regraStatusPedidoService;
+    @Autowired
     private ObjectMapper objectMapper;
 
     private final static String NOT_FOUND_MESSAGE = "{idPedido} não encontrado";
@@ -54,7 +56,7 @@ public class PedidoService {
         pedidoEntity.setValor(calculadoraService.calcularValorDoPedido(pedidoEntity, petRecuperado));
         pedidoEntity.setStatus(StatusPedido.ABERTO);
         pedidoEntity.setDataEHora(LocalDateTime.now());
-        PedidoDTO pedidoCriado = returnDTO(pedidoRepository.save(pedidoEntity));
+        PedidoDTO pedidoCriado = returnDtoWithId(pedidoRepository.save(pedidoEntity));
 
         clienteRecuperado.setQuantidadeDePedidos(clienteRecuperado.getQuantidadeDePedidos() + 1);
         clienteRecuperado.setValorPagamento(clienteRecuperado.getValorPagamento() + pedidoEntity.getValor());
@@ -99,11 +101,19 @@ public class PedidoService {
         return pedidoAtualizado;
     }
 
-    public void delete(Integer idPedido) throws EntidadeNaoEncontradaException {
+    public PedidoDTO updateStatus(Integer idPedido, StatusPedido statusPedido) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+        PedidoEntity pedido = returnByIdPedidoEntity(idPedido);
+        regraStatusPedidoService.updateStatus(pedido, statusPedido);
+        pedido.setStatus(statusPedido);
+        return returnDtoWithId(pedidoRepository.save(pedido));
+    }
+
+    public void delete(Integer idPedido) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
         PedidoEntity pedidoEntity = returnByIdPedidoEntity(idPedido);
-        ClienteEntity clienteEntityRecuperado = clienteService.retornarPorIdVerificado(pedidoEntity.getCliente().getIdCliente());
+        if(pedidoEntity.getStatus().equals(StatusPedido.ABERTO) || pedidoEntity.getStatus().equals(StatusPedido.EM_ANDAMENTO)) {
+            throw new RegraDeNegocioException("Pedidos com status ABERTO e EM_ANDAMENTO não podem ser deletados!");
+        }
         pedidoRepository.delete(pedidoEntity);
-        clienteEntityRecuperado.setQuantidadeDePedidos(clienteEntityRecuperado.getQuantidadeDePedidos() - 1);
     }
 
     public PageDTO<PedidoStatusRelatorioDTO> gerarRelatorioStatus(StatusPedido status, Integer pagina, Integer registro) {
