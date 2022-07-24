@@ -36,17 +36,15 @@ public class ContatoService {
         ContatoEntity contato = returnEntity(contatoDTO);
 
         contato.setCliente(clienteRecuperado);
-        ContatoDTO contatoSalvo = returnDTO(contatoRepository.save(contato));
-        contatoSalvo.setIdCliente(idCliente);
 
-        return contatoSalvo;
+        return returnDtoWithId(contatoRepository.save(contato));
     }
 
     public List<ContatoDTO> listByIdCliente(Integer idCliente) throws EntidadeNaoEncontradaException {
         clienteService.verificarId(idCliente);
         return contatoRepository.findAll().stream()
                 .filter(contato -> contato.getCliente().getIdCliente().equals(idCliente))
-                .map(this::returnDTO)
+                .map(this::returnDtoWithId)
                 .collect(Collectors.toList());
     }
 
@@ -54,20 +52,12 @@ public class ContatoService {
         ContatoEntity contatoRecuperado = getContatoEntityById(idContato);
         contatoRecuperado.setTelefone(contatoDto.getTelefone());
         contatoRecuperado.setDescricao(contatoDto.getDescricao());
-        ContatoDTO contatoAtualizado = returnDTO(contatoRepository.save(contatoRecuperado));
-        contatoAtualizado.setIdCliente(contatoRecuperado.getCliente().getIdCliente());
-        return contatoAtualizado;
+        return returnDtoWithId(contatoRepository.save(contatoRecuperado));
     }
 
     public void delete(Integer idContato) throws EntidadeNaoEncontradaException {
         ContatoEntity contatoRecuperado = getContatoEntityById(idContato);
         contatoRepository.delete(contatoRecuperado);
-    }
-
-    public void verificarIdContato(Integer idContato) throws EntidadeNaoEncontradaException {
-        contatoRepository.findById(idContato).stream()
-                .findFirst()
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(NOT_FOUND_MESSAGE));
     }
 
     public ContatoEntity getContatoEntityById(Integer idContato) throws EntidadeNaoEncontradaException {
@@ -81,5 +71,11 @@ public class ContatoService {
     }
     private ContatoDTO returnDTO(ContatoEntity entity){
         return objectMapper.convertValue(entity, ContatoDTO.class);
+    }
+
+    private ContatoDTO returnDtoWithId(ContatoEntity entity) {
+        ContatoDTO dto = returnDTO(entity);
+        dto.setIdCliente(entity.getCliente().getIdCliente());
+        return dto;
     }
 }

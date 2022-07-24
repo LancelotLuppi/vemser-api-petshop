@@ -66,7 +66,7 @@ public class PedidoService {
         clienteService.verificarId(idCliente);
         return pedidoRepository.findAll().stream()
                 .filter(pedido -> pedido.getCliente().getIdCliente().equals(idCliente))
-                .map(this::returnDTO)
+                .map(this::returnDtoWithId)
                 .collect(Collectors.toList());
     }
 
@@ -74,7 +74,7 @@ public class PedidoService {
         petService.verificarIdPet(idPet);
         return pedidoRepository.findAll().stream()
                 .filter(pedido -> pedido.getPet().getIdPet().equals(idPet))
-                .map(this::returnDTO)
+                .map(this::returnDtoWithId)
                 .collect(Collectors.toList());
     }
 
@@ -117,7 +117,7 @@ public class PedidoService {
         Page<PedidoEntity> page = resolvePaginacao(idCliente, idPet, pageRequest);
 
         List<PedidoDTO> pedidosDTO = page.getContent().stream()
-                .map(this::returnDTO)
+                .map(this::returnDtoWithId)
                 .collect(Collectors.toList());
         return new PageDTO<>(page.getTotalElements(), page.getTotalPages(), pagina, registro, pedidosDTO);
     }
@@ -155,6 +155,14 @@ public class PedidoService {
     private PedidoEntity returnEntity(PedidoCreateDTO dto) {
         return objectMapper.convertValue(dto, PedidoEntity.class);
     }
+
+    private PedidoDTO returnDtoWithId(PedidoEntity entity) {
+        PedidoDTO dto = returnDTO(entity);
+        dto.setIdCliente(entity.getCliente().getIdCliente());
+        dto.setIdPet(entity.getPet().getIdPet());
+        return dto;
+    }
+
     private PedidoDTO returnDTO(PedidoEntity entity) {
         return objectMapper.convertValue(entity, PedidoDTO.class);
     }

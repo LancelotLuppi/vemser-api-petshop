@@ -38,23 +38,20 @@ public class PetService {
         PetEntity petEntity = returnEntity(petDto);
 
         petEntity.setCliente(clienteEntity);
-        petRepository.save(petEntity);
-        PetDTO petSalvo = returnDto(petEntity);
-        petSalvo.setIdCliente(clienteEntity.getIdCliente());
 
-        return petSalvo;
+        return returnDtoWithId(petRepository.save(petEntity));
     }
 
     public List<PetDTO> list(Integer idCliente) throws EntidadeNaoEncontradaException {
         clienteService.verificarId(idCliente);
         return petRepository.findAll().stream()
                 .filter(pet -> pet.getCliente().getIdCliente().equals(idCliente))
-                .map(this::returnDto)
+                .map(this::returnDtoWithId)
                 .toList();
     }
 
     public PetDTO getByPetId(Integer idPet) throws EntidadeNaoEncontradaException {
-        return returnDto(getPetByIdEntity(idPet));
+        return returnDtoWithId(getPetByIdEntity(idPet));
     }
 
 
@@ -69,9 +66,7 @@ public class PetService {
         petRecuperado.setPorte(petDto.getPorte());
         petRecuperado.setIdade(petDto.getIdade());
 
-        PetDTO petAtualizado = returnDto(petRepository.save(petRecuperado));
-        petAtualizado.setIdCliente(petRecuperado.getCliente().getIdCliente());
-        return petAtualizado;
+        return returnDtoWithId(petRepository.save(petRecuperado));
     }
 
     public void delete(Integer id) throws EntidadeNaoEncontradaException {
@@ -79,11 +74,11 @@ public class PetService {
         petRepository.delete(petRecuperado);
     }
 
-    public PageDTO<PetDTO> paginarPets(Integer idCliente, Integer pagina, Integer registro) throws Exception {
+    public PageDTO<PetDTO> paginarPets(Integer idCliente, Integer pagina, Integer registro) {
         PageRequest pageRequest = PageRequest.of(pagina, registro);
         Page<PetEntity> page = petRepository.findById(idCliente, pageRequest);
         List<PetDTO> petDTOS = page.getContent().stream()
-                .map(this::returnDto)
+                .map(this::returnDtoWithId)
                 .toList();
         return new PageDTO<>(page.getTotalElements(), page.getTotalPages(), pagina, registro, petDTOS);
     }
@@ -107,5 +102,11 @@ public class PetService {
 
     private PetDTO returnDto(PetEntity entity) {
         return objectMapper.convertValue(entity, PetDTO.class);
+    }
+
+    private PetDTO returnDtoWithId(PetEntity entity) {
+        PetDTO dto = returnDto(entity);
+        dto.setIdCliente(entity.getCliente().getIdCliente());
+        return dto;
     }
 }
