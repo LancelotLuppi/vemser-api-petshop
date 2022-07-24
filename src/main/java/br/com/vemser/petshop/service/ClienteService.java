@@ -79,6 +79,9 @@ public class ClienteService {
 
     public void delete(Integer id) throws EntidadeNaoEncontradaException {
         ClienteEntity clienteRecuperado = retornarPorIdVerificado(id);
+        pedidoRepository.deleteByClienteId(id);
+        contatoRepository.deleteByClienteId(id);
+        petRepository.deleteByClienteId(id);
         clienteRepository.delete(clienteRecuperado);
     }
 

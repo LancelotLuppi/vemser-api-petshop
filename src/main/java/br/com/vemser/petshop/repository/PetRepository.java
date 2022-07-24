@@ -17,5 +17,11 @@ public interface PetRepository extends JpaRepository<PetEntity, Integer> {
             " where c.idCliente = :idCliente")
     Page<PetEntity> findById(@Param("idCliente") Integer idCliente, PageRequest pageRequest);
 
+    @Query(" delete p " +
+            " from pet p " +
+            " join p.cliente c " +
+            " where (c.idCliente = :idCliente)")
+    void deleteByClienteId(@Param("idCliente") Integer idCliente);
+
 
 }
