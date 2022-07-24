@@ -7,6 +7,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class PedidoDTO extends PedidoCreateDTO{
@@ -28,5 +29,5 @@ public class PedidoDTO extends PedidoCreateDTO{
     private StatusPedido status;
 
     @Schema(description = "Data e hora em que o pedido foi gerado")
-    private LocalDate data;
+    private LocalDateTime data;
 }

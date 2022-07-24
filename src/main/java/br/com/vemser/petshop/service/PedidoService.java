@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,7 +53,7 @@ public class PedidoService {
         pedidoEntity.setPet(petRecuperado);
         pedidoEntity.setValor(calculadoraService.calcularValorDoPedido(pedidoEntity, petRecuperado));
         pedidoEntity.setStatus(StatusPedido.ABERTO);
-        pedidoEntity.setDataEHora(LocalDate.now());
+        pedidoEntity.setDataEHora(LocalDateTime.now());
         PedidoDTO pedidoCriado = returnDTO(pedidoRepository.save(pedidoEntity));
 
         clienteRecuperado.setQuantidadeDePedidos(clienteRecuperado.getQuantidadeDePedidos() + 1);
@@ -114,7 +115,7 @@ public class PedidoService {
     public PageDTO<PedidoDTO> listarPedidosPaginado(Integer idCliente, Integer idPet, Integer pagina, Integer registro) {
         PageRequest pageRequest = PageRequest.of(pagina, registro);
 
-        Page<PedidoEntity> page = resolvePaginacao(idCliente, idPet, pageRequest);
+        Page<PedidoEntity> page = resolverPaginacao(idCliente, idPet, pageRequest);
 
         List<PedidoDTO> pedidosDTO = page.getContent().stream()
                 .map(this::returnDtoWithId)
@@ -139,7 +140,7 @@ public class PedidoService {
         }
     }
 
-    public Page<PedidoEntity> resolvePaginacao(Integer idCliente, Integer idPet, PageRequest pageRequest) {
+    public Page<PedidoEntity> resolverPaginacao(Integer idCliente, Integer idPet, PageRequest pageRequest) {
         if(idCliente != null && idPet == null) {
             return pedidoRepository.listarPedidosPorClientePaginado(idCliente, pageRequest);
         }
@@ -160,6 +161,7 @@ public class PedidoService {
         PedidoDTO dto = returnDTO(entity);
         dto.setIdCliente(entity.getCliente().getIdCliente());
         dto.setIdPet(entity.getPet().getIdPet());
+        dto.setData(entity.getDataEHora());
         return dto;
     }
 

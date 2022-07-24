@@ -8,6 +8,7 @@ import org.hibernate.boot.model.relational.Database;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -37,7 +38,7 @@ public class PedidoEntity {
     private StatusPedido status;
 
     @Column(name = "data_e_hora_gerada")
-    private LocalDate dataEHora;
+    private LocalDateTime dataEHora;
 
 
     @JsonIgnore
