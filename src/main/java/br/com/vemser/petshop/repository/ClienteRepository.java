@@ -2,9 +2,6 @@ package br.com.vemser.petshop.repository;
 
 import br.com.vemser.petshop.dto.ClienteDadosRelatorioDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
-import ch.qos.logback.core.net.server.Client;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

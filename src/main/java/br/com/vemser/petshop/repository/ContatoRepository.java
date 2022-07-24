@@ -9,11 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ContatoRepository extends JpaRepository<ContatoEntity, Integer> {
 
-    @Query("delete ctt " +
-            " from contato ctt " +
-            " join ctt.cliente c " +
-            " where (c.idCliente = :idCliente)")
-    void deleteByClienteId(@Param("idCliente") Integer idCliente);
 }
 
 

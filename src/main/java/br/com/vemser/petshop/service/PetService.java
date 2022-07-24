@@ -71,7 +71,6 @@ public class PetService {
 
     public void delete(Integer id) throws EntidadeNaoEncontradaException {
         PetEntity petRecuperado = getPetByIdEntity(id);
-        pedidoRepository.deleteByPetId(id);
         petRepository.delete(petRecuperado);
     }
 

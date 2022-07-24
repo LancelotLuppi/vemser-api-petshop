@@ -33,16 +33,19 @@ public class ClienteEntity {
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,
+        cascade = CascadeType.ALL, orphanRemoval = true,
         mappedBy = "cliente")
     private Set<ContatoEntity> contatos;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, orphanRemoval = true,
             mappedBy = "cliente")
     private Set<PetEntity> pets;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,orphanRemoval = true,
             mappedBy = "cliente")
     private Set<PedidoEntity> pedidos;
 }

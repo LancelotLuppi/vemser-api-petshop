@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -47,4 +48,10 @@ public class PetEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
     private ClienteEntity cliente;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,orphanRemoval = true,
+            mappedBy = "pet")
+    private Set<PedidoEntity> pedidos;
 }

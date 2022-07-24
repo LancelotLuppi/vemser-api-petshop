@@ -52,15 +52,4 @@ public interface PedidoRepository extends JpaRepository<PedidoEntity, Integer> {
                                                              @Param("idPet") Integer idPet,
                                                              PageRequest pageRequest);
 
-    @Query("delete ped " +
-            "from pedido ped " +
-            " join ped.pet p " +
-            " where (p.idPet = :idPet)")
-    void deleteByPetId(@Param("idPet") Integer idPet);
-
-    @Query("delete ped " +
-            "from pedido ped " +
-            " join ped.cliente c " +
-            " where (c.idCliente = :idCliente)")
-    void deleteByClienteId(@Param("idCliente") Integer idCliente);
 }
