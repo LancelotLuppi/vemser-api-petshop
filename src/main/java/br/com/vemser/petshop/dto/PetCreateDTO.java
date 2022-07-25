@@ -27,11 +27,11 @@ public class PetCreateDTO {
     @Size(max = 50)
     private String raca;
 
-    @Schema(description = "Informativo do tamanho da pelagem baseada na raça (0min - 9max)", example = "9")
+    @Schema(description = "Informativo do tamanho da pelagem baseada na raça", example = "LONGO")
     @NotNull
     private PelagemPet pelagem;
 
-    @Schema(description = "Informativo do porte do pet (0 muito pequeno - 9 muito grande)", example = "6")
+    @Schema(description = "Informativo do porte do pet ", example = "MEDIO")
     @NotNull
     private PortePet porte;
 

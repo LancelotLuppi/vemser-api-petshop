@@ -3,9 +3,7 @@ package br.com.vemser.petshop.controller;
 import br.com.vemser.petshop.documentation.ContatoDocumentation;
 import br.com.vemser.petshop.dto.ContatoCreateDTO;
 import br.com.vemser.petshop.dto.ContatoDTO;
-
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
-import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.service.ContatoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
