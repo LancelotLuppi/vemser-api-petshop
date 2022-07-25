@@ -3,11 +3,12 @@ package br.com.vemser.petshop.entity;
 import br.com.vemser.petshop.enums.StatusPedido;
 import br.com.vemser.petshop.enums.TipoServico;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-import org.hibernate.boot.model.relational.Database;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
