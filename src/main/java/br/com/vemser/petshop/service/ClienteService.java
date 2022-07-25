@@ -56,16 +56,7 @@ public class ClienteService {
         return clienteCriado;
     }
 
-    public PageDTO<ClienteDTO> listarClientes(Integer pagina, Integer registro) {
-        PageRequest pageRequest = PageRequest.of(pagina, registro);
-        Page<ClienteEntity> page = clienteRepository.findAll(pageRequest);
-        List<ClienteDTO> clienteDto = page.getContent().stream()
-                .map(this::returnDto)
-                .collect(Collectors.toList());
-        return new PageDTO<>(page.getTotalElements(), page.getTotalPages(), pagina, registro, clienteDto);
-    }
-
-    public ClienteDTO getById(Integer id) throws EntidadeNaoEncontradaException {
+    public ClienteDTO getById(Integer id) {
         ClienteEntity cliente = clienteRepository.findById(id).get();
         return returnDto(cliente);
     }

@@ -2,6 +2,8 @@ package br.com.vemser.petshop.documentation;
 
 import br.com.vemser.petshop.dto.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.ClienteDTO;
+import br.com.vemser.petshop.dto.ClienteDadosRelatorioDTO;
+import br.com.vemser.petshop.dto.PageDTO;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,14 +11,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.sql.SQLException;
+import java.util.List;
 
 public interface ClienteDocumentation {
 
     @Operation(summary = "Criar cadastro de cliente", description = "Adiciona as informações do cadastro no banco de dados" +
-            ", a quantidade de pedidos é passada como 0 ao criar um novo cadastro. \n" +
+            ", a quantidade de pedidos e o valor a pagar são definidas como 0 ao criar um novo cadastro. \n" +
             "Envia um email informando que foi feito o cadastro no sistema.")
         @ApiResponses(
                 value = {
@@ -33,7 +37,6 @@ public interface ClienteDocumentation {
                 value = {
                         @ApiResponse(responseCode = "200", description = "Retorna o cliente"),
                         @ApiResponse(responseCode = "400", description = "Erro client-side"),
-                        @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
@@ -50,7 +53,7 @@ public interface ClienteDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<ClienteDTO> put(Integer idCliente, @Valid @RequestBody ClienteCreateDTO clienteDto) throws RegraDeNegocioException, EntidadeNaoEncontradaException;
+    ResponseEntity<ClienteDTO> put(Integer idCliente, @Valid @RequestBody ClienteCreateDTO clienteDto) throws  EntidadeNaoEncontradaException;
 
     @Operation(summary = "Deletar cadastro de cliente", description = "Deleta as informações do cliente no banco de dados, " +
             "juntamente apagando as informações de (contato/pet/pedido) que estão ligados com o ID desse cliente. \n" +
@@ -63,5 +66,17 @@ public interface ClienteDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    void delete(Integer idCliente) throws RegraDeNegocioException, EntidadeNaoEncontradaException;
+    void delete(Integer idCliente) throws EntidadeNaoEncontradaException;
+
+
+    @Operation(summary = "Listar relatorio dos clientes", description = "Gera um relatório com as seguintes " +
+            "informações dos clientes: idCliente, nome, email, nome do pet, tipo do pet, telefone, descrição do contato.")
+        @ApiResponses(
+                value = {
+                        @ApiResponse(responseCode = "200", description = "Lista os relatórios"),
+                        @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "500", description = "Erro server-side")
+                }
+        )
+    ResponseEntity<List<ClienteDadosRelatorioDTO>> listClienteDados(Integer idCliente);
 }

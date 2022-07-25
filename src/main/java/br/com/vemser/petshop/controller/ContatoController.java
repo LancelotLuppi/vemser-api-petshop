@@ -30,18 +30,18 @@ public class ContatoController implements ContatoDocumentation {
     }
 
     @PostMapping("/{idCliente}")
-    public ResponseEntity<ContatoDTO> post(@PathVariable("idCliente") Integer id, @Valid @RequestBody ContatoCreateDTO contato) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public ResponseEntity<ContatoDTO> post(@PathVariable("idCliente") Integer id, @Valid @RequestBody ContatoCreateDTO contato) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(contatoService.create(id, contato));
     }
 
     @PutMapping("/{idContato}")
     public ResponseEntity<ContatoDTO> put(@PathVariable("idContato") Integer id,
-                                                       @Valid @RequestBody ContatoCreateDTO contatoAtualizado) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
+                                                       @Valid @RequestBody ContatoCreateDTO contatoAtualizado) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(contatoService.update(id, contatoAtualizado));
     }
 
     @DeleteMapping("/{idContato}")
-    public void delete(@PathVariable("idContato") Integer id) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public void delete(@PathVariable("idContato") Integer id) throws EntidadeNaoEncontradaException {
         contatoService.delete(id);
     }
 }

@@ -41,28 +41,23 @@ public class ClienteController implements ClienteDocumentation {
         return ResponseEntity.ok(clienteService.create(cliente));
     }
 
-    @GetMapping("/paginacao")
-    private PageDTO<ClienteDTO> listarPaginado(Integer pagina, Integer registro) {
-        return clienteService.listarClientes(pagina, registro);
-    }
-
     @GetMapping("/{idCliente}")
-    public ResponseEntity<ClienteDTO> getById(@PathVariable("idCliente") Integer id) throws EntidadeNaoEncontradaException {
+    public ResponseEntity<ClienteDTO> getById(@PathVariable("idCliente") Integer id) {
         return ResponseEntity.ok(clienteService.getById(id));
     }
 
     @PutMapping("/{idCliente}")
-    public ResponseEntity<ClienteDTO> put(@PathVariable("idCliente") Integer id, @Valid @RequestBody ClienteCreateDTO clienteAtualizado) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public ResponseEntity<ClienteDTO> put(@PathVariable("idCliente") Integer id, @Valid @RequestBody ClienteCreateDTO clienteAtualizado) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(clienteService.update(id, clienteAtualizado));
     }
 
     @DeleteMapping("/{idCliente}")
-    public void delete(@PathVariable("idCliente") Integer id) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public void delete(@PathVariable("idCliente") Integer id) throws EntidadeNaoEncontradaException {
         clienteService.delete(id);
     }
 
     @GetMapping("/relatorio-dados")
-    public ResponseEntity<List<ClienteDadosRelatorioDTO>> listClienteDados(@RequestParam(value = "idCliente" , required = false) Integer idCliente){
+    public ResponseEntity<List<ClienteDadosRelatorioDTO>> listClienteDados(@RequestParam(value = "idCliente" , required = false) Integer idCliente) {
         return ResponseEntity.ok(clienteService.listarDadosCliente(idCliente));
     }
 }

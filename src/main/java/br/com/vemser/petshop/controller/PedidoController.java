@@ -26,22 +26,22 @@ public class PedidoController implements PedidoDocumentation {
     private PedidoService pedidoService;
 
     @PostMapping("/{idPet}")
-    public ResponseEntity<PedidoDTO> post(@PathVariable("idPet") Integer id, @Valid @RequestBody PedidoCreateDTO pedido) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public ResponseEntity<PedidoDTO> post(@PathVariable("idPet") Integer id, @Valid @RequestBody PedidoCreateDTO pedido) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(pedidoService.create(id, pedido));
     }
 
     @GetMapping("/{idCliente}")
-    public ResponseEntity<List<PedidoDTO>> getByClientId(@PathVariable("idCliente") Integer id) throws SQLException, EntidadeNaoEncontradaException {
+    public ResponseEntity<List<PedidoDTO>> getByClientId(@PathVariable("idCliente") Integer id) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(pedidoService.list(id));
     }
 
     @GetMapping("/{idPet}/pet")
-    public ResponseEntity<List<PedidoDTO>> getByPetId(@PathVariable("idPet") Integer idPet) throws SQLException, EntidadeNaoEncontradaException {
+    public ResponseEntity<List<PedidoDTO>> getByPetId(@PathVariable("idPet") Integer idPet) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(pedidoService.listByPetId(idPet));
     }
 
     @PutMapping("/{idPedido}")
-    public ResponseEntity<PedidoDTO> put(@PathVariable("idPedido") Integer idPedido, @Valid @RequestBody PedidoCreateDTO pedidoAtualizado) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public ResponseEntity<PedidoDTO> put(@PathVariable("idPedido") Integer idPedido, @Valid @RequestBody PedidoCreateDTO pedidoAtualizado) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
         return ResponseEntity.ok(pedidoService.update(idPedido, pedidoAtualizado));
     }
 
@@ -51,7 +51,7 @@ public class PedidoController implements PedidoDocumentation {
     }
 
     @DeleteMapping("/{idPedido}")
-    public void delete(@PathVariable("idPedido") Integer idPedido) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public void delete(@PathVariable("idPedido") Integer idPedido) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
         pedidoService.delete(idPedido);
     }
 

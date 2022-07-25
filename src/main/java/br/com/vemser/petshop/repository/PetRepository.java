@@ -14,7 +14,7 @@ public interface PetRepository extends JpaRepository<PetEntity, Integer> {
     @Query(value = " select a " +
             " FROM animal a " +
             " join a.cliente c" +
-            " where c.idCliente = :idCliente")
+            " where (c.idCliente = :idCliente OR :idCliente is null)")
     Page<PetEntity> findById(@Param("idCliente") Integer idCliente, PageRequest pageRequest);
 
 }

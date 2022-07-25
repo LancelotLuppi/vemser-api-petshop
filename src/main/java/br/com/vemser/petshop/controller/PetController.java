@@ -25,33 +25,33 @@ public class PetController implements PetDocumentation {
     private PetService petService;
 
     @PostMapping("/{idCliente}")
-    public ResponseEntity<PetDTO> post(@PathVariable("idCliente") Integer id, @Valid @RequestBody PetCreateDTO pet) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public ResponseEntity<PetDTO> post(@PathVariable("idCliente") Integer id, @Valid @RequestBody PetCreateDTO pet) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(petService.create(id, pet));
     }
 
     @GetMapping("/{idCliente}")
-    public ResponseEntity<List<PetDTO>> get(@PathVariable("idCliente") Integer id) throws SQLException, EntidadeNaoEncontradaException {
+    public ResponseEntity<List<PetDTO>> get(@PathVariable("idCliente") Integer id) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(petService.list(id));
     }
 
     @GetMapping("/{idPet}/pet")
-    public ResponseEntity<PetDTO> getByPetId(@PathVariable("idPet") Integer idPet) throws SQLException, EntidadeNaoEncontradaException {
+    public ResponseEntity<PetDTO> getByPetId(@PathVariable("idPet") Integer idPet) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(petService.getByPetId(idPet));
     }
 
     @GetMapping("/page-pets")
     public PageDTO<PetDTO> paginarPetsCliente(@RequestParam(value = "idCliente", required = false) Integer idCliente,
-                                              Integer pagina, Integer quantidadeRegistro) throws Exception{
+                                              Integer pagina, Integer quantidadeRegistro) {
         return petService.paginarPets(idCliente, pagina, quantidadeRegistro);
     }
 
     @PutMapping("/{idPet}")
-    public ResponseEntity<PetDTO> put(@PathVariable("idPet") Integer id, @Valid @RequestBody PetCreateDTO petAtualizado) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public ResponseEntity<PetDTO> put(@PathVariable("idPet") Integer id, @Valid @RequestBody PetCreateDTO petAtualizado) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(petService.update(id, petAtualizado));
     }
 
     @DeleteMapping("/{idPet}")
-    public void delete(@PathVariable("idPet") Integer id) throws SQLException, RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public void delete(@PathVariable("idPet") Integer id) throws EntidadeNaoEncontradaException {
         petService.delete(id);
     }
 }
