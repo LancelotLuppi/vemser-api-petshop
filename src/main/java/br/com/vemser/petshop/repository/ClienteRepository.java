@@ -25,6 +25,6 @@ public interface ClienteRepository extends JpaRepository<ClienteEntity, Integer>
             " FROM cliente c" +
             " join c.pets pety" +
             " join c.contatos ctt" +
-            " where (c.idCliente = :idCliente)")
+            " where (c.idCliente = :idCliente OR :idCliente is null)")
     List<ClienteDadosRelatorioDTO> relatorioCliente(@Param("idCliente") Integer idCliente);
 }
