@@ -2,11 +2,9 @@ package br.com.vemser.petshop.dto;
 
 import br.com.vemser.petshop.enums.StatusPedido;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
