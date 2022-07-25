@@ -11,12 +11,12 @@ public class CalculadoraService {
 
     public Double calcularValorDoPedido(PedidoEntity pedido, PetEntity pet) {
         if(pet.getTipoPet().equals(TipoPet.CACHORRO)) {
-            return calculoCachorro(pedido, pet);
+            return calcularParaCachorro(pedido, pet);
         }
-        return calculoGato(pedido, pet);
+        return calcularParaGato(pedido, pet);
     }
 
-    public Double calculoCachorro(PedidoEntity pedido, PetEntity pet) {
+    public Double calcularParaCachorro(PedidoEntity pedido, PetEntity pet) {
         if(pedido.getServico().equals(TipoServico.BANHO)) {
             switch (pet.getPorte()) {
                 case PEQUENO -> {
@@ -59,7 +59,7 @@ public class CalculadoraService {
         return 0.00;
     }
 
-    public Double calculoGato(PedidoEntity pedido, PetEntity pet) {
+    public Double calcularParaGato(PedidoEntity pedido, PetEntity pet) {
         if(pedido.getServico().equals(TipoServico.BANHO)) {
             switch (pet.getPorte()) {
                 case PEQUENO -> {

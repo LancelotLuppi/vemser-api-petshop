@@ -4,6 +4,7 @@ import br.com.vemser.petshop.dto.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.ClienteDTO;
 import br.com.vemser.petshop.dto.ClienteDadosRelatorioDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
+import br.com.vemser.petshop.enums.TipoRequisicao;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.ContatoRepository;
@@ -41,7 +42,7 @@ public class ClienteService {
         cliente.setQuantidadeDePedidos(0);
         cliente.setValorPagamento(0.0);
         ClienteDTO clienteCriado = returnDto(clienteRepository.save(cliente));
-        log.info("id do cliente: " + clienteCriado.getIdCliente());
+        emailService.sendEmail(clienteCriado.getNome(), clienteCriado.getIdCliente(), clienteCriado.getEmail(), TipoRequisicao.POST);
         return clienteCriado;
     }
 
@@ -54,11 +55,14 @@ public class ClienteService {
         ClienteEntity clienteRecuperado = retornarPorIdVerificado(id);
         clienteRecuperado.setNome(clienteDto.getNome());
         clienteRecuperado.setEmail(clienteDto.getEmail());
-        return returnDto(clienteRepository.save(clienteRecuperado));
+        ClienteDTO clienteAtualizado = returnDto(clienteRepository.save(clienteRecuperado));
+        emailService.sendEmail(clienteAtualizado.getNome(), clienteAtualizado.getIdCliente(), clienteAtualizado.getEmail(), TipoRequisicao.PUT);
+        return clienteAtualizado;
     }
 
     public void delete(Integer id) throws EntidadeNaoEncontradaException {
         ClienteEntity clienteRecuperado = retornarPorIdVerificado(id);
+        emailService.sendEmail(clienteRecuperado.getNome(), clienteRecuperado.getIdCliente(), clienteRecuperado.getEmail(), TipoRequisicao.DELETE);
         clienteRepository.delete(clienteRecuperado);
     }
 
@@ -70,12 +74,12 @@ public class ClienteService {
     public ClienteEntity retornarPorIdVerificado(Integer id) throws EntidadeNaoEncontradaException {
         return clienteRepository.findById(id).stream()
                 .findFirst()
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("{idPessoa} não encontrado"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(NOT_FOUND_MESSAGE));
     }
 
     public void verificarId(Integer id) throws EntidadeNaoEncontradaException {
         clienteRepository.findById(id)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("{idPessoa} não encontrado"));
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(NOT_FOUND_MESSAGE));
     }
 
     private ClienteEntity returnEntity(ClienteCreateDTO dto) {
@@ -85,4 +89,5 @@ public class ClienteService {
     private ClienteDTO returnDto(ClienteEntity entity) {
         return objectMapper.convertValue(entity, ClienteDTO.class);
     }
+
 }
