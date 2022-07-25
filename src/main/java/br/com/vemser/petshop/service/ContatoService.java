@@ -5,14 +5,12 @@ import br.com.vemser.petshop.dto.ContatoDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.ContatoEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
-import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ContatoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 

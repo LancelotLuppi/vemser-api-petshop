@@ -5,9 +5,7 @@ import br.com.vemser.petshop.dto.PetCreateDTO;
 import br.com.vemser.petshop.dto.PetDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.PetEntity;
-import br.com.vemser.petshop.enums.TipoPet;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
-import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.PedidoRepository;
 import br.com.vemser.petshop.repository.PetRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,9 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PetService {

@@ -3,29 +3,18 @@ package br.com.vemser.petshop.service;
 import br.com.vemser.petshop.dto.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.ClienteDTO;
 import br.com.vemser.petshop.dto.ClienteDadosRelatorioDTO;
-import br.com.vemser.petshop.dto.PageDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
-import br.com.vemser.petshop.enums.TipoRequisicao;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
-import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.ContatoRepository;
-
 import br.com.vemser.petshop.repository.PedidoRepository;
 import br.com.vemser.petshop.repository.PetRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
