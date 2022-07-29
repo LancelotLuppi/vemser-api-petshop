@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -37,7 +38,8 @@ public class SecurityConfiguration {
 
     private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> permissoes() {
         return (authz) ->
-                authz.antMatchers(HttpMethod.POST, "/cliente").hasAnyRole("USER", "ADMIN")
+                authz.antMatchers("/", "/auth", "/auth/cadastro", "/auth/logged").permitAll()
+                        .antMatchers(HttpMethod.POST, "/cliente").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.POST, "/pet").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.POST, "/contato").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.POST, "/pedido").hasAnyRole("USER", "ATENDENTE", "TOSADOR")
@@ -61,10 +63,7 @@ public class SecurityConfiguration {
         return (web) -> web.ignoring().antMatchers("/v3/api-docs",
                 "/v3/api-docs/**",
                 "/swagger-resources/**",
-                "/swagger-ui/**",
-                "/",
-                "/auth",
-                "/auth/cadastro");
+                "/swagger-ui/**");
     }
 
     @Bean

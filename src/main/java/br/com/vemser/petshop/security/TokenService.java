@@ -62,7 +62,7 @@ public class TokenService {
 
         Claims body = Jwts.parser()
                 .setSigningKey(secret)
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
 
         Integer idUsuario = body.get(Claims.ID, Integer.class);
