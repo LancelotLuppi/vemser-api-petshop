@@ -10,6 +10,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,9 @@ public class TokenService {
     private static final String KEY_CARGOS = "cargos";
 
 
-    public String generateToken(UsuarioEntity usuarioEntity) {
+    public String generateToken(Authentication authentication) {
+        UsuarioEntity usuarioEntity = (UsuarioEntity) authentication.getPrincipal();
+
         Date now = new Date();
         Date exp = new Date(now.getTime() + Long.parseLong(expiration));
 
