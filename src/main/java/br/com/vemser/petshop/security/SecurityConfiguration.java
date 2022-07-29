@@ -61,7 +61,10 @@ public class SecurityConfiguration {
         return (web) -> web.ignoring().antMatchers("/v3/api-docs",
                 "/v3/api-docs/**",
                 "/swagger-resources/**",
-                "/swagger-ui/**");
+                "/swagger-ui/**",
+                "/",
+                "/auth",
+                "/auth/cadastro");
     }
 
     @Bean
