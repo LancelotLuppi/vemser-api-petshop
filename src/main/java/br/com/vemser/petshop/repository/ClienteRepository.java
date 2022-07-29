@@ -1,6 +1,6 @@
 package br.com.vemser.petshop.repository;
 
-import br.com.vemser.petshop.dto.ClienteDadosRelatorioDTO;
+import br.com.vemser.petshop.dto.cliente.ClienteDadosRelatorioDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface ClienteRepository extends JpaRepository<ClienteEntity, Integer> {
 
-    @Query(value = "select new br.com.vemser.petshop.dto.ClienteDadosRelatorioDTO(" +
+    @Query(value = "select new br.com.vemser.petshop.dto.cliente.ClienteDadosRelatorioDTO(" +
             " c.idCliente," +
             " c.nome," +
             " c.email," +

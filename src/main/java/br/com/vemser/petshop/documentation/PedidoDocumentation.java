@@ -1,9 +1,9 @@
 package br.com.vemser.petshop.documentation;
 
 import br.com.vemser.petshop.dto.PageDTO;
-import br.com.vemser.petshop.dto.PedidoCreateDTO;
-import br.com.vemser.petshop.dto.PedidoDTO;
-import br.com.vemser.petshop.dto.PedidoStatusRelatorioDTO;
+import br.com.vemser.petshop.dto.pedido.PedidoCreateDTO;
+import br.com.vemser.petshop.dto.pedido.PedidoDTO;
+import br.com.vemser.petshop.dto.pedido.PedidoStatusRelatorioDTO;
 import br.com.vemser.petshop.enums.StatusPedido;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;

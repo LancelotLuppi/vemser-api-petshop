@@ -1,5 +1,6 @@
-package br.com.vemser.petshop.dto;
+package br.com.vemser.petshop.dto.pedido;
 
+import br.com.vemser.petshop.dto.pedido.PedidoCreateDTO;
 import br.com.vemser.petshop.enums.StatusPedido;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -8,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
-public class PedidoDTO extends PedidoCreateDTO{
+public class PedidoDTO extends PedidoCreateDTO {
 
     @Schema(description = "Identificador único do pedido")
     private Integer idPedido;

@@ -1,11 +1,11 @@
-package br.com.vemser.petshop.dto;
+package br.com.vemser.petshop.dto.login;
 
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 
 @Data
-public class LoginDTO {
+public class LoginCreateDTO {
 
     @NotNull
     private String login;

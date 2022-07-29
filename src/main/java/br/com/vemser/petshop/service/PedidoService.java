@@ -1,9 +1,9 @@
 package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.dto.PageDTO;
-import br.com.vemser.petshop.dto.PedidoCreateDTO;
-import br.com.vemser.petshop.dto.PedidoDTO;
-import br.com.vemser.petshop.dto.PedidoStatusRelatorioDTO;
+import br.com.vemser.petshop.dto.pedido.PedidoCreateDTO;
+import br.com.vemser.petshop.dto.pedido.PedidoDTO;
+import br.com.vemser.petshop.dto.pedido.PedidoStatusRelatorioDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.PedidoEntity;
 import br.com.vemser.petshop.entity.PetEntity;

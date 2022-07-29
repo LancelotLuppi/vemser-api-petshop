@@ -1,8 +1,8 @@
 package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.dto.PageDTO;
-import br.com.vemser.petshop.dto.PetCreateDTO;
-import br.com.vemser.petshop.dto.PetDTO;
+import br.com.vemser.petshop.dto.pet.PetCreateDTO;
+import br.com.vemser.petshop.dto.pet.PetDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.PetEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;

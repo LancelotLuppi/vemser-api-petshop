@@ -2,8 +2,8 @@ package br.com.vemser.petshop.controller;
 
 import br.com.vemser.petshop.documentation.PetDocumentation;
 import br.com.vemser.petshop.dto.PageDTO;
-import br.com.vemser.petshop.dto.PetCreateDTO;
-import br.com.vemser.petshop.dto.PetDTO;
+import br.com.vemser.petshop.dto.pet.PetCreateDTO;
+import br.com.vemser.petshop.dto.pet.PetDTO;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.service.PetService;
 import org.springframework.beans.factory.annotation.Autowired;

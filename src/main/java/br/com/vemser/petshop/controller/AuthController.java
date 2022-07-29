@@ -1,6 +1,7 @@
 package br.com.vemser.petshop.controller;
 
-import br.com.vemser.petshop.dto.LoginDTO;
+import br.com.vemser.petshop.dto.login.LoginCreateDTO;
+import br.com.vemser.petshop.dto.login.LoginDTO;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.security.TokenService;
 import br.com.vemser.petshop.service.UsuarioService;
@@ -28,7 +29,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping
-    public String auth(@RequestBody @Valid LoginDTO login) throws RegraDeNegocioException{
+    public String auth(@RequestBody @Valid LoginCreateDTO login) throws RegraDeNegocioException{
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(
                         login.getLogin(),
@@ -41,7 +42,7 @@ public class AuthController {
     }
 
     @PostMapping("/cadastro")
-    public ResponseEntity<LoginDTO> cadastro(@RequestBody @Valid LoginDTO loginDTO){
-        return ResponseEntity.ok(usuarioService.cadastro(loginDTO));
+    public ResponseEntity<LoginDTO> cadastro(@RequestBody @Valid LoginCreateDTO loginCreateDTO){
+        return ResponseEntity.ok(usuarioService.cadastro(loginCreateDTO));
     }
 }

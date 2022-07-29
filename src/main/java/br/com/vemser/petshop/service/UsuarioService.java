@@ -1,7 +1,8 @@
 package br.com.vemser.petshop.service;
 
 
-import br.com.vemser.petshop.dto.LoginDTO;
+import br.com.vemser.petshop.dto.login.LoginCreateDTO;
+import br.com.vemser.petshop.dto.login.LoginDTO;
 import br.com.vemser.petshop.entity.UsuarioEntity;
 import br.com.vemser.petshop.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,10 +31,19 @@ public class UsuarioService {
         return usuarioRepository.findByLogin(login);
     }
 
-    public LoginDTO cadastro(LoginDTO loginDTO){
-        UsuarioEntity novoUser = objectMapper.convertValue(loginDTO, UsuarioEntity.class);
-        novoUser.setSenha(new Argon2PasswordEncoder().encode(loginDTO.getSenha()));
-        usuarioRepository.save(novoUser);
-        return loginDTO;
+    public LoginDTO cadastro(LoginCreateDTO loginCreateDTO){
+        UsuarioEntity novoUser = returnEntity(loginCreateDTO);
+        novoUser.setSenha(new Argon2PasswordEncoder().encode(loginCreateDTO.getSenha()));
+        UsuarioEntity user = usuarioRepository.save(novoUser);
+
+        return new LoginDTO(user.getIdUsuario(), user.getUsername());
+    }
+
+    private LoginDTO returnDTO(UsuarioEntity entity) {
+        return objectMapper.convertValue(entity, LoginDTO.class);
+    }
+
+    private UsuarioEntity returnEntity(LoginCreateDTO dto) {
+        return objectMapper.convertValue(dto, UsuarioEntity.class);
     }
 }

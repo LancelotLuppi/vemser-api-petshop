@@ -1,4 +1,4 @@
-package br.com.vemser.petshop.dto;
+package br.com.vemser.petshop.dto.pet;
 
 import br.com.vemser.petshop.enums.PelagemPet;
 import br.com.vemser.petshop.enums.PortePet;

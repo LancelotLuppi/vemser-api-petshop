@@ -1,5 +1,6 @@
-package br.com.vemser.petshop.dto;
+package br.com.vemser.petshop.dto.contato;
 
+import br.com.vemser.petshop.dto.contato.ContatoCreateDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

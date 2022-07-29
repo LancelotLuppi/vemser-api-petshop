@@ -1,8 +1,8 @@
 package br.com.vemser.petshop.documentation;
 
-import br.com.vemser.petshop.dto.ClienteCreateDTO;
-import br.com.vemser.petshop.dto.ClienteDTO;
-import br.com.vemser.petshop.dto.ClienteDadosRelatorioDTO;
+import br.com.vemser.petshop.dto.cliente.ClienteCreateDTO;
+import br.com.vemser.petshop.dto.cliente.ClienteDTO;
+import br.com.vemser.petshop.dto.cliente.ClienteDadosRelatorioDTO;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;

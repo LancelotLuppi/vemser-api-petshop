@@ -1,7 +1,7 @@
 package br.com.vemser.petshop.documentation;
 
-import br.com.vemser.petshop.dto.ContatoCreateDTO;
-import br.com.vemser.petshop.dto.ContatoDTO;
+import br.com.vemser.petshop.dto.contato.ContatoCreateDTO;
+import br.com.vemser.petshop.dto.contato.ContatoDTO;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

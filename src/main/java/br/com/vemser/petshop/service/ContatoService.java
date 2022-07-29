@@ -1,7 +1,7 @@
 package br.com.vemser.petshop.service;
 
-import br.com.vemser.petshop.dto.ContatoCreateDTO;
-import br.com.vemser.petshop.dto.ContatoDTO;
+import br.com.vemser.petshop.dto.contato.ContatoCreateDTO;
+import br.com.vemser.petshop.dto.contato.ContatoDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.ContatoEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
