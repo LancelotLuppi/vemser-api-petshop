@@ -2,6 +2,7 @@ package br.com.vemser.petshop.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,6 +23,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String token = getTokenFromHeader(request);
 
         UsernamePasswordAuthenticationToken userAuthenticationToken = tokenService.isValid(token);
+
+        SecurityContextHolder.getContext().setAuthentication(userAuthenticationToken);
+
+        filterChain.doFilter(request, response);
     }
 
     private String getTokenFromHeader(HttpServletRequest request) {
