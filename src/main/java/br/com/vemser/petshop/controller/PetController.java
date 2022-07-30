@@ -23,12 +23,12 @@ public class PetController implements PetDocumentation {
 
     @PostMapping("/{idCliente}")
     public ResponseEntity<PetDTO> post(@PathVariable("idCliente") Integer id, @Valid @RequestBody PetCreateDTO pet) throws EntidadeNaoEncontradaException {
-        return ResponseEntity.ok(petService.create(id, pet));
+        return ResponseEntity.ok(petService.createByClientId(id, pet));
     }
 
     @GetMapping("/{idCliente}")
     public ResponseEntity<List<PetDTO>> get(@PathVariable("idCliente") Integer id) throws EntidadeNaoEncontradaException {
-        return ResponseEntity.ok(petService.list(id));
+        return ResponseEntity.ok(petService.getByClientId(id));
     }
 
     @GetMapping("/{idPet}/pet")

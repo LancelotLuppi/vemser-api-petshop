@@ -6,10 +6,9 @@ import br.com.vemser.petshop.dto.pet.PetDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.PetEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
-import br.com.vemser.petshop.repository.PedidoRepository;
 import br.com.vemser.petshop.repository.PetRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -17,19 +16,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PetService {
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private PetRepository petRepository;
-    @Autowired
-    private PedidoRepository pedidoRepository;
-    @Autowired
-    private ClienteService clienteService;
+    private final ObjectMapper objectMapper;
+    private final PetRepository petRepository;
+    private final ClienteService clienteService;
 
     private final static String NOT_FOUND_MESSAGE = "{idPet} não encontrado";
 
-    public PetDTO create(Integer idCliente, PetCreateDTO petDto) throws EntidadeNaoEncontradaException {
+    public PetDTO createByClientId(Integer idCliente, PetCreateDTO petDto) throws EntidadeNaoEncontradaException {
         ClienteEntity clienteEntity = clienteService.retornarPorIdVerificado(idCliente);
         PetEntity petEntity = returnEntity(petDto);
 
@@ -38,7 +33,23 @@ public class PetService {
         return returnDtoWithId(petRepository.save(petEntity));
     }
 
-    public List<PetDTO> list(Integer idCliente) throws EntidadeNaoEncontradaException {
+    public PetDTO createByLoggedUser(PetCreateDTO petDto) throws EntidadeNaoEncontradaException {
+        ClienteEntity clienteLogado = clienteService.returnLoggedClient();
+        PetEntity petEntity = returnEntity(petDto);
+
+        petEntity.setCliente(clienteLogado);
+
+        return returnDtoWithId(petRepository.save(petEntity));
+    }
+
+    public List<PetDTO> getByLoggedUser() throws EntidadeNaoEncontradaException {
+        ClienteEntity clienteLogado = clienteService.returnLoggedClient();
+
+        return clienteLogado.getPets().stream()
+                .map(this::returnDto).toList();
+    }
+
+    public List<PetDTO> getByClientId(Integer idCliente) throws EntidadeNaoEncontradaException {
         clienteService.verificarId(idCliente);
         return petRepository.findAll().stream()
                 .filter(pet -> pet.getCliente().getIdCliente().equals(idCliente))

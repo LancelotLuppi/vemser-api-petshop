@@ -97,6 +97,11 @@ public class ClienteService {
         return objectMapper.convertValue(dto, ClienteEntity.class);
     }
 
+    public ClienteEntity returnLoggedClient() throws EntidadeNaoEncontradaException {
+        UsuarioEntity userLogado = usuarioService.findById(usuarioService.getIdLoggedUser());
+        return userLogado.getCliente();
+    }
+
     private ClienteDTO returnDto(ClienteEntity entity) {
         return objectMapper.convertValue(entity, ClienteDTO.class);
     }
