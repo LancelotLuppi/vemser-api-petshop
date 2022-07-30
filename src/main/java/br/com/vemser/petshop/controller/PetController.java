@@ -6,6 +6,7 @@ import br.com.vemser.petshop.dto.pet.PetCreateDTO;
 import br.com.vemser.petshop.dto.pet.PetDTO;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.service.PetService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -26,9 +27,19 @@ public class PetController implements PetDocumentation {
         return ResponseEntity.ok(petService.createByClientId(id, pet));
     }
 
+    @PostMapping("/logged-user")
+    public ResponseEntity<PetDTO> post(PetCreateDTO pet) throws EntidadeNaoEncontradaException {
+        return ResponseEntity.ok(petService.createByLoggedUser(pet));
+    }
+
     @GetMapping("/{idCliente}")
     public ResponseEntity<List<PetDTO>> get(@PathVariable("idCliente") Integer id) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(petService.getByClientId(id));
+    }
+
+    @GetMapping("/logged-user")
+    public ResponseEntity<List<PetDTO>> getByLoggedUser() throws EntidadeNaoEncontradaException {
+        return ResponseEntity.ok(petService.getByLoggedUser());
     }
 
     @GetMapping("/{idPet}/pet")

@@ -46,7 +46,7 @@ public class PetService {
         ClienteEntity clienteLogado = clienteService.returnLoggedClient();
 
         return clienteLogado.getPets().stream()
-                .map(this::returnDto).toList();
+                .map(this::returnDtoWithId).toList();
     }
 
     public List<PetDTO> getByClientId(Integer idCliente) throws EntidadeNaoEncontradaException {
