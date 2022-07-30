@@ -8,6 +8,7 @@ public enum TipoCargo {
     TOSADOR(1),
     ATENDENTE(2),
     USUARIO(3);
+
     private Integer tipo;
 
     TipoCargo(Integer tipo) {

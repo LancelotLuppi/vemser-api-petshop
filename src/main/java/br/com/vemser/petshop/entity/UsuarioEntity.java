@@ -28,6 +28,8 @@ public class UsuarioEntity implements UserDetails {
     @Column(name = "senha")
     private String senha;
 
+    @Column(name = "status")
+    private Boolean status;
 
 
     @JsonIgnore

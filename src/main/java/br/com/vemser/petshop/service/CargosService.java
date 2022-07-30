@@ -35,13 +35,13 @@ public class CargosService {
 
     public CargoEntity returnByEnum(TipoCargo tipoCargo) throws EntidadeNaoEncontradaException {
         if(tipoCargo.equals(TipoCargo.ADMIN)) {
-            return findById(1);
+            return findById(0);
         } else if(tipoCargo.equals(TipoCargo.ATENDENTE)) {
-            return findById(4);
-        } else if(tipoCargo.equals(TipoCargo.TOSADOR)) {
-            return findById(3);
-        } else if(tipoCargo.equals(TipoCargo.USUARIO)) {
             return findById(2);
+        } else if(tipoCargo.equals(TipoCargo.TOSADOR)) {
+            return findById(1);
+        } else if(tipoCargo.equals(TipoCargo.USUARIO)) {
+            return findById(3);
         }
         return null;
     }
