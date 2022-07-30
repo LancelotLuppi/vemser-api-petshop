@@ -3,6 +3,7 @@ package br.com.vemser.petshop.controller;
 import br.com.vemser.petshop.dto.login.LoginCreateDTO;
 import br.com.vemser.petshop.dto.login.LoginDTO;
 import br.com.vemser.petshop.dto.usuario.UsuarioDTO;
+import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.security.TokenService;
 import br.com.vemser.petshop.service.UsuarioService;
@@ -35,8 +36,7 @@ public class AuthController {
                 );
 
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-        String token = tokenService.generateToken(authentication);
-        return token;
+        return tokenService.generateToken(authentication);
     }
 
     @PostMapping("/cadastro")
@@ -45,8 +45,13 @@ public class AuthController {
     }
 
     @GetMapping("/logged")
-    public ResponseEntity<UsuarioDTO> getLoggedUser() throws RegraDeNegocioException{
+    public ResponseEntity<LoginDTO> getLoggedUser() throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(usuarioService.getLoggedUser());
+    }
+
+    @PutMapping("/new-password")
+    public ResponseEntity<String> putLoggedPassword(String newPassword) {
+        return ResponseEntity.ok(usuarioService.updateLoggedPassword(newPassword));
     }
 
 }

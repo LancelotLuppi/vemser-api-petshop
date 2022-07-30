@@ -6,13 +6,11 @@ import br.com.vemser.petshop.dto.login.LoginDTO;
 import br.com.vemser.petshop.dto.usuario.UsuarioDTO;
 import br.com.vemser.petshop.entity.UsuarioEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
-import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -48,19 +46,26 @@ public class UsuarioService {
         return new LoginDTO(user.getIdUsuario(), user.getUsername());
     }
 
-    public UsuarioDTO getLoggedUser() throws RegraDeNegocioException{
+    public LoginDTO getLoggedUser() throws EntidadeNaoEncontradaException {
         return findByIdUser(getIdLoggedUser());
+    }
+
+    public String updateLoggedPassword(String newPassword) {
+        Optional<UsuarioEntity> user = usuarioRepository.findById(getIdLoggedUser());
+        UsuarioEntity userEntity = user.get();
+        userEntity.setSenha(new Argon2PasswordEncoder().encode(newPassword));
+        usuarioRepository.save(userEntity);
+        return "Senha alterada com sucesso!";
     }
 
     public Integer getIdLoggedUser(){
         return (Integer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    public UsuarioDTO findByIdUser(Integer idUsuario) throws RegraDeNegocioException{
+    public LoginDTO findByIdUser(Integer idUsuario) throws EntidadeNaoEncontradaException {
         UsuarioEntity usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new RegraDeNegocioException("usuario não encontrado"));
-        UsuarioDTO usuarioDTO = objectMapper.convertValue(usuario, UsuarioDTO.class);
-        return usuarioDTO;
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("usuario não encontrado"));
+        return returnDTO(usuario);
     }
 
     private LoginDTO returnDTO(UsuarioEntity entity) {
