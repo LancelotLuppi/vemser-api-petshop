@@ -4,46 +4,57 @@ import br.com.vemser.petshop.dto.cliente.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.cliente.ClienteDTO;
 import br.com.vemser.petshop.dto.cliente.ClienteDadosRelatorioDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
+import br.com.vemser.petshop.entity.UsuarioEntity;
 import br.com.vemser.petshop.enums.TipoRequisicao;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
+import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
-import br.com.vemser.petshop.repository.ContatoRepository;
-import br.com.vemser.petshop.repository.PedidoRepository;
-import br.com.vemser.petshop.repository.PetRepository;
+import br.com.vemser.petshop.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ClienteService {
-
-    @Autowired
-    private ClienteRepository clienteRepository;
-    @Autowired
-    private ContatoRepository contatoRepository;
-    @Autowired
-    private PetRepository petRepository;
-    @Autowired
-    private PedidoRepository pedidoRepository;
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
+    private final ClienteRepository clienteRepository;
+    private final EmailService emailService;
+    private final ObjectMapper objectMapper;
+    private final UsuarioService usuarioService;
+    private final UsuarioRepository usuarioRepository;
     private final static String NOT_FOUND_MESSAGE = "{idCliente} não encontrado";
 
-    public ClienteDTO create(ClienteCreateDTO clienteDto) {
+    public ClienteDTO create(ClienteCreateDTO clienteDto) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+        UsuarioEntity loggedUser = usuarioService.findById(usuarioService.getIdLoggedUser());
         ClienteEntity cliente = returnEntity(clienteDto);
+
+        if(loggedUser.getCliente() != null) {
+            throw new RegraDeNegocioException("Este usuário já tem um cadastro!");
+        }
+
         cliente.setQuantidadeDePedidos(0);
         cliente.setValorPagamento(0.0);
-        ClienteDTO clienteCriado = returnDto(clienteRepository.save(cliente));
+        loggedUser.setCliente(clienteRepository.save(cliente));
+        usuarioRepository.save(loggedUser);
+
+        ClienteEntity clienteSalvo = clienteRepository.findById(loggedUser.getCliente().getIdCliente()).get();
+        clienteSalvo.setUsuario(loggedUser);
+        clienteRepository.save(clienteSalvo);
+
+        ClienteDTO clienteCriado = returnDto(clienteSalvo);
+
+        usuarioRepository.save(loggedUser);
         emailService.sendEmail(clienteCriado.getNome(), clienteCriado.getIdCliente(), clienteCriado.getEmail(), TipoRequisicao.POST);
         return clienteCriado;
+    }
+
+    public ClienteDTO getLogged() throws EntidadeNaoEncontradaException {
+        UsuarioEntity userLogado = usuarioService.findById(usuarioService.getIdLoggedUser());
+        return returnDto(userLogado.getCliente());
     }
 
     public ClienteDTO getById(Integer id) {

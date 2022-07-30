@@ -23,8 +23,13 @@ public class ClienteController implements ClienteDocumentation {
     private ClienteService clienteService;
 
     @PostMapping
-    public ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO cliente) throws RegraDeNegocioException {
+    public ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO cliente) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
         return ResponseEntity.ok(clienteService.create(cliente));
+    }
+
+    @GetMapping("/logged-user")
+    public ResponseEntity<ClienteDTO> getByLoggedUser() throws EntidadeNaoEncontradaException {
+        return ResponseEntity.ok(clienteService.getLogged());
     }
 
     @GetMapping("/{idCliente}")

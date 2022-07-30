@@ -30,10 +30,10 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping
-    public String auth(@RequestBody @Valid LoginCreateDTO login) throws RegraDeNegocioException{
+    public String auth(@RequestBody @Valid LoginCreateDTO login) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(
-                        login.getLogin(),
+                        login.getUsername(),
                         login.getSenha()
                 );
 

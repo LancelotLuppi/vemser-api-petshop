@@ -17,10 +17,8 @@ public class UsuarioEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USUARIO_SEQUENCIA")
     @SequenceGenerator(name = "USUARIO_SEQUENCIA", sequenceName = "seq_usuario", allocationSize = 1)
+    @Column(name = "id_usuario")
     private Integer idUsuario;
-
-    @Column(name = "id_cliente")
-    private Integer idCliente;
 
     @Column(name = "username")
     private String username;
@@ -40,6 +38,11 @@ public class UsuarioEntity implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "id_cargo")
     )
     private Set<CargoEntity> cargos;
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
+    private ClienteEntity cliente;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

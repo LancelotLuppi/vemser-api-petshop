@@ -26,7 +26,7 @@ public interface ClienteDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO clienteDto) throws RegraDeNegocioException;
+    ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO clienteDto) throws EntidadeNaoEncontradaException, RegraDeNegocioException;
 
     @Operation(summary = "Retornar informações de um cliente", description = "Busca no banco de dados por um " +
             "cadastro com o ID fornecido na requisição, retornando as informações caso encontre")
