@@ -2,6 +2,7 @@ package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.dto.contato.ContatoCreateDTO;
 import br.com.vemser.petshop.dto.contato.ContatoDTO;
+import br.com.vemser.petshop.dto.pet.PetDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.ContatoEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
@@ -27,6 +28,21 @@ public class ContatoService {
 
     private final static String NOT_FOUND_MESSAGE = "{idContato} não encontrado";
 
+
+
+    public List<ContatoDTO> getByLoggedUser() throws EntidadeNaoEncontradaException{
+        ClienteEntity clienteLogado = clienteService.returnLoggedClient();
+
+        return clienteLogado.getContatos().stream()
+                .map(this::returnDtoWithId).toList();
+    }
+
+    public ContatoDTO createByLoggedUser(ContatoCreateDTO contatoDTO) throws EntidadeNaoEncontradaException{
+        ClienteEntity clienteLogado = clienteService.returnLoggedClient();
+        ContatoEntity contatoEntity = returnEntity(contatoDTO);
+        contatoEntity.setCliente(clienteLogado);
+        return returnDtoWithId(contatoRepository.save(contatoEntity));
+    }
 
 
     public ContatoDTO create(Integer idCliente, ContatoCreateDTO contatoDTO) throws EntidadeNaoEncontradaException {

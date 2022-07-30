@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class ClienteDTO extends ClienteCreateDTO {
+
     @Schema(description = "Identificador único do cliente")
     private Integer idCliente;
 

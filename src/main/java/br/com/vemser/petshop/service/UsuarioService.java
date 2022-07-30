@@ -5,8 +5,6 @@ import br.com.vemser.petshop.dto.login.LoginCreateDTO;
 import br.com.vemser.petshop.dto.login.LoginDTO;
 import br.com.vemser.petshop.dto.login.LoginStatusDTO;
 import br.com.vemser.petshop.dto.login.LoginUpdateDTO;
-import br.com.vemser.petshop.dto.usuario.UsuarioDTO;
-import br.com.vemser.petshop.entity.CargoEntity;
 import br.com.vemser.petshop.entity.UsuarioEntity;
 import br.com.vemser.petshop.enums.EnumDesativar;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
