@@ -42,4 +42,13 @@ public class ContatoController implements ContatoDocumentation {
     public void delete(@PathVariable("idContato") Integer id) throws EntidadeNaoEncontradaException {
         contatoService.delete(id);
     }
+    @GetMapping("/contatos-id-logado")
+    public ResponseEntity<List<ContatoDTO>> getByLoggedUser() throws EntidadeNaoEncontradaException{
+        return ResponseEntity.ok(contatoService.getByLoggedUser());
+    }
+
+    @PostMapping("/create-id-logado")
+    public ResponseEntity<ContatoDTO> createByLoggedUser(@Valid @RequestBody ContatoCreateDTO contatoCreateDTO) throws EntidadeNaoEncontradaException{
+        return ResponseEntity.ok(contatoService.createByLoggedUser(contatoCreateDTO));
+    }
 }
