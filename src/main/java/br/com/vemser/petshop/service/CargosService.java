@@ -1,5 +1,6 @@
 package br.com.vemser.petshop.service;
 
+import br.com.vemser.petshop.dto.login.LoginDTO;
 import br.com.vemser.petshop.entity.CargoEntity;
 import br.com.vemser.petshop.entity.UsuarioEntity;
 import br.com.vemser.petshop.enums.TipoCargo;
@@ -7,6 +8,7 @@ import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.CargoRepository;
 import br.com.vemser.petshop.repository.UsuarioRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,28 +22,26 @@ public class CargosService {
     private final UsuarioService usuarioService;
     private final CargoRepository cargoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final ObjectMapper objectMapper;
 
-    public void updateCargo(Integer idUsuario, TipoCargo tipoCargo) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public LoginDTO updateCargo(Integer idUsuario, TipoCargo tipoCargo) throws EntidadeNaoEncontradaException {
         UsuarioEntity user = usuarioService.findById(idUsuario);
         CargoEntity cargo = returnByEnum(tipoCargo);
 
-        if (user.getCargos().stream().anyMatch((Predicate<? super CargoEntity>) cargo)) {
-            throw new RegraDeNegocioException("O usuario já tem esse cargo!");
-        }
-
         user.setCargos(Set.of(cargo));
         usuarioRepository.save(user);
+        return objectMapper.convertValue(user, LoginDTO.class);
     }
 
     public CargoEntity returnByEnum(TipoCargo tipoCargo) throws EntidadeNaoEncontradaException {
         if(tipoCargo.equals(TipoCargo.ADMIN)) {
-            return findById(0);
-        } else if(tipoCargo.equals(TipoCargo.ATENDENTE)) {
-            return findById(2);
-        } else if(tipoCargo.equals(TipoCargo.TOSADOR)) {
             return findById(1);
-        } else if(tipoCargo.equals(TipoCargo.USUARIO)) {
+        } else if(tipoCargo.equals(TipoCargo.ATENDENTE)) {
+            return findById(4);
+        } else if(tipoCargo.equals(TipoCargo.TOSADOR)) {
             return findById(3);
+        } else if(tipoCargo.equals(TipoCargo.USUARIO)) {
+            return findById(2);
         }
         return null;
     }

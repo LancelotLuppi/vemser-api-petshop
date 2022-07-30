@@ -6,9 +6,11 @@ import br.com.vemser.petshop.dto.login.LoginStatusDTO;
 import br.com.vemser.petshop.dto.login.LoginUpdateDTO;
 import br.com.vemser.petshop.dto.usuario.UsuarioDTO;
 import br.com.vemser.petshop.enums.EnumDesativar;
+import br.com.vemser.petshop.enums.TipoCargo;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.security.TokenService;
+import br.com.vemser.petshop.service.CargosService;
 import br.com.vemser.petshop.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,7 @@ public class AuthController {
     private final UsuarioService usuarioService;
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
+    private final CargosService cargosService;
 
     @PostMapping
     public String auth(@RequestBody @Valid LoginCreateDTO login) {
@@ -60,5 +63,10 @@ public class AuthController {
     @PutMapping("/desativar/{idUsuario}")
     public ResponseEntity<LoginStatusDTO> putStatusLogin(@PathVariable("idUsuario") @Valid Integer idUsuario, @RequestParam EnumDesativar desativarUsuario) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
         return ResponseEntity.ok(usuarioService.desativarConta(idUsuario, desativarUsuario));
+    }
+
+    @PutMapping("/cargos")
+    public ResponseEntity<LoginDTO> putCargos(Integer idUsuario, TipoCargo cargo) throws EntidadeNaoEncontradaException {
+        return ResponseEntity.ok(cargosService.updateCargo(idUsuario, cargo));
     }
 }
