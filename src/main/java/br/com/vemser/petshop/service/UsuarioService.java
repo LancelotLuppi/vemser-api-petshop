@@ -43,7 +43,7 @@ public class UsuarioService {
     }
 
     public LoginDTO cadastro(LoginCreateDTO loginCreateDTO) throws RegraDeNegocioException {
-        verificaUsername(loginCreateDTO.getLogin());
+        verificaUsername(loginCreateDTO.getUsername());
         UsuarioEntity novoUser = returnEntity(loginCreateDTO);
         novoUser.setSenha(new Argon2PasswordEncoder().encode(loginCreateDTO.getSenha()));
 
