@@ -3,6 +3,7 @@ package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.dto.login.LoginCreateDTO;
 import br.com.vemser.petshop.dto.login.LoginDTO;
+import br.com.vemser.petshop.dto.login.LoginStatusDTO;
 import br.com.vemser.petshop.dto.login.LoginUpdateDTO;
 import br.com.vemser.petshop.dto.usuario.UsuarioDTO;
 import br.com.vemser.petshop.entity.CargoEntity;
@@ -50,24 +51,19 @@ public class UsuarioService {
         verificaUsername(loginCreateDTO.getUsername());
         UsuarioEntity novoUser = returnEntity(loginCreateDTO);
         novoUser.setSenha(new Argon2PasswordEncoder().encode(loginCreateDTO.getSenha()));
+        novoUser.setAtivo(true);
 
         novoUser.setCargos(Set.of(cargoRepository.findById(2).get()));
         usuarioRepository.save(novoUser);
 
         return returnDTO(novoUser);
     }
-    public String desativarConta(Integer idUsuario, EnumDesativar desativar) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public LoginStatusDTO desativarConta(Integer idUsuario, EnumDesativar status) throws EntidadeNaoEncontradaException {
         UsuarioEntity usuario = findById(idUsuario);
 
-        if(desativar.equals(desativar.DESATIVAR)){
-            usuario.setStatus(true);
-            usuarioRepository.save(usuario);
-            return "Desativado";
-        } else {
-            usuario.setStatus(false);
-            usuarioRepository.save(usuario);
-            return "Ativado";
-        }
+        usuario.setAtivo(!status.equals(EnumDesativar.DESATIVAR));
+
+        return objectMapper.convertValue(usuario, LoginStatusDTO.class);
     }
 
 

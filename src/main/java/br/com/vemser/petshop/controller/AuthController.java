@@ -2,6 +2,7 @@ package br.com.vemser.petshop.controller;
 
 import br.com.vemser.petshop.dto.login.LoginCreateDTO;
 import br.com.vemser.petshop.dto.login.LoginDTO;
+import br.com.vemser.petshop.dto.login.LoginStatusDTO;
 import br.com.vemser.petshop.dto.login.LoginUpdateDTO;
 import br.com.vemser.petshop.dto.usuario.UsuarioDTO;
 import br.com.vemser.petshop.enums.EnumDesativar;
@@ -57,7 +58,7 @@ public class AuthController {
     }
 
     @PutMapping("/desativar/{idUsuario}")
-    public ResponseEntity<String> desativarUsuario(@PathVariable("idUsuario") @Valid Integer idUsuario, @RequestParam EnumDesativar desativarUsuario) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public ResponseEntity<LoginStatusDTO> putStatusLogin(@PathVariable("idUsuario") @Valid Integer idUsuario, @RequestParam EnumDesativar desativarUsuario) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
         return ResponseEntity.ok(usuarioService.desativarConta(idUsuario, desativarUsuario));
     }
 }
