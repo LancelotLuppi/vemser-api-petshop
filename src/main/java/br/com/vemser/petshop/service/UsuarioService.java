@@ -3,9 +3,11 @@ package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.dto.login.LoginCreateDTO;
 import br.com.vemser.petshop.dto.login.LoginDTO;
-import br.com.vemser.petshop.dto.usuario.UsuarioDTO;
+import br.com.vemser.petshop.dto.login.LoginUpdateDTO;
 import br.com.vemser.petshop.entity.UsuarioEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
+import br.com.vemser.petshop.exception.RegraDeNegocioException;
+import br.com.vemser.petshop.repository.CargoRepository;
 import br.com.vemser.petshop.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -21,11 +24,12 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final ObjectMapper objectMapper;
+    private final CargoRepository cargoService;
 
     private final static String NOT_FOUND_MESSAGE = "{idCliente} não encontrado";
 
     public Optional<UsuarioEntity> findByLoginAndSenha(String login, String senha){
-        return usuarioRepository.findByLoginAndSenha(login, senha);
+        return usuarioRepository.findByUsernameAndSenha(login, senha);
     }
 
     public UsuarioEntity findById(Integer idUsuario) throws EntidadeNaoEncontradaException{
@@ -34,16 +38,26 @@ public class UsuarioService {
                 .orElseThrow(() -> new EntidadeNaoEncontradaException(NOT_FOUND_MESSAGE));
     }
 
-    public Optional<UsuarioEntity> findByLogin(String login){
-        return usuarioRepository.findByLogin(login);
+    public Optional<UsuarioEntity> findByUsername(String login){
+        return usuarioRepository.findByUsername(login);
     }
 
-    public LoginDTO cadastro(LoginCreateDTO loginCreateDTO){
+    public LoginDTO cadastro(LoginCreateDTO loginCreateDTO) throws RegraDeNegocioException {
+        verificaUsername(loginCreateDTO.getLogin());
         UsuarioEntity novoUser = returnEntity(loginCreateDTO);
         novoUser.setSenha(new Argon2PasswordEncoder().encode(loginCreateDTO.getSenha()));
-        UsuarioEntity user = usuarioRepository.save(novoUser);
 
-        return new LoginDTO(user.getIdUsuario(), user.getUsername());
+        novoUser.setCargos(Set.of(cargoService.findById(2).get()));
+        usuarioRepository.save(novoUser);
+
+        return returnDTO(novoUser);
+    }
+
+    public LoginDTO updateLoggedUsername(LoginUpdateDTO loginUpdate) throws RegraDeNegocioException {
+        verificaUsername(loginUpdate.getUsername());
+        UsuarioEntity usuarioLogado = usuarioRepository.findById(getIdLoggedUser()).get();
+        usuarioLogado.setUsername(loginUpdate.getUsername());
+        return returnDTO(usuarioLogado);
     }
 
     public LoginDTO getLoggedUser() throws EntidadeNaoEncontradaException {
@@ -66,6 +80,12 @@ public class UsuarioService {
         UsuarioEntity usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("usuario não encontrado"));
         return returnDTO(usuario);
+    }
+
+    public void verificaUsername(String username) throws RegraDeNegocioException {
+        if(usuarioRepository.findByUsername(username).isPresent()) {
+            throw new RegraDeNegocioException("Este usuário já existe!");
+        }
     }
 
     private LoginDTO returnDTO(UsuarioEntity entity) {

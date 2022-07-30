@@ -23,7 +23,7 @@ public class UsuarioEntity implements UserDetails {
     private Integer idCliente;
 
     @Column(name = "username")
-    private String login;
+    private String username;
 
     @Column(name = "senha")
     private String senha;
@@ -51,7 +51,7 @@ public class UsuarioEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return login;
+        return username;
     }
 
     @Override

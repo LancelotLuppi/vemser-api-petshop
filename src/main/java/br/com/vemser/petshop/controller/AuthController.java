@@ -40,7 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("/cadastro")
-    public ResponseEntity<LoginDTO> cadastro(@RequestBody @Valid LoginCreateDTO loginCreateDTO){
+    public ResponseEntity<LoginDTO> cadastro(@RequestBody @Valid LoginCreateDTO loginCreateDTO) throws RegraDeNegocioException {
         return ResponseEntity.ok(usuarioService.cadastro(loginCreateDTO));
     }
 
