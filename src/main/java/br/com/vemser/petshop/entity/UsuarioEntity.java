@@ -39,6 +39,11 @@ public class UsuarioEntity implements UserDetails {
     )
     private Set<CargoEntity> cargos;
 
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
+    private ClienteEntity cliente;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return cargos;
