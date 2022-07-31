@@ -2,6 +2,7 @@ package br.com.vemser.petshop.controller;
 
 import br.com.vemser.petshop.documentation.PedidoDocumentation;
 import br.com.vemser.petshop.dto.PageDTO;
+import br.com.vemser.petshop.dto.contato.ContatoDTO;
 import br.com.vemser.petshop.dto.pedido.PedidoCreateDTO;
 import br.com.vemser.petshop.dto.pedido.PedidoDTO;
 import br.com.vemser.petshop.dto.pedido.PedidoStatusRelatorioDTO;
@@ -65,5 +66,10 @@ public class PedidoController implements PedidoDocumentation {
                                                      @RequestParam(value = "idPet", required = false) Integer idPet,
                                                      Integer pagina, Integer registro) {
         return pedidoService.listarPedidosPaginado(idCliente, idPet, pagina, registro);
+    }
+
+    @GetMapping("/pedido-id-logado")
+    public ResponseEntity<List<PedidoDTO>> getByLoggedUser() throws EntidadeNaoEncontradaException{
+        return ResponseEntity.ok(pedidoService.getByLoggedUser());
     }
 }

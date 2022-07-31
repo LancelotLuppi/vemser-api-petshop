@@ -161,6 +161,13 @@ public class PedidoService {
         return pedidoRepository.findAll(pageRequest);
     }
 
+    public List<PedidoDTO> getByLoggedUser() throws EntidadeNaoEncontradaException{
+        ClienteEntity clienteLogado = clienteService.returnLoggedClient();
+
+        return clienteLogado.getPedidos().stream()
+                .map(this::returnDtoWithId).toList();
+    }
+
     private PedidoEntity returnEntity(PedidoCreateDTO dto) {
         return objectMapper.convertValue(dto, PedidoEntity.class);
     }

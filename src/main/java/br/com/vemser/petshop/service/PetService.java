@@ -3,10 +3,12 @@ package br.com.vemser.petshop.service;
 import br.com.vemser.petshop.dto.PageDTO;
 import br.com.vemser.petshop.dto.pet.PetCreateDTO;
 import br.com.vemser.petshop.dto.pet.PetDTO;
+import br.com.vemser.petshop.dto.usuario.UsuarioDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.PetEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.repository.PetRepository;
+import br.com.vemser.petshop.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,8 @@ public class PetService {
     private final ObjectMapper objectMapper;
     private final PetRepository petRepository;
     private final ClienteService clienteService;
+
+    private final UsuarioRepository usuarioRepository;
 
     private final static String NOT_FOUND_MESSAGE = "{idPet} não encontrado";
 
@@ -62,7 +66,6 @@ public class PetService {
     }
 
 
-
     public PetDTO update(Integer idPet, PetCreateDTO petDto) throws EntidadeNaoEncontradaException {
         PetEntity petRecuperado = getPetByIdEntity(idPet);
 
@@ -102,6 +105,9 @@ public class PetService {
                 .findFirst()
                 .orElseThrow(() -> new EntidadeNaoEncontradaException(NOT_FOUND_MESSAGE));
     }
+
+
+
 
     private PetEntity returnEntity(PetCreateDTO dto) {
         return objectMapper.convertValue(dto, PetEntity.class);
