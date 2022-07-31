@@ -5,7 +5,6 @@ import br.com.vemser.petshop.entity.CargoEntity;
 import br.com.vemser.petshop.entity.UsuarioEntity;
 import br.com.vemser.petshop.enums.TipoCargo;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
-import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.CargoRepository;
 import br.com.vemser.petshop.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,25 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
-import java.util.function.Predicate;
 
 @Service
 @RequiredArgsConstructor
 public class CargosService {
-
-    private final UsuarioService usuarioService;
     private final CargoRepository cargoRepository;
-    private final UsuarioRepository usuarioRepository;
-    private final ObjectMapper objectMapper;
-
-    public LoginDTO updateCargo(Integer idUsuario, TipoCargo tipoCargo) throws EntidadeNaoEncontradaException {
-        UsuarioEntity user = usuarioService.findById(idUsuario);
-        CargoEntity cargo = returnByEnum(tipoCargo);
-
-        user.setCargos(Set.of(cargo));
-        usuarioRepository.save(user);
-        return objectMapper.convertValue(user, LoginDTO.class);
-    }
 
     public CargoEntity returnByEnum(TipoCargo tipoCargo) throws EntidadeNaoEncontradaException {
         if(tipoCargo.equals(TipoCargo.ADMIN)) {
@@ -50,6 +35,4 @@ public class CargosService {
         return cargoRepository.findById(idCargo)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Cargo não encontrado"));
     }
-
-
 }

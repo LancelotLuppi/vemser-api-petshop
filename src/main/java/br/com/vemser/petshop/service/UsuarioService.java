@@ -5,8 +5,10 @@ import br.com.vemser.petshop.dto.login.LoginCreateDTO;
 import br.com.vemser.petshop.dto.login.LoginDTO;
 import br.com.vemser.petshop.dto.login.LoginStatusDTO;
 import br.com.vemser.petshop.dto.login.LoginUpdateDTO;
+import br.com.vemser.petshop.entity.CargoEntity;
 import br.com.vemser.petshop.entity.UsuarioEntity;
 import br.com.vemser.petshop.enums.EnumDesativar;
+import br.com.vemser.petshop.enums.TipoCargo;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.CargoRepository;
@@ -17,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -56,6 +59,29 @@ public class UsuarioService {
 
         return returnDTO(novoUser);
     }
+
+    public LoginDTO cadastroAdmin(LoginCreateDTO loginCreateDTO) throws RegraDeNegocioException {
+        verificaUsername(loginCreateDTO.getUsername());
+        UsuarioEntity novoUser = returnEntity(loginCreateDTO);
+        novoUser.setSenha(new Argon2PasswordEncoder().encode(loginCreateDTO.getSenha()));
+        novoUser.setAtivo(true);
+
+        novoUser.setCargos(Set.of(cargoRepository.findById(1).get()));
+        usuarioRepository.save(novoUser);
+
+        return returnDTO(novoUser);
+    }
+
+    public LoginDTO updateCargos(Integer idUsuario, Set<TipoCargo> cargos) throws EntidadeNaoEncontradaException {
+        UsuarioEntity user = findById(idUsuario);
+        user.getCargos().clear();
+        user.getCargos().addAll(cargos.stream()
+                .map(cargo -> cargoRepository.findById(cargo.getTipo()).get())
+                .toList());
+        usuarioRepository.save(user);
+        return returnDTO(user);
+    }
+
     public LoginStatusDTO desativarConta(Integer idUsuario, EnumDesativar status) throws EntidadeNaoEncontradaException {
         UsuarioEntity usuario = findById(idUsuario);
 
@@ -63,8 +89,6 @@ public class UsuarioService {
 
         return objectMapper.convertValue(usuario, LoginStatusDTO.class);
     }
-
-
 
     public LoginDTO updateLoggedUsername(LoginUpdateDTO loginUpdate) throws RegraDeNegocioException {
         verificaUsername(loginUpdate.getUsername());
@@ -101,8 +125,11 @@ public class UsuarioService {
         }
     }
 
-    private LoginDTO returnDTO(UsuarioEntity entity) {
-        return objectMapper.convertValue(entity, LoginDTO.class);
+    public LoginDTO returnDTO(UsuarioEntity entity) {
+        LoginDTO dto = objectMapper.convertValue(entity, LoginDTO.class);
+        dto.setCargos(entity.getCargos().stream()
+                .map(CargoEntity::getNome).toList());
+        return dto;
     }
 
     private UsuarioEntity returnEntity(LoginCreateDTO dto) {

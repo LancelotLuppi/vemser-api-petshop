@@ -3,8 +3,6 @@ package br.com.vemser.petshop.controller;
 import br.com.vemser.petshop.dto.login.LoginCreateDTO;
 import br.com.vemser.petshop.dto.login.LoginDTO;
 import br.com.vemser.petshop.dto.login.LoginStatusDTO;
-import br.com.vemser.petshop.dto.login.LoginUpdateDTO;
-import br.com.vemser.petshop.dto.usuario.UsuarioDTO;
 import br.com.vemser.petshop.enums.EnumDesativar;
 import br.com.vemser.petshop.enums.TipoCargo;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
@@ -21,6 +19,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/auth")
@@ -65,8 +65,13 @@ public class AuthController {
         return ResponseEntity.ok(usuarioService.desativarConta(idUsuario, desativarUsuario));
     }
 
+    @PostMapping("/admin")
+    public ResponseEntity<LoginDTO> postAdmin(LoginCreateDTO login) throws RegraDeNegocioException {
+        return ResponseEntity.ok(usuarioService.cadastroAdmin(login));
+    }
+
     @PutMapping("/cargos")
-    public ResponseEntity<LoginDTO> putCargos(Integer idUsuario, TipoCargo cargo) throws EntidadeNaoEncontradaException {
-        return ResponseEntity.ok(cargosService.updateCargo(idUsuario, cargo));
+    public ResponseEntity<LoginDTO> updateCargo(@RequestParam(value = "idUsuario") Integer idUsuario, @RequestParam(value = "cargos") Set<TipoCargo> cargos) throws EntidadeNaoEncontradaException {
+        return ResponseEntity.ok(usuarioService.updateCargos(idUsuario, cargos));
     }
 }

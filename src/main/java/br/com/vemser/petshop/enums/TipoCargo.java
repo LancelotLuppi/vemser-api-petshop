@@ -4,10 +4,10 @@ import java.util.Arrays;
 
 public enum TipoCargo {
 
-    ADMIN(0),
-    TOSADOR(1),
-    ATENDENTE(2),
-    USUARIO(3);
+    ADMIN(1),
+    USUARIO(2),
+    TOSADOR(3),
+    ATENDENTE(4);
 
     private Integer tipo;
 
