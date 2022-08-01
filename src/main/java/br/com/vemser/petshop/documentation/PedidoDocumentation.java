@@ -30,6 +30,20 @@ public interface PedidoDocumentation {
         )
     ResponseEntity<PedidoDTO> post(Integer idPet, @Valid @RequestBody PedidoCreateDTO pedidoDto) throws RegraDeNegocioException, EntidadeNaoEncontradaException;
 
+    @Operation(summary = "Criar novo pedido para usuário logado", description = "Cria um novo pedido relacionado " +
+            "com o usuário que está logado. Recebe um {idPet} como parâmetro, realiza a verificação se o pet " +
+            "informado pertence ao usuário que está logado.")
+        @ApiResponses(
+                value = {
+                        @ApiResponse(responseCode = "200", description = "Retorna o pedido criado"),
+                        @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
+                        @ApiResponse(responseCode = "500", description = "Erro server-side")
+                }
+        )
+    ResponseEntity<PedidoDTO> postByLoggedUser(Integer idPet, @RequestBody PedidoCreateDTO pedido) throws EntidadeNaoEncontradaException, RegraDeNegocioException;
+
+
     @Operation(summary = "Listar pedidos por cliente", description = "Lista todos os pedidos ligados " +
             "ao {idCliente} informado")
         @ApiResponses(
@@ -66,6 +80,21 @@ public interface PedidoDocumentation {
                 }
         )
     ResponseEntity<PedidoDTO> put(Integer idPedido, @Valid @RequestBody PedidoCreateDTO pedidoDto) throws RegraDeNegocioException, EntidadeNaoEncontradaException;
+
+
+    @Operation(summary = "Atualizar pedido para usuário logado", description = "Atualiza um pedido relacionado " +
+            "com o usuário que está logado. Recebe um {idPedido} como parâmetro, realiza a verificação se o pedido " +
+            "informado pertence ao usuário que está logado.")
+        @ApiResponses(
+                value = {
+                        @ApiResponse(responseCode = "200", description = "Retorna o pedido criado"),
+                        @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
+                        @ApiResponse(responseCode = "500", description = "Erro server-side")
+                }
+        )
+    ResponseEntity<PedidoDTO> putByLoggedUser(Integer idPedido, @Valid @RequestBody PedidoCreateDTO pedidoAtualizado) throws EntidadeNaoEncontradaException, RegraDeNegocioException;
+
 
     @Operation(summary = "Deletar pedido", description = "Deleta o pedido a partir do {idPedido} informado")
     @ApiResponses(
@@ -122,4 +151,16 @@ public interface PedidoDocumentation {
                 }
         )
     PageDTO<PedidoDTO> listarPedidosPaginados( Integer idCliente, Integer idPet, Integer pagina, Integer registro);
+
+    @Operation(summary = "Listar pedidos para usuário logado", description = "Lista os pedidos relacionados " +
+            "com o usuário que está logado")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Retorna o pedido criado"),
+                    @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                    @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
+                    @ApiResponse(responseCode = "500", description = "Erro server-side")
+            }
+    )
+    ResponseEntity<List<PedidoDTO>> getByLoggedUser() throws EntidadeNaoEncontradaException;
 }
