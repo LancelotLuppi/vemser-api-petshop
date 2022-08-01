@@ -3,6 +3,7 @@ package br.com.vemser.petshop.documentation;
 import br.com.vemser.petshop.dto.contato.ContatoCreateDTO;
 import br.com.vemser.petshop.dto.contato.ContatoDTO;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
+import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -61,4 +62,44 @@ public interface ContatoDocumentation {
                 }
         )
     void delete(Integer idContato) throws EntidadeNaoEncontradaException;
+
+
+    @Operation(summary = "Listar contatos do usuário logado", description = "Lista todos os contatos que " +
+            "estão relacionados com o usuário logado.")
+        @ApiResponses(
+                value = {
+                        @ApiResponse(responseCode = "200", description = "Atualiza o contato"),
+                        @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
+                        @ApiResponse(responseCode = "500", description = "Erro server-side")
+                }
+        )
+    ResponseEntity<List<ContatoDTO>> getByLoggedUser() throws EntidadeNaoEncontradaException;
+
+
+    @Operation(summary = "Criar contato para usuário logado", description = "Cria um contato novo que se " +
+            "relaciona com o usuário que está logado.")
+        @ApiResponses(
+                value = {
+                        @ApiResponse(responseCode = "200", description = "Atualiza o contato"),
+                        @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
+                        @ApiResponse(responseCode = "500", description = "Erro server-side")
+                }
+        )
+    ResponseEntity<ContatoDTO> createByLoggedUser(@RequestBody ContatoCreateDTO contatoCreateDTO) throws EntidadeNaoEncontradaException;
+
+
+    @Operation(summary = "Atualizar contato do usuário logado", description = "Atualiza as informações de um " +
+            "contato a partir de seu ID, realiza a verificação para saber se o ID informado pertence ao " +
+            "usuário logado.")
+        @ApiResponses(
+                value = {
+                        @ApiResponse(responseCode = "200", description = "Atualiza o contato"),
+                        @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
+                        @ApiResponse(responseCode = "500", description = "Erro server-side")
+                }
+        )
+    ResponseEntity<ContatoDTO> putByLoggedUser(Integer idContato, @RequestBody ContatoCreateDTO cttAtualizado) throws EntidadeNaoEncontradaException, RegraDeNegocioException;
 }

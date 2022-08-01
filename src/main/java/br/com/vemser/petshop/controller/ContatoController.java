@@ -44,12 +44,12 @@ public class ContatoController implements ContatoDocumentation {
         contatoService.delete(id);
     }
     @GetMapping("/logged-user")
-    public ResponseEntity<List<ContatoDTO>> getByLoggedUser() throws EntidadeNaoEncontradaException{
+    public ResponseEntity<List<ContatoDTO>> getByLoggedUser() throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(contatoService.getByLoggedUser());
     }
 
     @PostMapping("/logged-user")
-    public ResponseEntity<ContatoDTO> createByLoggedUser(@Valid @RequestBody ContatoCreateDTO contatoCreateDTO) throws EntidadeNaoEncontradaException{
+    public ResponseEntity<ContatoDTO> createByLoggedUser(@Valid @RequestBody ContatoCreateDTO contatoCreateDTO) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(contatoService.createByLoggedUser(contatoCreateDTO));
     }
 

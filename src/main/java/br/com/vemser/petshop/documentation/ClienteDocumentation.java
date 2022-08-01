@@ -28,6 +28,16 @@ public interface ClienteDocumentation {
         )
     ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO clienteDto) throws EntidadeNaoEncontradaException, RegraDeNegocioException;
 
+    @Operation(summary = "Retornar informação do cliente logado", description = "Retorna as informações de cliente do usuário logado")
+        @ApiResponses(
+                value = {
+                        @ApiResponse(responseCode = "200", description = "Retorna informação do cliente"),
+                        @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "500", description = "Erro server-side")
+                }
+        )
+    ResponseEntity<ClienteDTO> getByLoggedUser() throws EntidadeNaoEncontradaException;
+
     @Operation(summary = "Retornar informações de um cliente", description = "Busca no banco de dados por um " +
             "cadastro com o ID fornecido na requisição, retornando as informações caso encontre")
         @ApiResponses(
