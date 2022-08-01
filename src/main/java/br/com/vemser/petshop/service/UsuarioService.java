@@ -69,6 +69,7 @@ public class UsuarioService {
         UsuarioEntity usuario = findById(idUsuario);
 
         usuario.setAtivo(!status.equals(EnumDesativar.DESATIVAR));
+        usuarioRepository.save(usuario);
 
         return objectMapper.convertValue(usuario, LoginStatusDTO.class);
     }
