@@ -61,6 +61,7 @@ public class SecurityConfiguration {
                         .antMatchers("/pedido").hasAnyRole("ATENDENTE", "ADMIN")
 
                         .antMatchers("/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated();
     }
 
@@ -70,7 +71,8 @@ public class SecurityConfiguration {
         return (web) -> web.ignoring().antMatchers("/v3/api-docs",
                 "/v3/api-docs/**",
                 "/swagger-resources/**",
-                "/swagger-ui/**");
+                "/swagger-ui/**",
+                "/auth");
     }
 
     @Bean
