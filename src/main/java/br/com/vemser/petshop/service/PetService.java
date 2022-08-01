@@ -3,10 +3,11 @@ package br.com.vemser.petshop.service;
 import br.com.vemser.petshop.dto.PageDTO;
 import br.com.vemser.petshop.dto.pet.PetCreateDTO;
 import br.com.vemser.petshop.dto.pet.PetDTO;
-import br.com.vemser.petshop.dto.usuario.UsuarioDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.PetEntity;
+import br.com.vemser.petshop.entity.UsuarioEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
+import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.PetRepository;
 import br.com.vemser.petshop.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,26 +25,18 @@ public class PetService {
     private final PetRepository petRepository;
     private final ClienteService clienteService;
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioService usuarioService;
 
     private final static String NOT_FOUND_MESSAGE = "{idPet} não encontrado";
 
     public PetDTO createByClientId(Integer idCliente, PetCreateDTO petDto) throws EntidadeNaoEncontradaException {
         ClienteEntity clienteEntity = clienteService.retornarPorIdVerificado(idCliente);
-        PetEntity petEntity = returnEntity(petDto);
-
-        petEntity.setCliente(clienteEntity);
-
-        return returnDtoWithId(petRepository.save(petEntity));
+        return genericPetCreate(petDto, clienteEntity);
     }
 
     public PetDTO createByLoggedUser(PetCreateDTO petDto) throws EntidadeNaoEncontradaException {
         ClienteEntity clienteLogado = clienteService.returnLoggedClient();
-        PetEntity petEntity = returnEntity(petDto);
-
-        petEntity.setCliente(clienteLogado);
-
-        return returnDtoWithId(petRepository.save(petEntity));
+        return genericPetCreate(petDto, clienteLogado);
     }
 
     public List<PetDTO> getByLoggedUser() throws EntidadeNaoEncontradaException {
@@ -67,16 +60,13 @@ public class PetService {
 
 
     public PetDTO update(Integer idPet, PetCreateDTO petDto) throws EntidadeNaoEncontradaException {
-        PetEntity petRecuperado = getPetByIdEntity(idPet);
+        return genericUpdate(idPet, petDto);
+    }
 
-        petRecuperado.setNome(petDto.getNome());
-        petRecuperado.setTipoPet(petDto.getTipoPet());
-        petRecuperado.setRaca(petDto.getRaca());
-        petRecuperado.setPelagem(petDto.getPelagem());
-        petRecuperado.setPorte(petDto.getPorte());
-        petRecuperado.setIdade(petDto.getIdade());
+    public PetDTO loggedUpdate(Integer idPet, PetCreateDTO petDTO) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+        verificaPetDoUserLogado(idPet);
 
-        return returnDtoWithId(petRepository.save(petRecuperado));
+        return genericUpdate(idPet, petDTO);
     }
 
     public void delete(Integer id) throws EntidadeNaoEncontradaException {
@@ -122,4 +112,35 @@ public class PetService {
         dto.setIdCliente(entity.getCliente().getIdCliente());
         return dto;
     }
+
+    private PetDTO genericPetCreate(PetCreateDTO petDto, ClienteEntity clienteEntity) {
+        PetEntity petEntity = returnEntity(petDto);
+
+        petEntity.setCliente(clienteEntity);
+
+        return returnDtoWithId(petRepository.save(petEntity));
+    }
+
+    private PetDTO genericUpdate(Integer idPet, PetCreateDTO petDto) throws EntidadeNaoEncontradaException {
+        PetEntity petRecuperado = getPetByIdEntity(idPet);
+
+        petRecuperado.setNome(petDto.getNome());
+        petRecuperado.setTipoPet(petDto.getTipoPet());
+        petRecuperado.setRaca(petDto.getRaca());
+        petRecuperado.setPelagem(petDto.getPelagem());
+        petRecuperado.setPorte(petDto.getPorte());
+        petRecuperado.setIdade(petDto.getIdade());
+
+        return returnDtoWithId(petRepository.save(petRecuperado));
+    }
+
+    public void verificaPetDoUserLogado(Integer idPet) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+        UsuarioEntity loggedUser = usuarioService.findById(usuarioService.getIdLoggedUser());
+        List<Integer> idPets = loggedUser.getCliente().getPets().stream()
+                .map(PetEntity::getIdPet).toList();
+        if(!idPets.contains(idPet)){
+            throw new RegraDeNegocioException("Este pet não é seu!");
+        }
+    }
+
 }

@@ -19,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,10 +33,6 @@ public class UsuarioService {
     private final CargoRepository cargoRepository;
 
     private final static String NOT_FOUND_MESSAGE = "{idCliente} não encontrado";
-
-    public Optional<UsuarioEntity> findByLoginAndSenha(String login, String senha){
-        return usuarioRepository.findByUsernameAndSenha(login, senha);
-    }
 
     public UsuarioEntity findById(Integer idUsuario) throws EntidadeNaoEncontradaException{
         return usuarioRepository.findById(idUsuario)
@@ -55,18 +50,6 @@ public class UsuarioService {
         novoUser.setAtivo(true);
 
         novoUser.setCargos(Set.of(cargoRepository.findById(2).get()));
-        usuarioRepository.save(novoUser);
-
-        return returnDTO(novoUser);
-    }
-
-    public LoginDTO cadastroAdmin(LoginCreateDTO loginCreateDTO) throws RegraDeNegocioException {
-        verificaUsername(loginCreateDTO.getUsername());
-        UsuarioEntity novoUser = returnEntity(loginCreateDTO);
-        novoUser.setSenha(new Argon2PasswordEncoder().encode(loginCreateDTO.getSenha()));
-        novoUser.setAtivo(true);
-
-        novoUser.setCargos(Set.of(cargoRepository.findById(1).get()));
         usuarioRepository.save(novoUser);
 
         return returnDTO(novoUser);
@@ -107,6 +90,11 @@ public class UsuarioService {
         userEntity.setSenha(new Argon2PasswordEncoder().encode(newPassword));
         usuarioRepository.save(userEntity);
         return "Senha alterada com sucesso!";
+    }
+
+    public void deleteUser(Integer idUsuario) {
+        UsuarioEntity user = usuarioRepository.findById(idUsuario).get();
+        usuarioRepository.delete(user);
     }
 
     public Integer getIdLoggedUser(){

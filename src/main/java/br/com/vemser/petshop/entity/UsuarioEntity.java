@@ -3,7 +3,6 @@ package br.com.vemser.petshop.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -41,7 +40,7 @@ public class UsuarioEntity implements UserDetails {
     private Set<CargoEntity> cargos;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
     private ClienteEntity cliente;
 

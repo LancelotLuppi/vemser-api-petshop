@@ -3,6 +3,7 @@ package br.com.vemser.petshop.controller;
 import br.com.vemser.petshop.dto.login.LoginCreateDTO;
 import br.com.vemser.petshop.dto.login.LoginDTO;
 import br.com.vemser.petshop.dto.login.LoginStatusDTO;
+import br.com.vemser.petshop.dto.login.LoginUpdateDTO;
 import br.com.vemser.petshop.enums.EnumDesativar;
 import br.com.vemser.petshop.enums.TipoCargo;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
@@ -55,23 +56,28 @@ public class AuthController {
         return ResponseEntity.ok(usuarioService.getLoggedUser());
     }
 
-    @PutMapping("/new-password")
+    @PutMapping("/logged/password")
     public ResponseEntity<String> putLoggedPassword(String newPassword) {
         return ResponseEntity.ok(usuarioService.updateLoggedPassword(newPassword));
     }
 
-    @PutMapping("/desativar/{idUsuario}")
-    public ResponseEntity<LoginStatusDTO> putStatusLogin(@PathVariable("idUsuario") @Valid Integer idUsuario, @RequestParam EnumDesativar desativarUsuario) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
-        return ResponseEntity.ok(usuarioService.desativarConta(idUsuario, desativarUsuario));
+    @PutMapping("/logged/username")
+    public ResponseEntity<LoginDTO> putLoggedUsername(LoginUpdateDTO loginUpdateDTO) throws RegraDeNegocioException {
+        return ResponseEntity.ok(usuarioService.updateLoggedUsername(loginUpdateDTO));
     }
 
-    @PostMapping("/admin")
-    public ResponseEntity<LoginDTO> postAdmin(LoginCreateDTO login) throws RegraDeNegocioException {
-        return ResponseEntity.ok(usuarioService.cadastroAdmin(login));
+    @PutMapping("/status/{idUsuario}")
+    public ResponseEntity<LoginStatusDTO> putStatusLogin(@PathVariable("idUsuario") @Valid Integer idUsuario, @RequestParam EnumDesativar desativarUsuario) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
+        return ResponseEntity.ok(usuarioService.desativarConta(idUsuario, desativarUsuario));
     }
 
     @PutMapping("/cargos")
     public ResponseEntity<LoginDTO> updateCargo(@RequestParam(value = "idUsuario") Integer idUsuario, @RequestParam(value = "cargos") Set<TipoCargo> cargos) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(usuarioService.updateCargos(idUsuario, cargos));
+    }
+
+    @DeleteMapping
+    public void deleteUsuario(Integer idUsuario) {
+        usuarioService.deleteUser(idUsuario);
     }
 }

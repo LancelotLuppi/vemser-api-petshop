@@ -39,14 +39,21 @@ public class SecurityConfiguration {
     private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> permissoes() {
         return (authz) ->
                 authz.antMatchers("/", "/auth", "/auth/cadastro", "/auth/logged", "/auth/new-password").permitAll()
+//                        .antMatchers("/auth/cargos").hasRole("ADMIN")
+////                        .antMatchers("/auth/status/**").hasRole("ADMIN")
+////                        .antMatchers("/pet/logged-user").hasAnyRole("USER", "ADMIN")
+
+
+
+
+
+                        .antMatchers(HttpMethod.DELETE,"/auth").hasRole("ADMIN")
                         .antMatchers(HttpMethod.POST, "/cliente").hasAnyRole("USER", "ADMIN","ATENDENTE")
                         .antMatchers(HttpMethod.PUT, "/cliente").hasAnyRole("USER","ADMIN","ATENDENTE")
                         .antMatchers(HttpMethod.POST, "/contato/create-id-logado").hasAnyRole("USER","ADMIN")
                         .antMatchers(HttpMethod.GET, "/contato/contatos-id-logado").hasAnyRole("USER","ADMIN")
                         .antMatchers(HttpMethod.POST, "/pedido").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.PUT, "/pedido").hasAnyRole("USER", "ADMIN")
-                        .antMatchers(HttpMethod.POST, "/pet/logged-user").hasAnyRole("USER", "ADMIN")
-                        .antMatchers(HttpMethod.GET, "/pet/logged-user").hasAnyRole("USER", "ADMIN")
                         .antMatchers(HttpMethod.PUT, "/pet").hasRole("USER")
 
                         .antMatchers(HttpMethod.GET, "/pet/page-pets").hasAnyRole("TOSADOR", "ADMIN")
@@ -64,6 +71,7 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.GET, "/pet/page-pets").hasAnyRole("ATENDENTE", "ADMIN")
                         .antMatchers(HttpMethod.PUT, "/pet").hasAnyRole("ATENDENTE", "ADMIN")
                         .antMatchers(HttpMethod.DELETE, "/pet").hasAnyRole("ATENDENTE", "ADMIN")
+
 
                         .antMatchers("/**").hasRole("ADMIN")
                         .anyRequest().authenticated();
