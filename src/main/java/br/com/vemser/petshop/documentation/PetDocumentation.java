@@ -28,6 +28,18 @@ public interface PetDocumentation {
         )
     ResponseEntity<PetDTO> post(Integer idCliente, @Valid @RequestBody PetCreateDTO petDto) throws RegraDeNegocioException, EntidadeNaoEncontradaException;
 
+    @Operation(summary = "Criar cadastro de pet para usuário logado", description = "Cria um cadastro de pet " +
+            "relacionado com o usuário que está logado.")
+        @ApiResponses(
+                value = {
+                        @ApiResponse(responseCode = "200", description = "Retorna o cadastro do pet criado"),
+                        @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
+                        @ApiResponse(responseCode = "500", description = "Erro server-side")
+                }
+        )
+    ResponseEntity<PetDTO> postByLoggedUser(PetCreateDTO pet) throws EntidadeNaoEncontradaException;
+
     @Operation(summary = "Listar pets do cliente", description = "Lista todos os pets cadastrados " +
             "com o ID do cliente desejado")
         @ApiResponses(
@@ -39,6 +51,19 @@ public interface PetDocumentation {
                 }
         )
     ResponseEntity<List<PetDTO>> get(Integer idCliente) throws EntidadeNaoEncontradaException;
+
+    @Operation(summary = "Listar pets do usuário logado", description = "Lista todos os pets " +
+            "que estão relacionados com o usuario logado")
+        @ApiResponses(
+                value = {
+                        @ApiResponse(responseCode = "200", description = "Retorna a lista de pets"),
+                        @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                        @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
+                        @ApiResponse(responseCode = "500", description = "Erro server-side")
+                }
+        )
+    ResponseEntity<List<PetDTO>> getByLoggedUser() throws EntidadeNaoEncontradaException;
+
 
     @Operation(summary = "Retornar um pet por seu ID", description = "Retorna as informações do pet atravésde seu ID")
         @ApiResponses(
@@ -74,6 +99,18 @@ public interface PetDocumentation {
                 }
         )
     ResponseEntity<PetDTO> put(Integer idPet, @Valid @RequestBody PetCreateDTO petDto) throws  EntidadeNaoEncontradaException;
+
+    @Operation(summary = "Atualizar pet para usuário logado", description = "Atualiza um pet recebendo seu " +
+            "ID como parâmetro, será verificado se o pet informado pertence ao usuário que está logado.")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Retorna o cadastro do pet atualizado"),
+                    @ApiResponse(responseCode = "400", description = "Erro client-side"),
+                    @ApiResponse(responseCode = "404", description = "Entidade não encontrada"),
+                    @ApiResponse(responseCode = "500", description = "Erro server-side")
+            }
+    )
+    ResponseEntity<PetDTO> putLoggedUser(Integer idPet, @Valid @RequestBody PetCreateDTO petAtualizado) throws EntidadeNaoEncontradaException, RegraDeNegocioException;
 
     @Operation(summary = "Deletar cadastro do pet", description = "Remove o cadastro do pet desejado " +
             "a partir de seu ID, removerá também os pedidos atrelados ao seu ID")

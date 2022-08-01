@@ -28,7 +28,7 @@ public class PetController implements PetDocumentation {
     }
 
     @PostMapping("/logged-user")
-    public ResponseEntity<PetDTO> post(PetCreateDTO pet) throws EntidadeNaoEncontradaException {
+    public ResponseEntity<PetDTO> postByLoggedUser(PetCreateDTO pet) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(petService.createByLoggedUser(pet));
     }
 
