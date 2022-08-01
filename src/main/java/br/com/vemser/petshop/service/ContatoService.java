@@ -5,9 +5,13 @@ import br.com.vemser.petshop.dto.contato.ContatoDTO;
 import br.com.vemser.petshop.dto.pet.PetDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.ContatoEntity;
+import br.com.vemser.petshop.entity.PetEntity;
+import br.com.vemser.petshop.entity.UsuarioEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
+import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ContatoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,15 +21,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ContatoService {
 
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private ContatoRepository contatoRepository;
-    @Autowired
-    private ClienteService clienteService;
-
+    private final ObjectMapper objectMapper;
+    private final ContatoRepository contatoRepository;
+    private final ClienteService clienteService;
+    private final UsuarioService usuarioService;
     private final static String NOT_FOUND_MESSAGE = "{idContato} não encontrado";
 
 
@@ -42,6 +44,11 @@ public class ContatoService {
         ContatoEntity contatoEntity = returnEntity(contatoDTO);
         contatoEntity.setCliente(clienteLogado);
         return returnDtoWithId(contatoRepository.save(contatoEntity));
+    }
+
+    public ContatoDTO updateByLoggedUser(Integer idContato, ContatoCreateDTO contatoDto) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+        verificarContatoDoUserLogado(idContato);
+        return update(idContato, contatoDto);
     }
 
 
@@ -72,6 +79,17 @@ public class ContatoService {
     public void delete(Integer idContato) throws EntidadeNaoEncontradaException {
         ContatoEntity contatoRecuperado = getContatoEntityById(idContato);
         contatoRepository.delete(contatoRecuperado);
+    }
+
+
+
+    private void verificarContatoDoUserLogado(Integer idContato) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
+        UsuarioEntity loggedUser = usuarioService.findById(usuarioService.getIdLoggedUser());
+        List<Integer> idContatos = loggedUser.getCliente().getContatos().stream()
+                .map(ContatoEntity::getIdContato).toList();
+        if(!idContatos.contains(idContato)){
+            throw new RegraDeNegocioException("Este contato não é seu!");
+        }
     }
 
     public ContatoEntity getContatoEntityById(Integer idContato) throws EntidadeNaoEncontradaException {

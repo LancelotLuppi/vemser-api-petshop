@@ -38,40 +38,27 @@ public class SecurityConfiguration {
 
     private Customizer<AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry> permissoes() {
         return (authz) ->
-                authz.antMatchers("/", "/auth", "/auth/cadastro", "/auth/logged", "/auth/new-password").permitAll()
-//                        .antMatchers("/auth/cargos").hasRole("ADMIN")
-////                        .antMatchers("/auth/status/**").hasRole("ADMIN")
-////                        .antMatchers("/pet/logged-user").hasAnyRole("USER", "ADMIN")
+                authz.antMatchers("/", "/auth", "/auth/cadastro").permitAll()
 
+                        .antMatchers("/auth/status/**").hasRole("ADMIN")
+                        .antMatchers("/auth/cargos").hasRole("ADMIN")
+                        .antMatchers("/cliente/relatorio-dados").hasAnyRole("ATENDENTE", "TOSADOR", "ADMIN")
+                        .antMatchers("/cliente/logged-user").hasAnyRole("USER", "ADMIN", "ATENDENTE")
+                        .antMatchers("/pet/logged-user").hasAnyRole("USER", "ADMIN")
+                        .antMatchers("/contato/logged-user").hasAnyRole("USER", "ADMIN")
+                        .antMatchers("/pedido/logged-user").hasAnyRole("USER", "ADMIN")
+                        .antMatchers("/pedido/atualizar-status").hasAnyRole("TOSADOR", "ATENDENTE", "ADMIN")
 
+                        .antMatchers(HttpMethod.DELETE, "/auth").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.GET, "/cliente/**").hasAnyRole("ATENDENTE", "ADMIN")
+                        .antMatchers(HttpMethod.POST, "/cliente").hasAnyRole("USER", "ADMIN", "ATENDENTE")
+                        .antMatchers(HttpMethod.POST, "/pet/**").hasAnyRole("ATENDENTE", "ADMIN")
+                        .antMatchers(HttpMethod.GET, "/pet/**").hasAnyRole("TOSADOR", "ADMIN")
+                        .antMatchers(HttpMethod.DELETE, "/pet/**").hasAnyRole("ADMIN")
 
-
-
-                        .antMatchers(HttpMethod.DELETE,"/auth").hasRole("ADMIN")
-                        .antMatchers(HttpMethod.POST, "/cliente").hasAnyRole("USER", "ADMIN","ATENDENTE")
-                        .antMatchers(HttpMethod.PUT, "/cliente").hasAnyRole("USER","ADMIN","ATENDENTE")
-                        .antMatchers(HttpMethod.POST, "/contato/create-id-logado").hasAnyRole("USER","ADMIN")
-                        .antMatchers(HttpMethod.GET, "/contato/contatos-id-logado").hasAnyRole("USER","ADMIN")
-                        .antMatchers(HttpMethod.POST, "/pedido").hasAnyRole("USER", "ADMIN")
-                        .antMatchers(HttpMethod.PUT, "/pedido").hasAnyRole("USER", "ADMIN")
-                        .antMatchers(HttpMethod.PUT, "/pet").hasRole("USER")
-
-                        .antMatchers(HttpMethod.GET, "/pet/page-pets").hasAnyRole("TOSADOR", "ADMIN")
-                        .antMatchers(HttpMethod.GET,"/cliente/relatorio-dados").hasAnyRole("TOSADOR", "ADMIN", "ATENDENTE")
-
-                        .antMatchers(HttpMethod.GET, "/contato").hasAnyRole("ATENDENTE", "ADMIN")
-                        .antMatchers(HttpMethod.POST,"/contato").hasAnyRole("ATENDENTE", "ADMIN")
-                        .antMatchers(HttpMethod.PUT, "/contato").hasAnyRole("ATENDENTE", "ADMIN")
-                        .antMatchers(HttpMethod.DELETE, "/contato").hasAnyRole("ATENDENTE", "ADMIN")
-                        .antMatchers(HttpMethod.POST, "/pedido").hasAnyRole("ATENDENTE", "ADMIN")
-                        .antMatchers(HttpMethod.PUT, "/pedido/atualizar-status").hasAnyRole("ATENDENTE", "ADMIN")
-                        .antMatchers(HttpMethod.GET, "/pedido/relatorio-status").hasAnyRole("ATENDENTE", "ADMIN")
-                        .antMatchers(HttpMethod.PUT, "/pedido").hasAnyRole("ATENDENTE", "ADMIN")
-                        .antMatchers(HttpMethod.DELETE, "/pedido").hasAnyRole("ATENDENTE", "ADMIN")
-                        .antMatchers(HttpMethod.GET, "/pet/page-pets").hasAnyRole("ATENDENTE", "ADMIN")
-                        .antMatchers(HttpMethod.PUT, "/pet").hasAnyRole("ATENDENTE", "ADMIN")
-                        .antMatchers(HttpMethod.DELETE, "/pet").hasAnyRole("ATENDENTE", "ADMIN")
-
+                        .antMatchers("/cliente/**").hasRole("ADMIN")
+                        .antMatchers("/contato").hasAnyRole("ATENDENTE", "ADMIN")
+                        .antMatchers("/pedido").hasAnyRole("ATENDENTE", "ADMIN")
 
                         .antMatchers("/**").hasRole("ADMIN")
                         .anyRequest().authenticated();

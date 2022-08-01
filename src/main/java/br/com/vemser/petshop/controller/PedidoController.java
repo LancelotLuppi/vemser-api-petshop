@@ -30,6 +30,11 @@ public class PedidoController implements PedidoDocumentation {
         return ResponseEntity.ok(pedidoService.create(id, pedido));
     }
 
+    @PostMapping("/logged-user")
+    public ResponseEntity<PedidoDTO> postByLoggedUser(Integer idPet, @Valid @RequestBody PedidoCreateDTO pedido) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+        return ResponseEntity.ok(pedidoService.createByLoggedUser(idPet, pedido));
+    }
+
     @GetMapping("/{idCliente}")
     public ResponseEntity<List<PedidoDTO>> getByClientId(@PathVariable("idCliente") Integer id) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(pedidoService.list(id));
@@ -43,6 +48,11 @@ public class PedidoController implements PedidoDocumentation {
     @PutMapping("/{idPedido}")
     public ResponseEntity<PedidoDTO> put(@PathVariable("idPedido") Integer idPedido, @Valid @RequestBody PedidoCreateDTO pedidoAtualizado) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
         return ResponseEntity.ok(pedidoService.update(idPedido, pedidoAtualizado));
+    }
+
+    @PutMapping("/logged-user")
+    public  ResponseEntity<PedidoDTO> putByLoggedUser(Integer idPedido, @Valid @RequestBody PedidoCreateDTO pedidoAtualizado) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+        return ResponseEntity.ok(pedidoService.updateByLoggedUser(idPedido, pedidoAtualizado));
     }
 
     @PutMapping("/atualizar-status")

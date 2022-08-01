@@ -7,14 +7,14 @@ import br.com.vemser.petshop.dto.pedido.PedidoStatusRelatorioDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.PedidoEntity;
 import br.com.vemser.petshop.entity.PetEntity;
+import br.com.vemser.petshop.entity.UsuarioEntity;
 import br.com.vemser.petshop.enums.StatusPedido;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.PedidoRepository;
-import br.com.vemser.petshop.repository.PetRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,23 +24,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PedidoService {
-    @Autowired
-    private PedidoRepository pedidoRepository;
-    @Autowired
-    private PetRepository petRepository;
-    @Autowired
-    private PetService petService;
-    @Autowired
-    private ClienteRepository clienteRepository;
-    @Autowired
-    private ClienteService clienteService;
-    @Autowired
-    private CalculadoraService calculadoraService;
-    @Autowired
-    private RegraStatusPedidoService regraStatusPedidoService;
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final PedidoRepository pedidoRepository;
+    private final PetService petService;
+    private final ClienteRepository clienteRepository;
+    private final ClienteService clienteService;
+    private final UsuarioService usuarioService;
+    private final CalculadoraService calculadoraService;
+    private final RegraStatusPedidoService regraStatusPedidoService;
+    private final ObjectMapper objectMapper;
 
     private final static String NOT_FOUND_MESSAGE = "{idPedido} não encontrado";
 
@@ -63,6 +56,11 @@ public class PedidoService {
         return pedidoCriado;
     }
 
+    public PedidoDTO createByLoggedUser(Integer idPet, PedidoCreateDTO pedidoDto) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+        petService.verificaPetDoUserLogado(idPet);
+        return create(idPet, pedidoDto);
+    }
+
     public List<PedidoDTO> list(Integer idCliente) throws EntidadeNaoEncontradaException {
         clienteService.verificarId(idCliente);
         return pedidoRepository.findAll().stream()
@@ -82,12 +80,13 @@ public class PedidoService {
     public PedidoDTO update(Integer idPedido, PedidoCreateDTO pedidoDto) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
         PedidoEntity pedidoRecuperado = returnByIdPedidoEntity(idPedido);
         verificarStatusPedido(pedidoRecuperado);
+        PetEntity petRecuperado = petService.getPetByIdEntity(pedidoRecuperado.getPet().getIdPet());
 
         Double valorAnterior = pedidoRecuperado.getValor();
 
         pedidoRecuperado.setServico(pedidoDto.getServico());
         pedidoRecuperado.setDescricao(pedidoRecuperado.getDescricao());
-        pedidoRecuperado.setValor(0.0);
+        pedidoRecuperado.setValor(calculadoraService.calcularValorDoPedido(pedidoRecuperado, petRecuperado));
 
         PedidoDTO pedidoAtualizado = returnDTO(pedidoRepository.save(pedidoRecuperado));
         pedidoAtualizado.setIdCliente(pedidoRecuperado.getCliente().getIdCliente());
@@ -97,6 +96,11 @@ public class PedidoService {
         clienteRepository.save(clienteRecuperado);
 
         return pedidoAtualizado;
+    }
+
+    public PedidoDTO updateByLoggedUser(Integer idPedido, PedidoCreateDTO pedidoDto) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
+        verificarPedidoDoUserLogado(idPedido);
+        return update(idPedido, pedidoDto);
     }
 
     public PedidoDTO updateStatus(Integer idPedido, StatusPedido statusPedido) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
@@ -155,7 +159,7 @@ public class PedidoService {
         else if(idPet != null && idCliente == null) {
             return pedidoRepository.listarPedidosPorPetPaginado(idPet, pageRequest);
         }
-        else if(idPet != null && idCliente != null) {
+        else if(idPet != null) {
             return pedidoRepository.listarPedidosPorClienteAndPetPaginado(idCliente ,idPet, pageRequest);
         }
         return pedidoRepository.findAll(pageRequest);
@@ -182,5 +186,14 @@ public class PedidoService {
 
     private PedidoDTO returnDTO(PedidoEntity entity) {
         return objectMapper.convertValue(entity, PedidoDTO.class);
+    }
+
+    private void verificarPedidoDoUserLogado(Integer idPedido) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
+        UsuarioEntity loggedUser = usuarioService.findById(usuarioService.getIdLoggedUser());
+        List<Integer> idPedidos = loggedUser.getCliente().getPedidos().stream()
+                .map(PedidoEntity::getIdPedido).toList();
+        if(!idPedidos.contains(idPedido)){
+            throw new RegraDeNegocioException("Este pedido não é seu!");
+        }
     }
 }

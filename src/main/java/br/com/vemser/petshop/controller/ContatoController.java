@@ -4,6 +4,7 @@ import br.com.vemser.petshop.documentation.ContatoDocumentation;
 import br.com.vemser.petshop.dto.contato.ContatoCreateDTO;
 import br.com.vemser.petshop.dto.contato.ContatoDTO;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
+import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.service.ContatoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -50,5 +51,10 @@ public class ContatoController implements ContatoDocumentation {
     @PostMapping("/logged-user")
     public ResponseEntity<ContatoDTO> createByLoggedUser(@Valid @RequestBody ContatoCreateDTO contatoCreateDTO) throws EntidadeNaoEncontradaException{
         return ResponseEntity.ok(contatoService.createByLoggedUser(contatoCreateDTO));
+    }
+
+    @PutMapping("/logged-user")
+    public ResponseEntity<ContatoDTO> putByLoggedUser(Integer idContato, @Valid @RequestBody ContatoCreateDTO cttAtualizado) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+        return ResponseEntity.ok(contatoService.updateByLoggedUser(idContato, cttAtualizado));
     }
 }
