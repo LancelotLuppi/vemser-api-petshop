@@ -2,6 +2,7 @@ package br.com.vemser.petshop.dto.pet;
 
 import br.com.vemser.petshop.dto.pet.PetCreateDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 
 

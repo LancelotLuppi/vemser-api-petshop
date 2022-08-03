@@ -4,11 +4,13 @@ import br.com.vemser.petshop.enums.PelagemPet;
 import br.com.vemser.petshop.enums.PortePet;
 import br.com.vemser.petshop.enums.TipoPet;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.*;
 
 @Data
+
 public class PetCreateDTO {
 
     @Schema(description = "Nome do pet no cadastro", example = "Eros")

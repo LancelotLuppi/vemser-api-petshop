@@ -4,14 +4,12 @@ import br.com.vemser.petshop.enums.PelagemPet;
 import br.com.vemser.petshop.enums.PortePet;
 import br.com.vemser.petshop.enums.TipoPet;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor

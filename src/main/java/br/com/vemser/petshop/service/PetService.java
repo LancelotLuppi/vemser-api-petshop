@@ -31,7 +31,10 @@ public class PetService {
 
     public PetDTO createByClientId(Integer idCliente, PetCreateDTO petDto) throws EntidadeNaoEncontradaException {
         ClienteEntity clienteEntity = clienteService.retornarPorIdVerificado(idCliente);
-        return genericPetCreate(petDto, clienteEntity);
+        PetEntity petEntity = returnEntity(petDto);
+        petEntity.setCliente(clienteEntity);
+        return returnDtoWithId(petRepository.save(petEntity));
+
     }
 
     public PetDTO createByLoggedUser(PetCreateDTO petDto) throws EntidadeNaoEncontradaException {
@@ -60,13 +63,21 @@ public class PetService {
 
 
     public PetDTO update(Integer idPet, PetCreateDTO petDto) throws EntidadeNaoEncontradaException {
-        return genericUpdate(idPet, petDto);
+        PetEntity petRecuperado = getPetByIdEntity(idPet);
+
+        petRecuperado.setNome(petDto.getNome());
+        petRecuperado.setTipoPet(petDto.getTipoPet());
+        petRecuperado.setRaca(petDto.getRaca());
+        petRecuperado.setPelagem(petDto.getPelagem());
+        petRecuperado.setPorte(petDto.getPorte());
+        petRecuperado.setIdade(petDto.getIdade());
+
+        return returnDtoWithId(petRepository.save(petRecuperado));
     }
 
     public PetDTO loggedUpdate(Integer idPet, PetCreateDTO petDTO) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
         verificaPetDoUserLogado(idPet);
-
-        return genericUpdate(idPet, petDTO);
+        return update(idPet, petDTO);
     }
 
     public void delete(Integer id) throws EntidadeNaoEncontradaException {
@@ -97,8 +108,6 @@ public class PetService {
     }
 
 
-
-
     private PetEntity returnEntity(PetCreateDTO dto) {
         return objectMapper.convertValue(dto, PetEntity.class);
     }
@@ -115,30 +124,15 @@ public class PetService {
 
     private PetDTO genericPetCreate(PetCreateDTO petDto, ClienteEntity clienteEntity) {
         PetEntity petEntity = returnEntity(petDto);
-
         petEntity.setCliente(clienteEntity);
-
         return returnDtoWithId(petRepository.save(petEntity));
-    }
-
-    private PetDTO genericUpdate(Integer idPet, PetCreateDTO petDto) throws EntidadeNaoEncontradaException {
-        PetEntity petRecuperado = getPetByIdEntity(idPet);
-
-        petRecuperado.setNome(petDto.getNome());
-        petRecuperado.setTipoPet(petDto.getTipoPet());
-        petRecuperado.setRaca(petDto.getRaca());
-        petRecuperado.setPelagem(petDto.getPelagem());
-        petRecuperado.setPorte(petDto.getPorte());
-        petRecuperado.setIdade(petDto.getIdade());
-
-        return returnDtoWithId(petRepository.save(petRecuperado));
     }
 
     public void verificaPetDoUserLogado(Integer idPet) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
         UsuarioEntity loggedUser = usuarioService.findById(usuarioService.getIdLoggedUser());
         List<Integer> idPets = loggedUser.getCliente().getPets().stream()
                 .map(PetEntity::getIdPet).toList();
-        if(!idPets.contains(idPet)){
+        if (!idPets.contains(idPet)) {
             throw new RegraDeNegocioException("Este pet não é seu!");
         }
     }
