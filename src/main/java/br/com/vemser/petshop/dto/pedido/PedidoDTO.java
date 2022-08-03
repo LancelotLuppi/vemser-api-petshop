@@ -1,6 +1,5 @@
 package br.com.vemser.petshop.dto.pedido;
 
-import br.com.vemser.petshop.dto.pedido.PedidoCreateDTO;
 import br.com.vemser.petshop.enums.StatusPedido;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
