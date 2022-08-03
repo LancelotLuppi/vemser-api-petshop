@@ -91,8 +91,7 @@ public class PetService {
     }
 
     public PetEntity getPetByIdEntity(Integer idPet) throws EntidadeNaoEncontradaException {
-        return petRepository.findById(idPet).stream()
-                .findFirst()
+        return petRepository.findById(idPet)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException(NOT_FOUND_MESSAGE));
     }
 

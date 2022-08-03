@@ -91,6 +91,7 @@ public class PedidoService {
         PedidoDTO pedidoAtualizado = returnDTO(pedidoRepository.save(pedidoRecuperado));
         pedidoAtualizado.setIdCliente(pedidoRecuperado.getCliente().getIdCliente());
         pedidoAtualizado.setIdPet(pedidoRecuperado.getPet().getIdPet());
+        pedidoAtualizado.setData(pedidoRecuperado.getDataEHora());
         ClienteEntity clienteRecuperado = clienteService.retornarPorIdVerificado(pedidoAtualizado.getIdCliente());
         clienteRecuperado.setValorPagamento(clienteRecuperado.getValorPagamento() - valorAnterior + pedidoRecuperado.getValor());
         clienteRepository.save(clienteRecuperado);
@@ -139,17 +140,8 @@ public class PedidoService {
 
 
     public PedidoEntity returnByIdPedidoEntity(Integer id) throws EntidadeNaoEncontradaException {
-        return pedidoRepository.findById(id).stream()
-                .findFirst()
+        return pedidoRepository.findById(id)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException(NOT_FOUND_MESSAGE));
-    }
-
-    public void verificarStatusPedido(PedidoEntity pedidoEntity) throws RegraDeNegocioException {
-        if (pedidoEntity.getStatus().equals(StatusPedido.CANCELADO)) {
-            throw new RegraDeNegocioException("Pedidos CANCELADOS não podem ser atualizados");
-        } else if (pedidoEntity.getStatus().equals(StatusPedido.CONCLUIDO)) {
-            throw new RegraDeNegocioException("Pedidos CONCLUIDOS não podem ser atualizados");
-        }
     }
 
     public Page<PedidoEntity> resolverPaginacao(Integer idCliente, Integer idPet, PageRequest pageRequest) {
@@ -194,6 +186,14 @@ public class PedidoService {
                 .map(PedidoEntity::getIdPedido).toList();
         if(!idPedidos.contains(idPedido)){
             throw new RegraDeNegocioException("Este pedido não é seu!");
+        }
+    }
+
+    public void verificarStatusPedido(PedidoEntity pedidoEntity) throws RegraDeNegocioException {
+        if (pedidoEntity.getStatus().equals(StatusPedido.CANCELADO)) {
+            throw new RegraDeNegocioException("Pedidos CANCELADOS não podem ser atualizados");
+        } else if (pedidoEntity.getStatus().equals(StatusPedido.CONCLUIDO)) {
+            throw new RegraDeNegocioException("Pedidos CONCLUIDOS não podem ser atualizados");
         }
     }
 }
