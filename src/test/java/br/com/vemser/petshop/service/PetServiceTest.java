@@ -87,7 +87,6 @@ public class PetServiceTest {
         PetCreateDTO petCreateDTO = getPetGenericDTO();
         UsuarioEntity loggedUser = getUsuarioEntityGeneric();
 
-        when(usuarioService.findById(any())).thenReturn(loggedUser);
         when(petRepository.save(any())).thenReturn(petEntity);
         PetDTO responsePetDTO = petService.createByLoggedUser(petCreateDTO);
 
@@ -115,10 +114,8 @@ public class PetServiceTest {
         ClienteEntity clienteEntity = getClienteEntityGeneric();
         List<PetEntity> petEntityList = List.of(getPetGenericComCliente(clienteEntity));
 
-        when(usuarioService.findById(anyInt())).thenReturn(usuarioEntity);
-        when(petRepository.findAll()).thenReturn(petEntityList);
-        when(clienteService.returnLoggedClient()).thenReturn(clienteEntity);
 
+        when(clienteService.returnLoggedClient()).thenReturn(clienteEntity);
         List<PetDTO> petDTOS = petService.getByLoggedUser();
 
         Assertions.assertNotNull(petDTOS);
@@ -183,7 +180,6 @@ public class PetServiceTest {
         PageRequest pageRequest = PageRequest.of(0, 1);
 
 
-        when(petRepository.findAll(any(Pageable.class))).thenReturn(pagePets);
         when(petRepository.findById(10, pageRequest)).thenReturn(pagePets);
         PageDTO<PetDTO> paginaDePets = petService.paginarPets(10, 0, 1);
 
