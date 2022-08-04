@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -56,11 +57,12 @@ public class UsuarioService {
     }
 
     public LoginDTO updateCargos(Integer idUsuario, Set<TipoCargo> cargos) throws EntidadeNaoEncontradaException {
+        Set<CargoEntity> novosCargos = new HashSet<>();
         UsuarioEntity user = findById(idUsuario);
-        user.getCargos().clear();
-        user.getCargos().addAll(cargos.stream()
+        novosCargos.addAll(cargos.stream()
                 .map(cargo -> cargoRepository.findById(cargo.getTipo()).get())
                 .toList());
+        user.setCargos(novosCargos);
         usuarioRepository.save(user);
         return returnDTO(user);
     }
