@@ -204,6 +204,65 @@ public class CalculadoraServiceTest {
         assertEquals(45.0, valorDoPedido, DELTA);
     }
 
+    @Test
+    public void deveTestarCalcularValorDoPedidoParaCorteDeUnhaDeGatoPortePequeno() {
+        ClienteEntity clienteEntity = getClienteEntity();
+        PetEntity petGatoPortePequeno = getGatoPortePequeno(clienteEntity);
+        PedidoEntity pedidoEntity = getPedidoCorteDeUnha(clienteEntity, petGatoPortePequeno);
+
+        Double valorDoPedido = calculadoraService.calcularValorDoPedido(pedidoEntity, petGatoPortePequeno);
+
+        assertNotNull(valorDoPedido);
+        assertEquals(25.0, valorDoPedido, DELTA);
+    }
+
+    @Test
+    public void deveTestarCalcularValorDoPedidoParaCorteDeUnhaDeGatoPorteMedio() {
+        ClienteEntity clienteEntity = getClienteEntity();
+        PetEntity petGatoPorteMedio = getGatoPorteMedio(clienteEntity);
+        PedidoEntity pedidoEntity = getPedidoCorteDeUnha(clienteEntity, petGatoPorteMedio);
+
+        Double valorDoPedido = calculadoraService.calcularValorDoPedido(pedidoEntity, petGatoPorteMedio);
+
+        assertNotNull(valorDoPedido);
+        assertEquals(40.0, valorDoPedido, DELTA);
+    }
+
+    @Test
+    public void deveTestarCalcularValorDoPedidoParaCorteDeUnhaDeGatoPorteGrande() {
+        ClienteEntity clienteEntity = getClienteEntity();
+        PetEntity petGatoPorteGrande = getGatoPorteGrande(clienteEntity);
+        PedidoEntity pedidoEntity = getPedidoCorteDeUnha(clienteEntity, petGatoPorteGrande);
+
+        Double valorDoPedido = calculadoraService.calcularValorDoPedido(pedidoEntity, petGatoPorteGrande);
+
+        assertNotNull(valorDoPedido);
+        assertEquals(50.0, valorDoPedido, DELTA);
+    }
+
+    @Test
+    public void deveTestarCalcularValorDoPedidoParaAdestramentoDeCachorro() {
+        ClienteEntity clienteEntity = getClienteEntity();
+        PetEntity petCachorro = getCachorroPorteGrande(clienteEntity);
+        PedidoEntity pedidoEntity = getPedidoAdestramento(clienteEntity, petCachorro);
+
+        Double valorDoPedido = calculadoraService.calcularValorDoPedido(pedidoEntity, petCachorro);
+
+        assertNotNull(valorDoPedido);
+        assertEquals(250.0, valorDoPedido, DELTA);
+    }
+
+    @Test
+    public void deveTestarCalcularValorDoPedidoParaAdestramentoDeGato() {
+        ClienteEntity clienteEntity = getClienteEntity();
+        PetEntity petGato = getGatoPorteGrande(clienteEntity);
+        PedidoEntity pedidoEntity = getPedidoAdestramento(clienteEntity, petGato);
+
+        Double valorDoPedido = calculadoraService.calcularValorDoPedido(pedidoEntity, petGato);
+
+        assertNotNull(valorDoPedido);
+        assertEquals(120.0, valorDoPedido, DELTA);
+    }
 
 
 
@@ -234,6 +293,12 @@ public class CalculadoraServiceTest {
     private PedidoEntity getPedidoCorteDeUnha(ClienteEntity clienteEntity, PetEntity petEntity) {
         PedidoEntity pedidoEntity = getPedido(clienteEntity, petEntity);
         pedidoEntity.setServico(TipoServico.CORTE_DE_UNHA);
+        return pedidoEntity;
+    }
+
+    private PedidoEntity getPedidoAdestramento(ClienteEntity clienteEntity, PetEntity petEntity) {
+        PedidoEntity pedidoEntity = getPedido(clienteEntity, petEntity);
+        pedidoEntity.setServico(TipoServico.ADESTRAMENTO);
         return pedidoEntity;
     }
 
