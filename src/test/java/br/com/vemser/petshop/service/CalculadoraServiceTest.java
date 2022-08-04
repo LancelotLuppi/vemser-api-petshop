@@ -4,6 +4,7 @@ import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.PedidoEntity;
 import br.com.vemser.petshop.entity.PetEntity;
 import br.com.vemser.petshop.enums.*;
+import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -263,8 +264,6 @@ public class CalculadoraServiceTest {
         assertNotNull(valorDoPedido);
         assertEquals(120.0, valorDoPedido, DELTA);
     }
-
-
 
 
     private PedidoEntity getPedido(ClienteEntity clienteEntity, PetEntity petEntity) {

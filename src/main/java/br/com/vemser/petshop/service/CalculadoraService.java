@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CalculadoraService {
+    private static final String MESSAGE_ERROR = "Desculpe, mas algo deu errado :(";
 
     public Double calcularValorDoPedido(PedidoEntity pedido, PetEntity pet) {
         if(pet.getTipoPet().equals(TipoPet.CACHORRO)) {
@@ -53,10 +54,8 @@ public class CalculadoraService {
                     return 45.00;
                 }
             }
-        } else if (pedido.getServico().equals(TipoServico.ADESTRAMENTO)) {
-            return 250.00;
         }
-        return 0.00;
+        return 250.0;
     }
 
     public Double calcularParaGato(PedidoEntity pedido, PetEntity pet) {
@@ -96,9 +95,7 @@ public class CalculadoraService {
                     return 50.00;
                 }
             }
-        } else if (pedido.getServico().equals(TipoServico.ADESTRAMENTO)) {
-            return 120.00;
         }
-        return 0.00;
+        return 120.0;
     }
 }

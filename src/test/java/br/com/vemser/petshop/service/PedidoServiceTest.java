@@ -104,7 +104,7 @@ public class PedidoServiceTest {
     }
 
     @Test(expected = EntidadeNaoEncontradaException.class)
-    public void deveTestarCreateSemId() throws EntidadeNaoEncontradaException {
+    public void deveTestarCreateSemId() throws EntidadeNaoEncontradaException, RegraDeNegocioException {
         PedidoCreateDTO pedidoCreateDTO = getPedidoCreateDTO();
         doThrow(new EntidadeNaoEncontradaException("Pet não encontrado"))
                 .when(petService).getPetByIdEntity(anyInt());

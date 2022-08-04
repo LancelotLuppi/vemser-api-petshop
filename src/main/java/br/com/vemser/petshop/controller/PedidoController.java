@@ -25,7 +25,7 @@ public class PedidoController implements PedidoDocumentation {
     private PedidoService pedidoService;
 
     @PostMapping("/{idPet}")
-    public ResponseEntity<PedidoDTO> post(@PathVariable("idPet") Integer id, @Valid @RequestBody PedidoCreateDTO pedido) throws EntidadeNaoEncontradaException {
+    public ResponseEntity<PedidoDTO> post(@PathVariable("idPet") Integer id, @Valid @RequestBody PedidoCreateDTO pedido) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
         return ResponseEntity.ok(pedidoService.create(id, pedido));
     }
 
