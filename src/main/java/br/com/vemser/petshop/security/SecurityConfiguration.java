@@ -72,7 +72,9 @@ public class SecurityConfiguration {
                 "/v3/api-docs/**",
                 "/swagger-resources/**",
                 "/swagger-ui/**",
-                "/auth");
+                "/auth",
+                "/teste-mongo",
+                "/balanco-mensal/**");
     }
 
     @Bean
