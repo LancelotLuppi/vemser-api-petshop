@@ -83,7 +83,7 @@ public class ContatoService {
 
 
 
-    private void verificarContatoDoUserLogado(Integer idContato) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
+    public void verificarContatoDoUserLogado(Integer idContato) throws RegraDeNegocioException, EntidadeNaoEncontradaException {
         UsuarioEntity loggedUser = usuarioService.findById(usuarioService.getIdLoggedUser());
         List<Integer> idContatos = loggedUser.getCliente().getContatos().stream()
                 .map(ContatoEntity::getIdContato).toList();
