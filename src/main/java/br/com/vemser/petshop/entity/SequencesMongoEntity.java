@@ -10,25 +10,18 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-@Document(collection = "balanco_mensal")
+@Document("sequences")
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class BalancoMensalEntity {
-
+public class SequencesMongoEntity {
     @Id
     @Field(name = "_id")
-    private Integer idBalancoMensal;
+    private Integer idSequence;
 
-    @Field(name = "mes")
-    private Integer mes;
+    @Field(name = "atual")
+    private Integer atual;
 
-    @Field(name = "ano")
-    private Integer ano;
-
-    @Field(name = "total_de_pedidos")
-    private Integer totalDePedidos;
-
-    @Field(name = "lucro_bruto")
-    private Double lucroBruto;
+    @Field(name = "entidade")
+    private String entidade;
 }
