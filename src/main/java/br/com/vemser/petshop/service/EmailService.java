@@ -50,15 +50,12 @@ public class EmailService {
                 case PUT -> {
                     mimeMessageHelper.setSubject("Cadastro editado no petshop Padawans!");
                 }
-                case DELETE -> {
-                    mimeMessageHelper.setSubject("Cadastro deletado no petshop Padawans!");
-                }
-                default -> throw new RegraDeNegocioException("Requisicao inválida!");
+                default -> mimeMessageHelper.setSubject("Cadastro deletado no petshop Padawans!");
             }
             mimeMessageHelper.setText(geContentFromTemplate(nome, id, email, tipoRequisicao), true);
 
             emailSender.send(mimeMessageHelper.getMimeMessage());
-        } catch (MessagingException | IOException | RegraDeNegocioException | TemplateException e) {
+        } catch (MessagingException | IOException | TemplateException e) {
             e.printStackTrace();
         }
     }
