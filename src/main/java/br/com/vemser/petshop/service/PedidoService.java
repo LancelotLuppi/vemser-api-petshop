@@ -4,20 +4,19 @@ import br.com.vemser.petshop.dto.PageDTO;
 import br.com.vemser.petshop.dto.pedido.PedidoCreateDTO;
 import br.com.vemser.petshop.dto.pedido.PedidoDTO;
 import br.com.vemser.petshop.dto.pedido.PedidoStatusRelatorioDTO;
-import br.com.vemser.petshop.entity.ClienteEntity;
-import br.com.vemser.petshop.entity.PedidoEntity;
-import br.com.vemser.petshop.entity.PetEntity;
-import br.com.vemser.petshop.entity.UsuarioEntity;
+import br.com.vemser.petshop.entity.*;
 import br.com.vemser.petshop.enums.StatusPedido;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.PedidoRepository;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,7 +33,11 @@ public class PedidoService {
     private final CalculadoraService calculadoraService;
     private final BalancoMensalService balancoMensalService;
     private final RegraStatusPedidoService regraStatusPedidoService;
+
+    private final PedidosMensalService pedidosMensalService;
     private final ObjectMapper objectMapper;
+
+
 
     private final static String NOT_FOUND_MESSAGE = "{idPedido} não encontrado";
 
@@ -111,6 +114,7 @@ public class PedidoService {
         pedido.setStatus(statusPedido);
         if (pedido.getStatus().equals(StatusPedido.CONCLUIDO)) {
             balancoMensalService.atualizarBalanco(pedido);
+            pedidosMensalService.atualizarPedidos(pedido);
         }
         return returnDtoWithId(pedidoRepository.save(pedido));
     }
@@ -167,6 +171,7 @@ public class PedidoService {
         return clienteLogado.getPedidos().stream()
                 .map(this::returnDtoWithId).toList();
     }
+
 
     private PedidoEntity returnEntity(PedidoCreateDTO dto) {
         return objectMapper.convertValue(dto, PedidoEntity.class);

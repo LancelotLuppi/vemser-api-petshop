@@ -81,4 +81,5 @@ public class PedidoController implements PedidoDocumentation {
     public ResponseEntity<List<PedidoDTO>> getByLoggedUser() throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(pedidoService.getByLoggedUser());
     }
+
 }
