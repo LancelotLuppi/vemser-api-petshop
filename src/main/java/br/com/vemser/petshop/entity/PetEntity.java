@@ -33,11 +33,11 @@ public class PetEntity {
     @Column(name = "raca")
     private String raca;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "pelagem")
     private PelagemPet pelagem;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "porte")
     private PortePet porte;
 

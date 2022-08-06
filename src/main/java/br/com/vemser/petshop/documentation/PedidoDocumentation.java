@@ -41,7 +41,7 @@ public interface PedidoDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<PedidoDTO> postByLoggedUser(Integer idPet, @RequestBody PedidoCreateDTO pedido) throws EntidadeNaoEncontradaException, RegraDeNegocioException;
+    ResponseEntity<PedidoDTO> postByLoggedUser(Integer idPet, @Valid @RequestBody PedidoCreateDTO pedido) throws EntidadeNaoEncontradaException, RegraDeNegocioException;
 
 
     @Operation(summary = "Listar pedidos por cliente", description = "Lista todos os pedidos ligados " +

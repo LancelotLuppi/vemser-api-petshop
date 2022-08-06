@@ -6,9 +6,13 @@ import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.repository.BalancoMensalRepository;
 import br.com.vemser.petshop.repository.SequencesMongoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +20,7 @@ import java.util.Optional;
 public class BalancoMensalService {
     private final BalancoMensalRepository balancoMensalRepository;
     private final SequencesMongoService sequencesMongoService;
+    private final MongoTemplate mongoTemplate;
 
 
     public BalancoMensalEntity getBalancoMesAtual() throws EntidadeNaoEncontradaException {
@@ -31,9 +36,13 @@ public class BalancoMensalService {
     public void atualizarBalanco(PedidoEntity pedidoEntity) {
         Optional<BalancoMensalEntity> balancoMensalEntity = balancoMensalRepository.findBalancoMensalEntitiesByMesAndAno(
                 pedidoEntity.getDataEHora().getMonthValue(), pedidoEntity.getDataEHora().getYear());
+
         if (balancoMensalEntity.isPresent()) {
-            balancoMensalEntity.get().setLucroBruto(balancoMensalEntity.get().getLucroBruto() + pedidoEntity.getValor());
-            balancoMensalRepository.save(balancoMensalEntity.get());
+            BalancoMensalEntity balancoMensalEntityUpdate = balancoMensalEntity.get();
+            System.out.println(balancoMensalEntityUpdate.getIdBalancoMensal());
+            balancoMensalEntityUpdate.setLucroBruto(balancoMensalEntityUpdate.getLucroBruto() + pedidoEntity.getValor());
+            balancoMensalEntityUpdate.setTotalDePedidos(balancoMensalEntityUpdate.getTotalDePedidos() + 1);
+            mongoTemplate.save(balancoMensalEntityUpdate, "balanco_mensal");
         } else {
             BalancoMensalEntity balancoMensalEntityNew = new BalancoMensalEntity();
             balancoMensalEntityNew.setAno(pedidoEntity.getDataEHora().getYear());

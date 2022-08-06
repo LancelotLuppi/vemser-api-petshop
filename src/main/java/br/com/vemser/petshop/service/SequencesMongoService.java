@@ -3,6 +3,7 @@ package br.com.vemser.petshop.service;
 import br.com.vemser.petshop.entity.SequencesMongoEntity;
 import br.com.vemser.petshop.repository.SequencesMongoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -11,13 +12,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SequencesMongoService {
     private final SequencesMongoRepository sequencesMongoRepository;
+    private final MongoTemplate mongoTemplate;
 
     public Integer getIdByEntidade(String entidade) {
         Optional<SequencesMongoEntity> sequencesMongoEntityOptional = sequencesMongoRepository.findSequencesMongoEntitiesByEntidade(entidade);
         if (sequencesMongoEntityOptional.isPresent()) {
             Integer atual = sequencesMongoEntityOptional.get().getAtual() + 1;
             sequencesMongoEntityOptional.get().setAtual(atual);
-            sequencesMongoRepository.save(sequencesMongoEntityOptional.get());
+            mongoTemplate.save(sequencesMongoEntityOptional.get(), "sequences");
             return atual;
         } else {
             SequencesMongoEntity sequencesMongoEntity = new SequencesMongoEntity();

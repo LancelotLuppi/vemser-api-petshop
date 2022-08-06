@@ -32,6 +32,7 @@ public class PedidoService {
     private final ClienteService clienteService;
     private final UsuarioService usuarioService;
     private final CalculadoraService calculadoraService;
+    private final BalancoMensalService balancoMensalService;
     private final RegraStatusPedidoService regraStatusPedidoService;
     private final ObjectMapper objectMapper;
 
@@ -108,6 +109,9 @@ public class PedidoService {
         PedidoEntity pedido = returnByIdPedidoEntity(idPedido);
         regraStatusPedidoService.updateStatus(pedido, statusPedido);
         pedido.setStatus(statusPedido);
+        if (pedido.getStatus().equals(StatusPedido.CONCLUIDO)) {
+            balancoMensalService.atualizarBalanco(pedido);
+        }
         return returnDtoWithId(pedidoRepository.save(pedido));
     }
 

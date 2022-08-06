@@ -6,10 +6,8 @@ import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity
 @Document(collection = "balanco_mensal")
 @RequiredArgsConstructor
 @Getter
@@ -17,7 +15,7 @@ import javax.persistence.Id;
 public class BalancoMensalEntity {
 
     @Id
-    @Field(name = "_id")
+    @Field("_id")
     private Integer idBalancoMensal;
 
     @Field(name = "mes")
