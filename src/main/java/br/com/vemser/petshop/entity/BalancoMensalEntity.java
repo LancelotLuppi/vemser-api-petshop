@@ -24,9 +24,6 @@ public class BalancoMensalEntity {
     @Field(name = "ano")
     private Integer ano;
 
-    @Field(name = "total_de_pedidos")
-    private Integer totalDePedidos;
-
     @Field(name = "lucro_bruto")
     private Double lucroBruto;
 }

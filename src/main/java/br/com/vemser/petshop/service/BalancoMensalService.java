@@ -41,13 +41,11 @@ public class BalancoMensalService {
             BalancoMensalEntity balancoMensalEntityUpdate = balancoMensalEntity.get();
             System.out.println(balancoMensalEntityUpdate.getIdBalancoMensal());
             balancoMensalEntityUpdate.setLucroBruto(balancoMensalEntityUpdate.getLucroBruto() + pedidoEntity.getValor());
-            balancoMensalEntityUpdate.setTotalDePedidos(balancoMensalEntityUpdate.getTotalDePedidos() + 1);
             mongoTemplate.save(balancoMensalEntityUpdate, "balanco_mensal");
         } else {
             BalancoMensalEntity balancoMensalEntityNew = new BalancoMensalEntity();
             balancoMensalEntityNew.setAno(pedidoEntity.getDataEHora().getYear());
             balancoMensalEntityNew.setMes(pedidoEntity.getDataEHora().getMonthValue());
-            balancoMensalEntityNew.setTotalDePedidos(1);
             balancoMensalEntityNew.setLucroBruto(pedidoEntity.getValor());
             balancoMensalEntityNew.setIdBalancoMensal(sequencesMongoService.getIdByEntidade("balanco_mensal"));
             balancoMensalRepository.save(balancoMensalEntityNew);
