@@ -4,6 +4,7 @@ import br.com.vemser.petshop.enums.TipoRequisicao;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -30,7 +31,7 @@ public class EmailService {
 
     @Value("${remetente}")
     private String usuario;
-
+    private String mensagem;
 
     private final JavaMailSender emailSender;
 
@@ -56,7 +57,7 @@ public class EmailService {
 
             emailSender.send(mimeMessageHelper.getMimeMessage());
         } catch (MessagingException | IOException | TemplateException e) {
-            e.printStackTrace();
+            mensagem = "Exception verificada";
         }
     }
 
@@ -92,5 +93,8 @@ public class EmailService {
         return html;
     }
 
+    public String getMensagem() {
+        return mensagem;
+    }
 
 }

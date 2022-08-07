@@ -17,7 +17,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.MimeMessage;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 
@@ -87,6 +89,21 @@ public class EmailServiceTest {
         emailService.sendEmail(nome, id, email, tipoRequisicao);
 
         verify(emailSender, times(1)).send(any(MimeMessage.class));
+    }
+
+    @Test
+    public void deveTestarSendEmailComException() throws IOException {
+        String nome = "Luppi";
+        Integer id = 3;
+        String email = "meuemail@teste.com";
+        TipoRequisicao tipoRequisicao = TipoRequisicao.DELETE;
+
+        when(emailSender.createMimeMessage()).thenReturn(mimeMessage);
+        ReflectionTestUtils.setField(emailService, "from", "");
+
+        emailService.sendEmail(nome, id, email, tipoRequisicao);
+
+        assertEquals("Exception verificada", emailService.getMensagem());
     }
 
 
