@@ -2,27 +2,20 @@ package br.com.vemser.petshop.service;
 
 
 import br.com.vemser.petshop.enums.TipoRequisicao;
-import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.MimeMessage;
-import static org.junit.Assert.*;
-
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -105,6 +98,4 @@ public class EmailServiceTest {
 
         assertEquals("Exception verificada", emailService.getMensagem());
     }
-
-
 }
