@@ -61,6 +61,8 @@ public class PedidoServiceTest {
     private RegraStatusPedidoService regraStatusPedidoService;
     @Mock
     private BalancoMensalService balancoMensalService;
+    @Mock
+    private PedidosMensalService pedidosMensalService;
 
     private static final Integer ID_PEDIDO = 12;
     private static final Integer ID_PET = 42;
@@ -106,7 +108,7 @@ public class PedidoServiceTest {
     }
 
     @Test(expected = EntidadeNaoEncontradaException.class)
-    public void deveTestarCreateSemId() throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+    public void deveTestarCreateSemId() throws EntidadeNaoEncontradaException {
         PedidoCreateDTO pedidoCreateDTO = getPedidoCreateDTO();
         doThrow(new EntidadeNaoEncontradaException("Pet não encontrado"))
                 .when(petService).getPetByIdEntity(anyInt());
@@ -260,6 +262,7 @@ public class PedidoServiceTest {
         doNothing().when(regraStatusPedidoService).updateStatus(any(), any());
         when(pedidoRepository.save(any(PedidoEntity.class))).thenReturn(pedidoEntity);
         doNothing().when(balancoMensalService).atualizarBalanco(any());
+        doNothing().when(pedidosMensalService).atualizarPedidos(any());
 
         PedidoDTO pedidoDTO = pedidoService.updateStatus(12, statusPedido);
 
@@ -269,6 +272,30 @@ public class PedidoServiceTest {
         assertEquals(42, pedidoDTO.getIdPet().intValue());
         assertEquals(90, pedidoDTO.getValor().intValue());
         assertEquals(StatusPedido.CONCLUIDO, pedidoDTO.getStatus());
+        assertEquals(LocalDateTime.of(LocalDate.of(2022, 8, 2), LocalTime.of(21, 20)), pedidoDTO.getData());
+        assertEquals(TipoServico.BANHO, pedidoDTO.getServico());
+        assertEquals("SD", pedidoDTO.getDescricao());
+    }
+
+    @Test
+    public void deveTestarUpdateStatusComSucessoDiferenteDeConcluido() throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+        ClienteEntity clienteEntity = getClienteEntity();
+        PetEntity petEntity = getPetEntity(clienteEntity);
+        PedidoEntity pedidoEntity = getPedidoEntity(clienteEntity, petEntity);
+        StatusPedido statusPedido = StatusPedido.EM_ANDAMENTO;
+
+        when(pedidoRepository.findById(anyInt())).thenReturn(Optional.of(pedidoEntity));
+        doNothing().when(regraStatusPedidoService).updateStatus(any(), any());
+        when(pedidoRepository.save(any(PedidoEntity.class))).thenReturn(pedidoEntity);
+
+        PedidoDTO pedidoDTO = pedidoService.updateStatus(12, statusPedido);
+
+        assertNotNull(pedidoDTO);
+        assertEquals(12, pedidoDTO.getIdPedido().intValue());
+        assertEquals(10, pedidoDTO.getIdCliente().intValue());
+        assertEquals(42, pedidoDTO.getIdPet().intValue());
+        assertEquals(90, pedidoDTO.getValor().intValue());
+        assertEquals(StatusPedido.EM_ANDAMENTO, pedidoDTO.getStatus());
         assertEquals(LocalDateTime.of(LocalDate.of(2022, 8, 2), LocalTime.of(21, 20)), pedidoDTO.getData());
         assertEquals(TipoServico.BANHO, pedidoDTO.getServico());
         assertEquals("SD", pedidoDTO.getDescricao());

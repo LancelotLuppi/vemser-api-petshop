@@ -4,15 +4,11 @@ import br.com.vemser.petshop.entity.BalancoMensalEntity;
 import br.com.vemser.petshop.entity.PedidoEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.repository.BalancoMensalRepository;
-import br.com.vemser.petshop.repository.SequencesMongoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.mongodb.ReactiveMongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 @Service

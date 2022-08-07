@@ -1,6 +1,5 @@
 package br.com.vemser.petshop.service;
 
-import br.com.vemser.petshop.entity.BalancoMensalEntity;
 import br.com.vemser.petshop.entity.PedidoEntity;
 import br.com.vemser.petshop.entity.PedidoMensalEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
@@ -35,7 +34,6 @@ public class PedidosMensalService {
     public void atualizarPedidos(PedidoEntity pedidoEntity) {
         Optional<PedidoMensalEntity> pedidoMensalEntity = pedidosMensalRepository.findPedidosByMesAndAno(
                 pedidoEntity.getDataEHora().getMonthValue(), pedidoEntity.getDataEHora().getYear());
-
         if (pedidoMensalEntity.isPresent()) {
             PedidoMensalEntity pedidoMensalEntityUpdate = pedidoMensalEntity.get();
             System.out.println(pedidoMensalEntityUpdate.getIdPedidoMensal());
