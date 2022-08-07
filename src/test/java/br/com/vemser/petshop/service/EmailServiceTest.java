@@ -92,7 +92,7 @@ public class EmailServiceTest {
     }
 
     @Test
-    public void deveTestarSendEmailComException() throws IOException {
+    public void deveTestarSendEmailComException() {
         String nome = "Luppi";
         Integer id = 3;
         String email = "meuemail@teste.com";
