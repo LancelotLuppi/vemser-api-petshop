@@ -124,10 +124,6 @@ public class BalancoMensalServiceTest {
         return balancoMensalEntity;
     }
 
-    public Optional<BalancoMensalEntity> getBalancoMensalEmpty() {
-        return Optional.empty();
-    }
-
     public PedidoEntity getPedidoEntity() {
         PedidoEntity pedidoEntity = new PedidoEntity();
         pedidoEntity.setIdPedido(8);

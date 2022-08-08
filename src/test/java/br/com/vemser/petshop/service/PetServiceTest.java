@@ -39,15 +39,11 @@ public class PetServiceTest {
 
     @InjectMocks
     private PetService petService;
-
     private ObjectMapper objectMapper = new ObjectMapper();
-
     @Mock
     private PetRepository petRepository;
-
     @Mock
     private ClienteService clienteService;
-
     @Mock
     private UsuarioService usuarioService;
 
@@ -87,7 +83,6 @@ public class PetServiceTest {
         Assertions.assertNotNull(responsePetDTO);
     }
 
-
     @Test
     public void deveTestarListarPetsPorClienteComSucesso() throws EntidadeNaoEncontradaException {
         List<PetEntity> petEntityList = List.of(getPetGeneric());
@@ -97,8 +92,7 @@ public class PetServiceTest {
         List<PetDTO> petDTOS = petService.getByClientId(10);
 
         Assertions.assertNotNull(petDTOS);
-        Assertions.assertTrue(!petDTOS.isEmpty());
-
+        Assertions.assertFalse(petDTOS.isEmpty());
     }
 
 
@@ -113,26 +107,21 @@ public class PetServiceTest {
         List<PetDTO> petDTOS = petService.getByLoggedUser();
 
         Assertions.assertNotNull(petDTOS);
-        Assertions.assertTrue(!petDTOS.isEmpty());
+        Assertions.assertFalse(petDTOS.isEmpty());
     }
 
     @Test
     public void deveTestarGetByPetIdComSucesso() throws EntidadeNaoEncontradaException {
-        PetEntity petEntity = (getPetGeneric());
-
         when(petRepository.findById(any())).thenReturn(Optional.of(getPetGeneric()));
 
         PetDTO petDTO = petService.getByPetId(76);
 
-
         Assertions.assertNotNull(petDTO);
-
     }
 
 
     @Test
     public void deveTestarLoggedUpdateComSucesso() throws EntidadeNaoEncontradaException, RegraDeNegocioException {
-
         PetCreateDTO petCreateDTO = getPetGenericDTO();
         PetEntity petEntity = getPetGeneric();
         UsuarioEntity loggedUser = getUsuarioEntityGeneric();
@@ -154,7 +143,6 @@ public class PetServiceTest {
 
     @Test
     public void deveTestarDeleteDoPetComSucesso() throws EntidadeNaoEncontradaException {
-
         Integer idParaDelete = 76;
         PetEntity petEntity = getPetGeneric();
 
@@ -168,7 +156,6 @@ public class PetServiceTest {
 
     @Test
     public void deveTestarPagincaoPetsComSucesso(){
-
         List<PetEntity> petEntityList = List.of(getPetGeneric());
         Page<PetEntity> pagePets = new PageImpl<>(petEntityList);
         PageRequest pageRequest = PageRequest.of(0, 1);

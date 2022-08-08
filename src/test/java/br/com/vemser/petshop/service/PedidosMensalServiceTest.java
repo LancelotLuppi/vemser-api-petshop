@@ -96,8 +96,6 @@ public class PedidosMensalServiceTest {
         assertEquals(1, pedidoMensalEntity.getTotalPedido().intValue());
     }
 
-
-
     public PedidoMensalEntity getPedidoMensalEntity() {
         PedidoMensalEntity pedidoMensalEntity = new PedidoMensalEntity();
         pedidoMensalEntity.setIdPedidoMensal(4);
