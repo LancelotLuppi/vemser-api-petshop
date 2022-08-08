@@ -51,7 +51,7 @@ public class UsuarioService {
         novoUser.setSenha(new Argon2PasswordEncoder().encode(loginCreateDTO.getSenha()));
         novoUser.setAtivo(true);
 
-        novoUser.setCargos(Set.of(cargoRepository.findById(CARGO_USER).get()));
+        novoUser.setCargos(Set.of(cargoRepository.findById(TipoCargo.USUARIO.getTipo()).get()));
         usuarioRepository.save(novoUser);
 
         return returnDTO(novoUser);
