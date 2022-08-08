@@ -2,6 +2,7 @@ package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.entity.SequencesMongoEntity;
 import br.com.vemser.petshop.repository.SequencesMongoRepository;
+import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -52,7 +53,7 @@ public class SequencesMongoServiceTest {
 
     public SequencesMongoEntity getSequence() {
         SequencesMongoEntity sequencesMongoEntity = new SequencesMongoEntity();
-        sequencesMongoEntity.setIdSequence(2);
+        sequencesMongoEntity.setIdSequence(new ObjectId());
         sequencesMongoEntity.setAtual(2);
         sequencesMongoEntity.setEntidade("sequence");
         return  sequencesMongoEntity;

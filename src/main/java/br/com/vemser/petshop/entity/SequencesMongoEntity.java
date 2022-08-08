@@ -3,6 +3,7 @@ package br.com.vemser.petshop.entity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -16,8 +17,8 @@ import javax.persistence.Id;
 @Setter
 public class SequencesMongoEntity {
     @Id
-    @Field(name = "_id")
-    private Integer idSequence;
+    @Field(name = "sequences")
+    private ObjectId idSequence;
 
     @Field(name = "atual")
     private Integer atual;

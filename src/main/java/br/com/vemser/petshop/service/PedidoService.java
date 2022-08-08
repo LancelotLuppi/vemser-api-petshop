@@ -13,6 +13,9 @@ import br.com.vemser.petshop.repository.PedidoRepository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final PetService petService;
@@ -33,9 +37,11 @@ public class PedidoService {
     private final CalculadoraService calculadoraService;
     private final BalancoMensalService balancoMensalService;
     private final RegraStatusPedidoService regraStatusPedidoService;
-
     private final PedidosMensalService pedidosMensalService;
     private final ObjectMapper objectMapper;
+    private final LogService logService;
+
+    private static final Logger logger = LoggerFactory.getLogger(LogService.class);
 
 
 
@@ -45,6 +51,7 @@ public class PedidoService {
         PetEntity petRecuperado = petService.getPetByIdEntity(idPet);
         PedidoEntity pedidoEntity = returnEntity(pedidoDto);
         ClienteEntity clienteRecuperado = clienteRepository.findById(petRecuperado.getCliente().getIdCliente()).get();
+        logger.info(logService.info("Criando pedido para o cliente " + clienteRecuperado.getIdCliente() + ", pet " + petRecuperado.getIdPet()));
 
         pedidoEntity.setCliente(clienteRecuperado);
         pedidoEntity.setPet(petRecuperado);
@@ -56,6 +63,7 @@ public class PedidoService {
         clienteRecuperado.setQuantidadeDePedidos(clienteRecuperado.getQuantidadeDePedidos() + 1);
         clienteRecuperado.setValorPagamento(clienteRecuperado.getValorPagamento() + pedidoEntity.getValor());
         clienteRepository.save(clienteRecuperado);
+        logger.info(logService.info("Novo pedido criado, Id: " + pedidoCriado.getIdPedido()));
 
         return pedidoCriado;
     }
@@ -109,6 +117,7 @@ public class PedidoService {
     }
 
     public PedidoDTO updateStatus(Integer idPedido, StatusPedido statusPedido) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+        logger.info(logService.info("Atualizando status do pedido " + idPedido));
         PedidoEntity pedido = returnByIdPedidoEntity(idPedido);
         regraStatusPedidoService.updateStatus(pedido, statusPedido);
         pedido.setStatus(statusPedido);
@@ -116,6 +125,7 @@ public class PedidoService {
             balancoMensalService.atualizarBalanco(pedido);
             pedidosMensalService.atualizarPedidos(pedido);
         }
+        logger.info(logService.info("Status do pedido atualizado para " + statusPedido.name()));
         return returnDtoWithId(pedidoRepository.save(pedido));
     }
 

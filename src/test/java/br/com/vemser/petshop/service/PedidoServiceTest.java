@@ -63,6 +63,8 @@ public class PedidoServiceTest {
     private BalancoMensalService balancoMensalService;
     @Mock
     private PedidosMensalService pedidosMensalService;
+    @Mock
+    private LogService logService;
 
     private static final Integer ID_PEDIDO = 12;
     private static final Integer ID_PET = 42;
@@ -287,6 +289,7 @@ public class PedidoServiceTest {
         when(pedidoRepository.findById(anyInt())).thenReturn(Optional.of(pedidoEntity));
         doNothing().when(regraStatusPedidoService).updateStatus(any(), any());
         when(pedidoRepository.save(any(PedidoEntity.class))).thenReturn(pedidoEntity);
+        when(logService.info(anyString())).thenReturn(anyString());
 
         PedidoDTO pedidoDTO = pedidoService.updateStatus(12, statusPedido);
 

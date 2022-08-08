@@ -19,7 +19,7 @@ public class SequencesMongoService {
         if (sequencesMongoEntityOptional.isPresent()) {
             Integer atual = sequencesMongoEntityOptional.get().getAtual() + 1;
             sequencesMongoEntityOptional.get().setAtual(atual);
-            mongoTemplate.save(sequencesMongoEntityOptional.get(), "sequences");
+            mongoTemplate.save(sequencesMongoEntityOptional.get());
             return atual;
         } else {
             SequencesMongoEntity sequencesMongoEntity = new SequencesMongoEntity();
