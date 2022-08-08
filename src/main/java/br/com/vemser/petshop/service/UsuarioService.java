@@ -34,6 +34,7 @@ public class UsuarioService {
     private final CargoRepository cargoRepository;
 
     private final static String NOT_FOUND_MESSAGE = "{idCliente} não encontrado";
+    private static final Integer CARGO_USER = 2;
 
     public UsuarioEntity findById(Integer idUsuario) throws EntidadeNaoEncontradaException{
         return usuarioRepository.findById(idUsuario)
@@ -50,7 +51,7 @@ public class UsuarioService {
         novoUser.setSenha(new Argon2PasswordEncoder().encode(loginCreateDTO.getSenha()));
         novoUser.setAtivo(true);
 
-        novoUser.setCargos(Set.of(cargoRepository.findById(2).get()));
+        novoUser.setCargos(Set.of(cargoRepository.findById(CARGO_USER).get()));
         usuarioRepository.save(novoUser);
 
         return returnDTO(novoUser);
