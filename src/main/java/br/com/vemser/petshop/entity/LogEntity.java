@@ -2,20 +2,21 @@ package br.com.vemser.petshop.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.Id;
 import java.util.Date;
 
-@Document(collection = "log")
+@Document(collection = "logs")
 @Getter
 @Setter
 public class LogEntity {
 
     @Id
     @Field(name = "_id")
-    private Integer id;
+    private ObjectId id;
     @Field(name = "date")
     private Date date;
     @Field(name = "level")

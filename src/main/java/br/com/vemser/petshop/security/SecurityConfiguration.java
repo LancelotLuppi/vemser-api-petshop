@@ -57,6 +57,8 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.DELETE, "/pet/**").hasAnyRole("ADMIN")
 
                         .antMatchers("/cliente/**").hasRole("ADMIN")
+                        .antMatchers("/balanco-mensal/**").hasRole("ADMIN")
+                        .antMatchers("/log/**").hasRole("ADMIN")
                         .antMatchers("/contato").hasAnyRole("ATENDENTE", "ADMIN")
                         .antMatchers("/pedido").hasAnyRole("ATENDENTE", "ADMIN")
 
@@ -73,8 +75,8 @@ public class SecurityConfiguration {
                 "/swagger-resources/**",
                 "/swagger-ui/**",
                 "/auth",
-                "/teste-mongo",
-                "/balanco-mensal/**");
+                "/teste-mongo"
+                );
     }
 
     @Bean

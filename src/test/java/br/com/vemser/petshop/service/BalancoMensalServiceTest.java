@@ -6,12 +6,19 @@ import br.com.vemser.petshop.enums.StatusPedido;
 import br.com.vemser.petshop.enums.TipoServico;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.repository.BalancoMensalRepository;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.util.ReflectionTestUtils;
+
 import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;
@@ -30,6 +37,16 @@ public class BalancoMensalServiceTest {
     private SequencesMongoService sequencesMongoService;
     @Mock
     private MongoTemplate mongoTemplate;
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    @Before
+    public void init() {
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        ReflectionTestUtils.setField(balancoMensalService, "objectMapper", objectMapper);
+    }
 
     @Test
     public void deveTestarGetBalancoMesAtual() throws EntidadeNaoEncontradaException {
@@ -47,8 +64,24 @@ public class BalancoMensalServiceTest {
         assertEquals(15600.0, balancoMensalEntity.getLucroBruto(), 0);
     }
 
+    @Test
+    public void deveTestarGetBalancoByMesAndAno() throws EntidadeNaoEncontradaException {
+        BalancoMensalEntity balancoMensalEntity = getBalancoMensal();
+
+        when(balancoMensalRepository.findBalancoMensalEntitiesByMesAndAno(anyInt(), anyInt()))
+                .thenReturn(Optional.of(balancoMensalEntity));
+
+        balancoMensalService.getBalancoByMesAndAno(1, 2022);
+
+        assertNotNull(balancoMensalEntity);
+        assertEquals(3, balancoMensalEntity.getIdBalancoMensal().intValue());
+        assertEquals(8, balancoMensalEntity.getMes().intValue());
+        assertEquals(2022, balancoMensalEntity.getAno().intValue());
+        assertEquals(15600.0, balancoMensalEntity.getLucroBruto(), 0);
+    }
+
     @Test(expected = EntidadeNaoEncontradaException.class)
-    public void deveTestarGetBalancoMesAtualComEntidadeNaoEncontrada() throws EntidadeNaoEncontradaException {
+    public void deveTestarFindBalancoMesAtualComEntidadeNaoEncontrada() throws EntidadeNaoEncontradaException {
 
         when(balancoMensalRepository.findBalancoMensalEntitiesByMesAndAno(anyInt(), anyInt()))
                 .thenReturn(Optional.empty());

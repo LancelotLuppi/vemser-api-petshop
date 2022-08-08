@@ -6,6 +6,6 @@ import lombok.Data;
 public class BalancoMensalDTO {
 
     private Integer mes;
-
     private Integer ano;
+    private Double lucroBruto;
 }

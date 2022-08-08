@@ -1,5 +1,7 @@
 package br.com.vemser.petshop.controller;
 
+import br.com.vemser.petshop.dto.balancomensal.BalancoMensalDTO;
+import br.com.vemser.petshop.dto.pedidomensal.PedidoMensalDto;
 import br.com.vemser.petshop.entity.BalancoMensalEntity;
 import br.com.vemser.petshop.entity.PedidoMensalEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
@@ -21,22 +23,22 @@ public class BalancoMensalController {
     private final PedidosMensalService pedidosMensalService;
 
     @GetMapping("/mes-atual")
-    public ResponseEntity<BalancoMensalEntity> getMesAtual() throws EntidadeNaoEncontradaException {
+    public ResponseEntity<BalancoMensalDTO> getMesAtual() throws EntidadeNaoEncontradaException {
         return new ResponseEntity<>(balancoMensalService.getBalancoMesAtual(), HttpStatus.OK);
     }
 
     @GetMapping("/mes-ano")
-    public ResponseEntity<BalancoMensalEntity> getByMesAno(Integer mes,  Integer ano) throws EntidadeNaoEncontradaException {
+    public ResponseEntity<BalancoMensalDTO> getByMesAno(Integer mes,  Integer ano) throws EntidadeNaoEncontradaException {
         return new ResponseEntity<>(balancoMensalService.getBalancoByMesAndAno(mes, ano), HttpStatus.OK);
     }
 
     @GetMapping("/pedidos-mes-atual")
-    public ResponseEntity<PedidoMensalEntity> getPedidosMesAtual() throws EntidadeNaoEncontradaException {
+    public ResponseEntity<PedidoMensalDto> getPedidosMesAtual() throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(pedidosMensalService.getPedidoMesAtual());
     }
 
     @GetMapping("/pedidos-mes-ano")
-    public ResponseEntity<PedidoMensalEntity> getPedidosByMesAno(Integer mes,  Integer ano) throws EntidadeNaoEncontradaException {
+    public ResponseEntity<PedidoMensalDto> getPedidosByMesAno(Integer mes,  Integer ano) throws EntidadeNaoEncontradaException {
         return ResponseEntity.ok(pedidosMensalService.getPedidoByMesAndAno(mes, ano));
     }
 }

@@ -1,9 +1,11 @@
 package br.com.vemser.petshop.service;
 
+import br.com.vemser.petshop.dto.balancomensal.BalancoMensalDTO;
 import br.com.vemser.petshop.entity.BalancoMensalEntity;
 import br.com.vemser.petshop.entity.PedidoEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.repository.BalancoMensalRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -17,14 +19,18 @@ public class BalancoMensalService {
     private final BalancoMensalRepository balancoMensalRepository;
     private final SequencesMongoService sequencesMongoService;
     private final MongoTemplate mongoTemplate;
+    private final ObjectMapper objectMapper;
 
 
-    public BalancoMensalEntity getBalancoMesAtual() throws EntidadeNaoEncontradaException {
+    public BalancoMensalDTO getBalancoMesAtual() throws EntidadeNaoEncontradaException {
         LocalDate localDate = LocalDate.now();
-        return getBalancoByMesAndAno(localDate.getMonthValue(), localDate.getYear());
+        return entityToDto(findBalancoByMesAndAno(localDate.getMonthValue(), localDate.getYear()));
     }
 
-    public BalancoMensalEntity getBalancoByMesAndAno(Integer mes, Integer ano) throws EntidadeNaoEncontradaException {
+    public BalancoMensalDTO getBalancoByMesAndAno(Integer mes, Integer ano) throws EntidadeNaoEncontradaException {
+        return entityToDto(findBalancoByMesAndAno(mes, ano));
+    }
+    public BalancoMensalEntity findBalancoByMesAndAno(Integer mes, Integer ano) throws EntidadeNaoEncontradaException {
         return balancoMensalRepository.findBalancoMensalEntitiesByMesAndAno(mes, ano)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Não existem dados disponíveis para a data informada"));
     }
@@ -46,5 +52,9 @@ public class BalancoMensalService {
             balancoMensalEntityNew.setIdBalancoMensal(sequencesMongoService.getIdByEntidade("balanco_mensal"));
             balancoMensalRepository.save(balancoMensalEntityNew);
         }
+    }
+
+    public BalancoMensalDTO entityToDto(BalancoMensalEntity balancoMensalEntity) {
+        return objectMapper.convertValue(balancoMensalEntity, BalancoMensalDTO.class);
     }
 }

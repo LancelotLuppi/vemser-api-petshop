@@ -8,12 +8,18 @@ import br.com.vemser.petshop.enums.StatusPedido;
 import br.com.vemser.petshop.enums.TipoServico;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.repository.PedidosMensalRepository;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,6 +40,16 @@ public class PedidosMensalServiceTest {
     private SequencesMongoService sequencesMongoService;
     @Mock
     private MongoTemplate mongoTemplate;
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    @Before
+    public void init() {
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        ReflectionTestUtils.setField(pedidosMensalService, "objectMapper", objectMapper);
+    }
 
 
     @Test
@@ -59,6 +75,22 @@ public class PedidosMensalServiceTest {
                 .thenReturn(Optional.empty());
 
         pedidosMensalService.getPedidoMesAtual();
+    }
+
+    @Test
+    public void deveTestarGetPedidoByMesAndAnoComSucesso() throws EntidadeNaoEncontradaException {
+        PedidoMensalEntity pedidoMensalEntity = getPedidoMensalEntity();
+
+        when(pedidosMensalRepository.findPedidosByMesAndAno(anyInt(), anyInt()))
+                .thenReturn(Optional.of(pedidoMensalEntity));
+
+        pedidosMensalService.getPedidoByMesAndAno(1, 2022);
+
+        assertNotNull(pedidoMensalEntity);
+        assertEquals(4, pedidoMensalEntity.getIdPedidoMensal().intValue());
+        assertEquals(8, pedidoMensalEntity.getMes().intValue());
+        assertEquals(2022, pedidoMensalEntity.getAno().intValue());
+        assertEquals(21, pedidoMensalEntity.getTotalPedido().intValue());
     }
 
     @Test
