@@ -1,9 +1,7 @@
 package br.com.vemser.petshop.service;
 
-import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.PedidoEntity;
 import br.com.vemser.petshop.entity.PedidoMensalEntity;
-import br.com.vemser.petshop.entity.PetEntity;
 import br.com.vemser.petshop.enums.StatusPedido;
 import br.com.vemser.petshop.enums.TipoServico;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
@@ -26,8 +24,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)

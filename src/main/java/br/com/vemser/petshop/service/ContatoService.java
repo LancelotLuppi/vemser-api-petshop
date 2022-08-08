@@ -2,10 +2,8 @@ package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.dto.contato.ContatoCreateDTO;
 import br.com.vemser.petshop.dto.contato.ContatoDTO;
-import br.com.vemser.petshop.dto.pet.PetDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.ContatoEntity;
-import br.com.vemser.petshop.entity.PetEntity;
 import br.com.vemser.petshop.entity.UsuarioEntity;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
@@ -13,7 +11,6 @@ import br.com.vemser.petshop.repository.ContatoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

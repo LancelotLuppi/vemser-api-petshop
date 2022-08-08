@@ -1,10 +1,8 @@
 package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.enums.TipoRequisicao;
-import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;

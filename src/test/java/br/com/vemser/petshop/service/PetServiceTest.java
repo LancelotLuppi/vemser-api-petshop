@@ -1,8 +1,6 @@
 package br.com.vemser.petshop.service;
 
 import br.com.vemser.petshop.dto.PageDTO;
-
-import br.com.vemser.petshop.dto.cliente.ClienteDTO;
 import br.com.vemser.petshop.dto.pet.PetCreateDTO;
 import br.com.vemser.petshop.dto.pet.PetDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
@@ -18,9 +16,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import org.junit.Before;
-
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
@@ -30,9 +26,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
-
 
 import java.util.List;
 import java.util.Optional;

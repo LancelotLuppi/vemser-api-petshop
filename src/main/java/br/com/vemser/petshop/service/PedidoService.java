@@ -4,13 +4,15 @@ import br.com.vemser.petshop.dto.PageDTO;
 import br.com.vemser.petshop.dto.pedido.PedidoCreateDTO;
 import br.com.vemser.petshop.dto.pedido.PedidoDTO;
 import br.com.vemser.petshop.dto.pedido.PedidoStatusRelatorioDTO;
-import br.com.vemser.petshop.entity.*;
+import br.com.vemser.petshop.entity.ClienteEntity;
+import br.com.vemser.petshop.entity.PedidoEntity;
+import br.com.vemser.petshop.entity.PetEntity;
+import br.com.vemser.petshop.entity.UsuarioEntity;
 import br.com.vemser.petshop.enums.StatusPedido;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.PedidoRepository;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 
 import java.time.LocalDateTime;
 import java.util.List;
