@@ -6,8 +6,6 @@ import br.com.vemser.petshop.entity.PetEntity;
 import br.com.vemser.petshop.enums.*;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
-import br.com.vemser.petshop.repository.ClienteRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -22,17 +20,10 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RegraStatusPedidoServiceTest {
-
-    private ObjectMapper objectMapper = new ObjectMapper();
-
     @InjectMocks
     private RegraStatusPedidoService regraStatusPedidoService;
-
     @Mock
     ClienteService clienteService;
-
-    @Mock
-    ClienteRepository clienteRepository;
 
     @Test
     public void deveTestarUpdateStatusCanceladoComSucesso() throws EntidadeNaoEncontradaException, RegraDeNegocioException {
