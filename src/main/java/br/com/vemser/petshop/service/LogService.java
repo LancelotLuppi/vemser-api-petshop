@@ -11,7 +11,6 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class LogService {
     private final MongoTemplate mongoTemplate;
-    private final SequencesMongoService sequencesMongoService;
 
     public String info(String message) {
         LogEntity log = new LogEntity();

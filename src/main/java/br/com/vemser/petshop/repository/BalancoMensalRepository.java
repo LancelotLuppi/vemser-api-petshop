@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface BalancoMensalRepository extends MongoRepository<BalancoMensalEntity, Integer> {
 
-    public Optional<BalancoMensalEntity> findBalancoMensalEntitiesByMesAndAno(Integer mes, Integer ano);
+    Optional<BalancoMensalEntity> findBalancoMensalEntitiesByMesAndAno(Integer mes, Integer ano);
 }

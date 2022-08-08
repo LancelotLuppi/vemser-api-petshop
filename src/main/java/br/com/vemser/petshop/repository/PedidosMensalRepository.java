@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface PedidosMensalRepository extends MongoRepository<PedidoMensalEntity, Integer> {
 
-    public Optional<PedidoMensalEntity> findPedidosByMesAndAno(Integer mes, Integer ano);
+    Optional<PedidoMensalEntity> findPedidosByMesAndAno(Integer mes, Integer ano);
 }

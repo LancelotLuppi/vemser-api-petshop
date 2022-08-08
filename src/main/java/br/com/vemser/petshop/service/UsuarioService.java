@@ -34,7 +34,6 @@ public class UsuarioService {
     private final CargoRepository cargoRepository;
 
     private final static String NOT_FOUND_MESSAGE = "{idCliente} não encontrado";
-    private static final Integer CARGO_USER = 2;
 
     public UsuarioEntity findById(Integer idUsuario) throws EntidadeNaoEncontradaException{
         return usuarioRepository.findById(idUsuario)
