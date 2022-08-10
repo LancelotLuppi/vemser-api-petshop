@@ -13,6 +13,7 @@ import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.PedidoRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,12 +37,10 @@ public class PedidoService {
     private final ClienteService clienteService;
     private final UsuarioService usuarioService;
     private final CalculadoraService calculadoraService;
-    private final BalancoMensalService balancoMensalService;
     private final RegraStatusPedidoService regraStatusPedidoService;
-    private final PedidosMensalService pedidosMensalService;
     private final ObjectMapper objectMapper;
     private final LogService logService;
-
+    private final KafkaProducer kafkaProducer;
 
 
     private final static String NOT_FOUND_MESSAGE = "{idPedido} não encontrado";
@@ -115,14 +114,13 @@ public class PedidoService {
         return update(idPedido, pedidoDto);
     }
 
-    public PedidoDTO updateStatus(Integer idPedido, StatusPedido statusPedido) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+    public PedidoDTO updateStatus(Integer idPedido, StatusPedido statusPedido) throws EntidadeNaoEncontradaException, RegraDeNegocioException, JsonProcessingException {
         log.info(logService.info("Atualizando status do pedido " + idPedido));
         PedidoEntity pedido = returnByIdPedidoEntity(idPedido);
         regraStatusPedidoService.updateStatus(pedido, statusPedido);
         pedido.setStatus(statusPedido);
         if (pedido.getStatus().equals(StatusPedido.CONCLUIDO)) {
-            balancoMensalService.atualizarBalanco(pedido);
-            pedidosMensalService.atualizarPedidos(pedido);
+            kafkaProducer.sendPedido(pedido);
         }
         log.info(logService.info("Status do pedido atualizado para " + statusPedido.name()));
         return returnDtoWithId(pedidoRepository.save(pedido));

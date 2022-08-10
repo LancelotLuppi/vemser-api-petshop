@@ -10,6 +10,7 @@ import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.PedidoRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -60,9 +61,7 @@ public class PedidoServiceTest {
     @Mock
     private RegraStatusPedidoService regraStatusPedidoService;
     @Mock
-    private BalancoMensalService balancoMensalService;
-    @Mock
-    private PedidosMensalService pedidosMensalService;
+    private KafkaProducer kafkaProducer;
     @Mock
     private LogService logService;
 
@@ -254,7 +253,7 @@ public class PedidoServiceTest {
     }
 
     @Test
-    public void deveTestarUpdateStatusComSucesso() throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+    public void deveTestarUpdateStatusComSucesso() throws EntidadeNaoEncontradaException, RegraDeNegocioException, JsonProcessingException {
         ClienteEntity clienteEntity = getClienteEntity();
         PetEntity petEntity = getPetEntity(clienteEntity);
         PedidoEntity pedidoEntity = getPedidoEntity(clienteEntity, petEntity);
@@ -263,8 +262,7 @@ public class PedidoServiceTest {
         when(pedidoRepository.findById(anyInt())).thenReturn(Optional.of(pedidoEntity));
         doNothing().when(regraStatusPedidoService).updateStatus(any(), any());
         when(pedidoRepository.save(any(PedidoEntity.class))).thenReturn(pedidoEntity);
-        doNothing().when(balancoMensalService).atualizarBalanco(any());
-        doNothing().when(pedidosMensalService).atualizarPedidos(any());
+        doNothing().when(kafkaProducer).sendPedido(any());
 
         PedidoDTO pedidoDTO = pedidoService.updateStatus(12, statusPedido);
 
@@ -280,7 +278,7 @@ public class PedidoServiceTest {
     }
 
     @Test
-    public void deveTestarUpdateStatusComSucessoDiferenteDeConcluido() throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+    public void deveTestarUpdateStatusComSucessoDiferenteDeConcluido() throws EntidadeNaoEncontradaException, RegraDeNegocioException, JsonProcessingException {
         ClienteEntity clienteEntity = getClienteEntity();
         PetEntity petEntity = getPetEntity(clienteEntity);
         PedidoEntity pedidoEntity = getPedidoEntity(clienteEntity, petEntity);
@@ -305,7 +303,7 @@ public class PedidoServiceTest {
     }
 
     @Test(expected = EntidadeNaoEncontradaException.class)
-    public void deveTestarUpdateStatusSemId() throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+    public void deveTestarUpdateStatusSemId() throws EntidadeNaoEncontradaException, RegraDeNegocioException, JsonProcessingException {
         StatusPedido statusPedido = StatusPedido.EM_ANDAMENTO;
 
         when(pedidoRepository.findById(anyInt())).thenReturn(Optional.empty());
@@ -314,7 +312,7 @@ public class PedidoServiceTest {
     }
 
     @Test(expected = RegraDeNegocioException.class)
-    public void deveTestarUpdateStatusInvalido() throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+    public void deveTestarUpdateStatusInvalido() throws EntidadeNaoEncontradaException, RegraDeNegocioException, JsonProcessingException {
         ClienteEntity clienteEntity = getClienteEntity();
         PetEntity petEntity = getPetEntity(clienteEntity);
         PedidoEntity pedidoEntity = getPedidoEntity(clienteEntity, petEntity);

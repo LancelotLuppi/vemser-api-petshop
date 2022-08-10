@@ -9,6 +9,7 @@ import br.com.vemser.petshop.enums.StatusPedido;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.service.PedidoService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -55,7 +56,7 @@ public class PedidoController implements PedidoDocumentation {
     }
 
     @PutMapping("/atualizar-status")
-    public ResponseEntity<PedidoDTO> putStatus(Integer idPedido, StatusPedido status) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+    public ResponseEntity<PedidoDTO> putStatus(Integer idPedido, StatusPedido status) throws EntidadeNaoEncontradaException, RegraDeNegocioException, JsonProcessingException {
         return ResponseEntity.ok(pedidoService.updateStatus(idPedido, status));
     }
 

@@ -7,6 +7,7 @@ import br.com.vemser.petshop.dto.pedido.PedidoStatusRelatorioDTO;
 import br.com.vemser.petshop.enums.StatusPedido;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -121,7 +122,7 @@ public interface PedidoDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<PedidoDTO> putStatus(Integer idPedido, StatusPedido status) throws EntidadeNaoEncontradaException, RegraDeNegocioException;
+    ResponseEntity<PedidoDTO> putStatus(Integer idPedido, StatusPedido status) throws EntidadeNaoEncontradaException, RegraDeNegocioException, JsonProcessingException;
 
     @Operation(summary = "Gerar relatorio", description = "Gera um relatório trazendo " +
             "as seguintes informações do pedido: idCliente, nome do cliente, email, " +
