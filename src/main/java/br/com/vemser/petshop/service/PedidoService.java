@@ -3,6 +3,7 @@ package br.com.vemser.petshop.service;
 import br.com.vemser.petshop.dto.PageDTO;
 import br.com.vemser.petshop.dto.pedido.PedidoCreateDTO;
 import br.com.vemser.petshop.dto.pedido.PedidoDTO;
+import br.com.vemser.petshop.dto.pedido.PedidoDTOConsumer;
 import br.com.vemser.petshop.dto.pedido.PedidoStatusRelatorioDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.PedidoEntity;
@@ -120,7 +121,7 @@ public class PedidoService {
         regraStatusPedidoService.updateStatus(pedido, statusPedido);
         pedido.setStatus(statusPedido);
         if (pedido.getStatus().equals(StatusPedido.CONCLUIDO)) {
-            kafkaProducer.sendPedido(pedido);
+            kafkaProducer.sendPedido(objectMapper.convertValue(pedido, PedidoDTOConsumer.class));
         }
         log.info(logService.info("Status do pedido atualizado para " + statusPedido.name()));
         return returnDtoWithId(pedidoRepository.save(pedido));

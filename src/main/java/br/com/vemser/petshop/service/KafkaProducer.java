@@ -1,5 +1,6 @@
 package br.com.vemser.petshop.service;
 
+import br.com.vemser.petshop.dto.pedido.PedidoDTOConsumer;
 import br.com.vemser.petshop.entity.PedidoEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,8 +49,8 @@ public class KafkaProducer {
         });
     }
 
-    public void sendPedido(PedidoEntity pedidoEntity) throws JsonProcessingException {
-        String mensagemFinal = objectMapper.writeValueAsString(pedidoEntity);
+    public void sendPedido(PedidoDTOConsumer pedidoDTOConsumer) throws JsonProcessingException {
+        String mensagemFinal = objectMapper.writeValueAsString(pedidoDTOConsumer);
         enviarMensagemKafka(mensagemFinal, topicoBalanco);
     }
 }
