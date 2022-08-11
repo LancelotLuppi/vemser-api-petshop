@@ -26,7 +26,7 @@ import java.util.UUID;
 public class KafkaProducer {
     @Value("${kafka.balanco-topic}")
     private String topicoBalanco;
-    @Value("kafka.email-topic")
+    @Value("${kafka.email-topic}")
     private String topicoEmail;
     private final KafkaTemplate<String, String> kafkaTemplate;
 
