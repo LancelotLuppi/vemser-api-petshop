@@ -6,20 +6,27 @@ import br.com.vemser.petshop.dto.login.LoginDTO;
 import br.com.vemser.petshop.dto.login.LoginStatusDTO;
 import br.com.vemser.petshop.dto.login.LoginUpdateDTO;
 import br.com.vemser.petshop.entity.CargoEntity;
+import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.UsuarioEntity;
 import br.com.vemser.petshop.enums.EnumDesativar;
 import br.com.vemser.petshop.enums.TipoCargo;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.CargoRepository;
+import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -33,7 +40,14 @@ public class UsuarioService {
     private final ObjectMapper objectMapper;
     private final CargoRepository cargoRepository;
 
+    private final EmailService emailService;
+
+    private final ClienteRepository clienteRepository;
     private final static String NOT_FOUND_MESSAGE = "{idCliente} não encontrado";
+
+    private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
+
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     public UsuarioEntity findById(Integer idUsuario) throws EntidadeNaoEncontradaException{
         return usuarioRepository.findById(idUsuario)
@@ -122,6 +136,15 @@ public class UsuarioService {
                 .map(CargoEntity::getNome).toList());
         return dto;
     }
+
+    @Scheduled(cron = "/10 * * * *")
+    private void sendEmailMes(){
+        List<ClienteEntity> clienteEntities = clienteRepository.findAll();
+        for(ClienteEntity cliente : clienteEntities){
+            emailService.sendSimpleMessageMes(cliente);
+        }
+    }
+
 
     private UsuarioEntity returnEntity(LoginCreateDTO dto) {
         return objectMapper.convertValue(dto, UsuarioEntity.class);
