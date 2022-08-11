@@ -3,6 +3,7 @@ package br.com.vemser.petshop.service;
 import br.com.vemser.petshop.dto.cliente.ClienteCreateDTO;
 import br.com.vemser.petshop.dto.cliente.ClienteDTO;
 import br.com.vemser.petshop.dto.cliente.ClienteDadosRelatorioDTO;
+import br.com.vemser.petshop.dto.cliente.ClienteEmailMessageDTO;
 import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.UsuarioEntity;
 import br.com.vemser.petshop.enums.TipoRequisicao;
@@ -10,6 +11,7 @@ import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.UsuarioRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +24,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClienteService {
     private final ClienteRepository clienteRepository;
-    private final EmailService emailService;
+    private final KafkaProducer kafkaProducer;
     private final ObjectMapper objectMapper;
     private final UsuarioService usuarioService;
     private final UsuarioRepository usuarioRepository;
     private final static String NOT_FOUND_MESSAGE = "{idCliente} não encontrado";
 
-    public ClienteDTO create(ClienteCreateDTO clienteDto) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+    public ClienteDTO create(ClienteCreateDTO clienteDto) throws EntidadeNaoEncontradaException, RegraDeNegocioException, JsonProcessingException {
         UsuarioEntity loggedUser = usuarioService.findById(usuarioService.getIdLoggedUser());
         ClienteEntity cliente = returnEntity(clienteDto);
 
@@ -43,12 +45,15 @@ public class ClienteService {
 
         ClienteEntity clienteSalvo = clienteRepository.findById(loggedUser.getCliente().getIdCliente()).get();
         clienteSalvo.setUsuario(loggedUser);
-        clienteRepository.save(clienteSalvo);
+        ClienteEntity entitySalva = clienteRepository.save(clienteSalvo);
 
         ClienteDTO clienteCriado = returnDto(clienteSalvo);
 
         usuarioRepository.save(loggedUser);
-        emailService.sendEmail(clienteCriado.getNome(), clienteCriado.getIdCliente(), clienteCriado.getEmail(), TipoRequisicao.POST);
+
+        entitySalva.setIdCliente(clienteCriado.getIdCliente());
+        sendEmailMessage(entitySalva, TipoRequisicao.POST);
+
         return clienteCriado;
     }
 
@@ -62,18 +67,21 @@ public class ClienteService {
         return returnDto(cliente);
     }
 
-    public ClienteDTO update(Integer id, ClienteCreateDTO clienteDto) throws EntidadeNaoEncontradaException {
+    public ClienteDTO update(Integer id, ClienteCreateDTO clienteDto) throws EntidadeNaoEncontradaException, JsonProcessingException {
         ClienteEntity clienteRecuperado = retornarPorIdVerificado(id);
         clienteRecuperado.setNome(clienteDto.getNome());
         clienteRecuperado.setEmail(clienteDto.getEmail());
-        ClienteDTO clienteAtualizado = returnDto(clienteRepository.save(clienteRecuperado));
-        emailService.sendEmail(clienteAtualizado.getNome(), clienteAtualizado.getIdCliente(), clienteAtualizado.getEmail(), TipoRequisicao.PUT);
-        return clienteAtualizado;
+        ClienteEntity clienteAtualizadoEntity = clienteRepository.save(clienteRecuperado);
+        ClienteDTO clienteAtualizadoDTO = returnDto(clienteAtualizadoEntity);
+
+        sendEmailMessage(clienteAtualizadoEntity, TipoRequisicao.PUT);
+
+        return clienteAtualizadoDTO;
     }
 
-    public void delete(Integer id) throws EntidadeNaoEncontradaException {
+    public void delete(Integer id) throws EntidadeNaoEncontradaException, JsonProcessingException {
         ClienteEntity clienteRecuperado = retornarPorIdVerificado(id);
-        emailService.sendEmail(clienteRecuperado.getNome(), clienteRecuperado.getIdCliente(), clienteRecuperado.getEmail(), TipoRequisicao.DELETE);
+        sendEmailMessage(clienteRecuperado, TipoRequisicao.DELETE);
         clienteRepository.delete(clienteRecuperado);
     }
 
@@ -100,6 +108,11 @@ public class ClienteService {
     public ClienteEntity returnLoggedClient() throws EntidadeNaoEncontradaException {
         UsuarioEntity userLogado = usuarioService.findById(usuarioService.getIdLoggedUser());
         return userLogado.getCliente();
+    }
+
+    private void sendEmailMessage(ClienteEntity cliente, TipoRequisicao tipoRequisicao) throws JsonProcessingException {
+        ClienteEmailMessageDTO dadosEmail = objectMapper.convertValue(cliente, ClienteEmailMessageDTO.class);
+        kafkaProducer.sendMessageEmail(dadosEmail, tipoRequisicao);
     }
 
     private ClienteDTO returnDto(ClienteEntity entity) {
