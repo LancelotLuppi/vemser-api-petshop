@@ -7,6 +7,7 @@ import br.com.vemser.petshop.dto.cliente.ClienteDadosRelatorioDTO;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.service.ClienteService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,7 +24,7 @@ public class ClienteController implements ClienteDocumentation {
     private ClienteService clienteService;
 
     @PostMapping
-    public ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO cliente) throws EntidadeNaoEncontradaException, RegraDeNegocioException {
+    public ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO cliente) throws EntidadeNaoEncontradaException, RegraDeNegocioException, JsonProcessingException {
         return ResponseEntity.ok(clienteService.create(cliente));
     }
 
@@ -38,12 +39,12 @@ public class ClienteController implements ClienteDocumentation {
     }
 
     @PutMapping("/{idCliente}")
-    public ResponseEntity<ClienteDTO> put(@PathVariable("idCliente") Integer id, @Valid @RequestBody ClienteCreateDTO clienteAtualizado) throws EntidadeNaoEncontradaException {
+    public ResponseEntity<ClienteDTO> put(@PathVariable("idCliente") Integer id, @Valid @RequestBody ClienteCreateDTO clienteAtualizado) throws EntidadeNaoEncontradaException, JsonProcessingException {
         return ResponseEntity.ok(clienteService.update(id, clienteAtualizado));
     }
 
     @DeleteMapping("/{idCliente}")
-    public void delete(@PathVariable("idCliente") Integer id) throws EntidadeNaoEncontradaException {
+    public void delete(@PathVariable("idCliente") Integer id) throws EntidadeNaoEncontradaException, JsonProcessingException {
         clienteService.delete(id);
     }
 

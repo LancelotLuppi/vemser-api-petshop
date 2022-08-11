@@ -5,6 +5,7 @@ import br.com.vemser.petshop.dto.cliente.ClienteDTO;
 import br.com.vemser.petshop.dto.cliente.ClienteDadosRelatorioDTO;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -26,7 +27,7 @@ public interface ClienteDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO clienteDto) throws EntidadeNaoEncontradaException, RegraDeNegocioException;
+    ResponseEntity<ClienteDTO> post(@Valid @RequestBody ClienteCreateDTO clienteDto) throws EntidadeNaoEncontradaException, RegraDeNegocioException, JsonProcessingException;
 
     @Operation(summary = "Retornar informação do cliente logado", description = "Retorna as informações de cliente do usuário logado")
         @ApiResponses(
@@ -60,7 +61,7 @@ public interface ClienteDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    ResponseEntity<ClienteDTO> put(Integer idCliente, @Valid @RequestBody ClienteCreateDTO clienteDto) throws  EntidadeNaoEncontradaException;
+    ResponseEntity<ClienteDTO> put(Integer idCliente, @Valid @RequestBody ClienteCreateDTO clienteDto) throws EntidadeNaoEncontradaException, JsonProcessingException;
 
     @Operation(summary = "Deletar cadastro de cliente", description = "Deleta as informações do cliente no banco de dados, " +
             "juntamente apagando as informações de (contato/pet/pedido) que estão ligados com o ID desse cliente. \n" +
@@ -73,7 +74,7 @@ public interface ClienteDocumentation {
                         @ApiResponse(responseCode = "500", description = "Erro server-side")
                 }
         )
-    void delete(Integer idCliente) throws EntidadeNaoEncontradaException;
+    void delete(Integer idCliente) throws EntidadeNaoEncontradaException, JsonProcessingException;
 
 
     @Operation(summary = "Listar relatorio dos clientes", description = "Gera um relatório com as seguintes " +

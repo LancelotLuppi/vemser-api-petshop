@@ -1,7 +1,9 @@
 package br.com.vemser.petshop.service;
 
+import br.com.vemser.petshop.dto.cliente.ClienteEmailMessageDTO;
 import br.com.vemser.petshop.dto.pedido.PedidoDTOConsumer;
 import br.com.vemser.petshop.entity.PedidoEntity;
+import br.com.vemser.petshop.enums.TipoRequisicao;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,8 @@ import java.util.UUID;
 public class KafkaProducer {
     @Value("${kafka.balanco-topic}")
     private String topicoBalanco;
+    @Value("kafka.email-topic")
+    private String topicoEmail;
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     private final ObjectMapper objectMapper;
@@ -49,8 +53,34 @@ public class KafkaProducer {
         });
     }
 
+    public void enviarMensagemParticionadaKafka(String mensagem, String topico, Integer particao) {
+        MessageBuilder<String> stringMessageBuilder = MessageBuilder.withPayload(mensagem)
+                .setHeader(KafkaHeaders.TOPIC, topico)
+                .setHeader(KafkaHeaders.PARTITION_ID, particao)
+                .setHeader(KafkaHeaders.MESSAGE_KEY, UUID.randomUUID().toString());
+        Message<String> stringMessage = stringMessageBuilder.build();
+
+        ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(stringMessage);
+
+        future.addCallback(new ListenableFutureCallback<>() {
+            @Override
+            public void onFailure(Throwable ex) {
+                log.info("Erro ao enviar mensagem: '{}', para o Kafka", mensagem);
+            }
+            @Override
+            public void onSuccess(SendResult<String, String> result) {
+                log.info("Mensagem: '{}', enviada para o Kafka com sucesso", mensagem);
+            }
+        });
+    }
+
     public void sendPedido(PedidoDTOConsumer pedidoDTOConsumer) throws JsonProcessingException {
         String mensagemFinal = objectMapper.writeValueAsString(pedidoDTOConsumer);
         enviarMensagemKafka(mensagemFinal, topicoBalanco);
+    }
+
+    public void sendMessageEmail(ClienteEmailMessageDTO clienteDadosEmail, TipoRequisicao requisicao) throws JsonProcessingException {
+        String mensagemDadosEmail = objectMapper.writeValueAsString(clienteDadosEmail);
+        enviarMensagemParticionadaKafka(mensagemDadosEmail, topicoEmail, requisicao.ordinal());
     }
 }
