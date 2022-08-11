@@ -45,8 +45,6 @@ public class UsuarioService {
     private final ClienteRepository clienteRepository;
     private final static String NOT_FOUND_MESSAGE = "{idCliente} não encontrado";
 
-    private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
-
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     public UsuarioEntity findById(Integer idUsuario) throws EntidadeNaoEncontradaException{
@@ -137,7 +135,7 @@ public class UsuarioService {
         return dto;
     }
 
-    @Scheduled(cron = "/10 * * * *")
+    @Scheduled(cron = "*/10 * * * * *" )
     private void sendEmailMes(){
         List<ClienteEntity> clienteEntities = clienteRepository.findAll();
         for(ClienteEntity cliente : clienteEntities){
