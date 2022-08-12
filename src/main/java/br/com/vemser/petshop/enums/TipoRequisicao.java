@@ -4,6 +4,5 @@ public enum TipoRequisicao {
     POST,
     PUT ,
     DELETE,
-
     MARKETING;
 }
