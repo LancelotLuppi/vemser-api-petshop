@@ -1,6 +1,7 @@
 package br.com.vemser.petshop.service;
 
 
+import br.com.vemser.petshop.dto.cliente.ClienteEmailMessageDTO;
 import br.com.vemser.petshop.dto.login.LoginCreateDTO;
 import br.com.vemser.petshop.dto.login.LoginDTO;
 import br.com.vemser.petshop.dto.login.LoginStatusDTO;
@@ -10,11 +11,13 @@ import br.com.vemser.petshop.entity.ClienteEntity;
 import br.com.vemser.petshop.entity.UsuarioEntity;
 import br.com.vemser.petshop.enums.EnumDesativar;
 import br.com.vemser.petshop.enums.TipoCargo;
+import br.com.vemser.petshop.enums.TipoRequisicao;
 import br.com.vemser.petshop.exception.EntidadeNaoEncontradaException;
 import br.com.vemser.petshop.exception.RegraDeNegocioException;
 import br.com.vemser.petshop.repository.CargoRepository;
 import br.com.vemser.petshop.repository.ClienteRepository;
 import br.com.vemser.petshop.repository.UsuarioRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -40,8 +43,8 @@ public class UsuarioService {
     private final ObjectMapper objectMapper;
     private final CargoRepository cargoRepository;
 
-    private final EmailService emailService;
 
+    private final KafkaProducer kafkaProducer;
     private final ClienteRepository clienteRepository;
     private final static String NOT_FOUND_MESSAGE = "{idCliente} não encontrado";
 
@@ -135,11 +138,15 @@ public class UsuarioService {
         return dto;
     }
 
-    @Scheduled(cron = "*/10 * * * * *" )
-    private void sendEmailMes(){
+    @Scheduled(cron = "* 30 12 15 * *" )
+    private void sendEmailMes() throws JsonProcessingException {
         List<ClienteEntity> clienteEntities = clienteRepository.findAll();
         for(ClienteEntity cliente : clienteEntities){
-            emailService.sendSimpleMessageMes(cliente);
+            ClienteEmailMessageDTO clienteEmailMessageDTO = new ClienteEmailMessageDTO();
+            clienteEmailMessageDTO.setNome(cliente.getNome());
+            clienteEmailMessageDTO.setEmail(cliente.getEmail());
+            clienteEmailMessageDTO.setIdCliente(cliente.getIdCliente());
+            kafkaProducer.sendMessageEmail(clienteEmailMessageDTO, TipoRequisicao.MARKETING);
         }
     }
 

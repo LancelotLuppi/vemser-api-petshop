@@ -98,13 +98,4 @@ public class EmailService {
         return mensagem;
     }
 
-    public void sendSimpleMessageMes(ClienteEntity cliente) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(from);
-        message.setTo(cliente.getEmail());
-        message.setSubject("Petshop Padawans");
-        message.setText("Ola" + cliente.getNome() + "!! :)" + "\n\nTraga seu pet para um banho, nos vamos dar um dia de SPA para seu Pet!!");
-        emailSender.send(message);
-    }
-
 }
