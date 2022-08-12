@@ -138,17 +138,7 @@ public class UsuarioService {
         return dto;
     }
 
-    @Scheduled(cron = "* 30 12 15 * *" )
-    private void sendEmailMes() throws JsonProcessingException {
-        List<ClienteEntity> clienteEntities = clienteRepository.findAll();
-        for(ClienteEntity cliente : clienteEntities){
-            ClienteEmailMessageDTO clienteEmailMessageDTO = new ClienteEmailMessageDTO();
-            clienteEmailMessageDTO.setNome(cliente.getNome());
-            clienteEmailMessageDTO.setEmail(cliente.getEmail());
-            clienteEmailMessageDTO.setIdCliente(cliente.getIdCliente());
-            kafkaProducer.sendMessageEmail(clienteEmailMessageDTO, TipoRequisicao.MARKETING);
-        }
-    }
+
 
 
     private UsuarioEntity returnEntity(LoginCreateDTO dto) {
